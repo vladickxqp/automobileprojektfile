@@ -1,0 +1,9 @@
+{
+  "garage": {
+    "title": "My garage",
+    "empty": {
+      "title": "No cars yet",
+      "subtitle": "Add your first car by VIN or manually to start its digital life history."
+    }
+  }
+}

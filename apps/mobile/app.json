@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "AutoLife",
+    "slug": "autolife",
+    "scheme": "autolife",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.autolife.app"
+    },
+    "android": {
+      "package": "com.autolife.app"
+    },
+    "plugins": ["expo-router", "expo-localization"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

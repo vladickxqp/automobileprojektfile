@@ -1,0 +1,9 @@
+{
+  "garage": {
+    "title": "Meine Garage",
+    "empty": {
+      "title": "Noch keine Fahrzeuge",
+      "subtitle": "Füge dein erstes Auto per VIN oder manuell hinzu und starte seine digitale Lebensgeschichte."
+    }
+  }
+}

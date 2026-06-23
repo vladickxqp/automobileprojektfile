@@ -1,0 +1,213 @@
+// AutoLife data model — built around the CarDNA backbone (see docs/ARCHITECTURE.md §2).
+//
+//   * Vehicle identity = VIN, not the user, so a car's record survives a change of owner.
+//   * Ownership is a time-bounded relation → a car has a *chain* of owners (CarDNA, #40).
+//   * VehicleEvent is an append-only timeline → the spine of CarDNA and of future ML (#34–38).
+//   * `visibility` splits each event into the portable carDNA layer vs the private layer.
+//
+// Note: pgvector + a KnowledgeChunk model for the AI assistant (#10) are added in Phase 3.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Locale {
+  ru
+  en
+  de
+}
+
+enum SubscriptionTier {
+  free
+  pro
+}
+
+enum AuthProvider {
+  apple
+  google
+  email
+}
+
+enum OwnershipRole {
+  owner
+  viewer
+}
+
+enum Visibility {
+  private
+  carDNA
+}
+
+enum VehicleEventType {
+  maintenance
+  repair
+  scan
+  expense
+  document
+  incident
+  score
+}
+
+enum DocumentType {
+  insurance
+  techpassport
+  tuv
+  invoice
+  contract
+  other
+}
+
+model User {
+  id               String           @id @default(uuid())
+  email            String           @unique
+  authProvider     AuthProvider     @default(email)
+  passwordHash     String?
+  displayName      String?
+  locale           Locale           @default(en)
+  subscriptionTier SubscriptionTier @default(free)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  ownerships    Ownership[]
+  createdEvents VehicleEvent[] @relation("EventAuthor")
+
+  @@map("users")
+}
+
+/// Identity of the car itself, keyed by VIN so the record outlives any single owner.
+model Vehicle {
+  id        String   @id @default(uuid())
+  vin       String   @unique
+  make      String
+  model     String
+  year      Int
+  engine    String?
+  plate     String?
+  photoUrl  String?
+  mileageKm Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ownerships  Ownership[]
+  events      VehicleEvent[]
+  documents   Document[]
+  scans       DiagnosticScan[]
+  scores      ReliabilityScore[]
+  saleReports SaleReport[]
+
+  @@index([vin])
+  @@map("vehicles")
+}
+
+/// Time-bounded link user <-> vehicle. `to == null` marks the current owner.
+model Ownership {
+  id        String        @id @default(uuid())
+  vehicleId String
+  userId    String
+  role      OwnershipRole @default(owner)
+  from      DateTime      @default(now())
+  to        DateTime?
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@index([userId])
+  @@map("ownerships")
+}
+
+/// Append-only timeline — spine of CarDNA and the ML data set. Keep `payload` structured.
+model VehicleEvent {
+  id              String           @id @default(uuid())
+  vehicleId       String
+  type            VehicleEventType
+  occurredAt      DateTime
+  mileageKm       Int?
+  visibility      Visibility       @default(private)
+  payload         Json
+  createdByUserId String
+  createdAt       DateTime         @default(now())
+
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  createdBy User    @relation("EventAuthor", fields: [createdByUserId], references: [id])
+
+  @@index([vehicleId, occurredAt])
+  @@index([vehicleId, type])
+  @@map("vehicle_events")
+}
+
+/// User documents (#7). `expiresAt` drives the reminders feature (#8).
+model Document {
+  id        String       @id @default(uuid())
+  vehicleId String
+  type      DocumentType
+  fileUrl   String
+  title     String?
+  issuedAt  DateTime?
+  expiresAt DateTime?
+  createdAt DateTime     @default(now())
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@index([expiresAt])
+  @@map("documents")
+}
+
+/// One OBD-II read (#11). DTC codes are joined against DtcCodeRef for descriptions (#12).
+model DiagnosticScan {
+  id          String   @id @default(uuid())
+  vehicleId   String
+  adapterInfo String?
+  dtcCodes    String[]
+  mileageKm   Int?
+  scannedAt   DateTime @default(now())
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@map("diagnostic_scans")
+}
+
+/// Reference table of OBD-II diagnostic trouble codes (#12). Reference data, not user data.
+model DtcCodeRef {
+  code        String  @id
+  description String
+  system      String?
+  severity    Int?
+
+  @@map("dtc_codes")
+}
+
+/// AutoScore snapshots (#13): a 1–100 condition index with a transparent factor breakdown.
+model ReliabilityScore {
+  id         String   @id @default(uuid())
+  vehicleId  String
+  score      Int
+  factors    Json
+  computedAt DateTime @default(now())
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@map("reliability_scores")
+}
+
+/// Curated, owner-agnostic snapshot of the carDNA layer, shared via a public link (#14).
+model SaleReport {
+  id          String    @id @default(uuid())
+  vehicleId   String
+  publicSlug  String    @unique
+  snapshot    Json
+  generatedAt DateTime  @default(now())
+  expiresAt   DateTime?
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@map("sale_reports")
+}
