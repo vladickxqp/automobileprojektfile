@@ -42,7 +42,8 @@
     "noReminders": "Nichts fällig",
     "history": "Servicehistorie",
     "documents": "Dokumente",
-    "remindersScreen": "Erinnerungen"
+    "remindersScreen": "Erinnerungen",
+    "assistant": "KI-Assistent"
   },
   "history": {
     "title": "Verlauf",
@@ -73,5 +74,12 @@
     "add": "Erinnerung hinzufügen",
     "done": "Erledigt",
     "noDate": "kein Datum"
+  },
+  "assistant": {
+    "title": "KI-Assistent",
+    "empty": "Frag nach einem Symptom, einem Fehlercode oder Wartung.",
+    "placeholder": "z. B. Kann ich mit P0401 fahren?",
+    "send": "Senden",
+    "sources": "Quellen"
   }
 }

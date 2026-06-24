@@ -101,6 +101,25 @@ export interface ReminderDTO {
   source: "user" | "document";
 }
 
+export interface AssistantSource {
+  title: string;
+  source: string;
+}
+
+export interface AiMessageDTO {
+  id: string;
+  vehicleId: string;
+  role: "user" | "assistant";
+  content: string;
+  sources: AssistantSource[] | null;
+  createdAt: string;
+}
+
+export interface AssistantReplyDTO {
+  answer: string;
+  sources: AssistantSource[];
+}
+
 export interface UploadFile {
   uri: string;
   name: string;
@@ -213,5 +232,12 @@ export const api = {
   completeReminder: (vehicleId: string, reminderId: string) =>
     request<{ ok: boolean }>(`/vehicles/${vehicleId}/reminders/${reminderId}/complete`, {
       method: "PATCH",
+    }),
+  assistantHistory: (vehicleId: string) =>
+    request<AiMessageDTO[]>(`/vehicles/${vehicleId}/assistant/history`),
+  askAssistant: (vehicleId: string, message: string) =>
+    request<AssistantReplyDTO>(`/vehicles/${vehicleId}/assistant`, {
+      method: "POST",
+      body: { message },
     }),
 };

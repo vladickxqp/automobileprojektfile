@@ -42,7 +42,8 @@
     "noReminders": "Nothing due",
     "history": "Service history",
     "documents": "Documents",
-    "remindersScreen": "Reminders"
+    "remindersScreen": "Reminders",
+    "assistant": "AI assistant"
   },
   "history": {
     "title": "History",
@@ -73,5 +74,12 @@
     "add": "Add reminder",
     "done": "Done",
     "noDate": "no date"
+  },
+  "assistant": {
+    "title": "AI assistant",
+    "empty": "Ask about a symptom, a fault code, or maintenance.",
+    "placeholder": "e.g. Can I drive with P0401?",
+    "send": "Send",
+    "sources": "Sources"
   }
 }

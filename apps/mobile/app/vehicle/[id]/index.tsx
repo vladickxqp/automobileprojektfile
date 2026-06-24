@@ -71,7 +71,15 @@ export default function VehicleDashboard() {
         </Card>
 
         <View style={styles.actions}>
-          <Button title={t("dashboard.history")} onPress={() => router.push(`/vehicle/${id}/history`)} />
+          <Button
+            title={t("dashboard.assistant")}
+            onPress={() => router.push(`/vehicle/${id}/assistant`)}
+          />
+          <Button
+            variant="secondary"
+            title={t("dashboard.history")}
+            onPress={() => router.push(`/vehicle/${id}/history`)}
+          />
           <Button
             variant="secondary"
             title={t("dashboard.documents")}

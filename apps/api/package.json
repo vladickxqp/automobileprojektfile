@@ -14,6 +14,7 @@
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.106.0",
     "@autolife/shared": "workspace:*",
     "@fastify/cors": "^10.0.1",
     "@fastify/jwt": "^9.0.1",
