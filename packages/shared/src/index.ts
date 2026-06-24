@@ -4,4 +4,6 @@ export * from "./user";
 export * from "./vehicle";
 export * from "./vin-decode";
 export * from "./event";
+export * from "./document";
+export * from "./reminder";
 export * from "./score";

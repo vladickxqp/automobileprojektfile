@@ -40,6 +40,73 @@ export interface CreateVehicleInput {
   mileageKm?: number;
 }
 
+export interface VehicleEventDTO {
+  id: string;
+  vehicleId: string;
+  type: "maintenance" | "repair" | "scan" | "expense" | "document" | "incident" | "score";
+  occurredAt: string;
+  mileageKm: number | null;
+  visibility: "private" | "carDNA";
+  payload: Record<string, unknown>;
+  createdAt: string;
+}
+
+export type CreateEventInput =
+  | {
+      type: "maintenance" | "repair";
+      occurredAt: string;
+      mileageKm?: number;
+      payload: {
+        title: string;
+        category?: string;
+        shopName?: string;
+        partsCost?: number;
+        laborCost?: number;
+        currency?: string;
+        notes?: string;
+      };
+    }
+  | {
+      type: "expense";
+      occurredAt: string;
+      mileageKm?: number;
+      payload: { category: string; amount: number; currency?: string; note?: string };
+    };
+
+export interface ExpenseSummaryDTO {
+  count: number;
+  byCurrency: Record<string, number>;
+  byCategory: Record<string, number>;
+}
+
+export interface DocumentDTO {
+  id: string;
+  vehicleId: string;
+  type: string;
+  fileUrl: string;
+  title: string | null;
+  issuedAt: string | null;
+  expiresAt: string | null;
+  createdAt: string;
+}
+
+export interface ReminderDTO {
+  id: string;
+  vehicleId: string;
+  kind: string;
+  title: string;
+  dueDate: string | null;
+  dueMileageKm: number | null;
+  completedAt: string | null;
+  source: "user" | "document";
+}
+
+export interface UploadFile {
+  uri: string;
+  name: string;
+  mimeType?: string;
+}
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -83,6 +150,41 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   return (await res.json()) as T;
 }
 
+async function uploadDocument(
+  vehicleId: string,
+  file: UploadFile,
+  meta: { type: string; title?: string; expiresAt?: string },
+): Promise<DocumentDTO> {
+  const form = new FormData();
+  // React Native FormData accepts this { uri, name, type } shape for file parts.
+  form.append("file", {
+    uri: file.uri,
+    name: file.name,
+    type: file.mimeType ?? "application/octet-stream",
+  } as unknown as Blob);
+  form.append("type", meta.type);
+  if (meta.title) form.append("title", meta.title);
+  if (meta.expiresAt) form.append("expiresAt", meta.expiresAt);
+
+  const token = getAccessToken();
+  const res = await fetch(`${API_URL}/vehicles/${vehicleId}/documents`, {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: form,
+  });
+  if (!res.ok) {
+    let message = res.statusText;
+    try {
+      const data = (await res.json()) as { error?: string };
+      if (data.error) message = data.error;
+    } catch {
+      // keep statusText
+    }
+    throw new ApiError(res.status, message);
+  }
+  return (await res.json()) as DocumentDTO;
+}
+
 export const api = {
   register: (email: string, password: string) =>
     request<AuthResponse>("/auth/register", { method: "POST", body: { email, password }, auth: false }),
@@ -95,4 +197,21 @@ export const api = {
     request<VehicleDTO>("/vehicles", { method: "POST", body: input }),
   updateVehicle: (id: string, input: { mileageKm?: number; plate?: string | null }) =>
     request<VehicleDTO>(`/vehicles/${id}`, { method: "PATCH", body: input }),
+  listEvents: (vehicleId: string, type?: "maintenance" | "repair" | "expense") =>
+    request<VehicleEventDTO[]>(`/vehicles/${vehicleId}/events${type ? `?type=${type}` : ""}`),
+  createEvent: (vehicleId: string, input: CreateEventInput) =>
+    request<VehicleEventDTO>(`/vehicles/${vehicleId}/events`, { method: "POST", body: input }),
+  expenseSummary: (vehicleId: string) =>
+    request<ExpenseSummaryDTO>(`/vehicles/${vehicleId}/expenses/summary`),
+  listDocuments: (vehicleId: string) => request<DocumentDTO[]>(`/vehicles/${vehicleId}/documents`),
+  uploadDocument,
+  listReminders: (vehicleId: string) => request<ReminderDTO[]>(`/vehicles/${vehicleId}/reminders`),
+  createReminder: (
+    vehicleId: string,
+    input: { kind?: string; title: string; dueDate?: string; dueMileageKm?: number },
+  ) => request<ReminderDTO>(`/vehicles/${vehicleId}/reminders`, { method: "POST", body: input }),
+  completeReminder: (vehicleId: string, reminderId: string) =>
+    request<{ ok: boolean }>(`/vehicles/${vehicleId}/reminders/${reminderId}/complete`, {
+      method: "PATCH",
+    }),
 };

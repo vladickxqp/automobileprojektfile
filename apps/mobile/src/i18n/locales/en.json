@@ -36,6 +36,42 @@
     "year": "Year",
     "engine": "Engine",
     "mileage": "Mileage",
-    "scoreSoon": "AutoScore arrives in a later phase"
+    "scoreSoon": "AutoScore arrives in a later phase",
+    "expenses": "Total spent",
+    "reminders": "Upcoming reminders",
+    "noReminders": "Nothing due",
+    "history": "Service history",
+    "documents": "Documents",
+    "remindersScreen": "Reminders"
+  },
+  "history": {
+    "title": "History",
+    "empty": "No records yet",
+    "add": "Add record"
+  },
+  "addEvent": {
+    "title": "Add record",
+    "maintenance": "Maintenance",
+    "expense": "Expense",
+    "workTitle": "What was done",
+    "category": "Category",
+    "amount": "Amount",
+    "mileage": "Mileage (km)",
+    "save": "Save",
+    "failed": "Could not save"
+  },
+  "documents": {
+    "title": "Documents",
+    "empty": "No documents yet",
+    "upload": "Upload document",
+    "expires": "expires"
+  },
+  "reminders": {
+    "title": "Reminders",
+    "empty": "No reminders",
+    "newTitle": "New reminder",
+    "add": "Add reminder",
+    "done": "Done",
+    "noDate": "no date"
   }
 }

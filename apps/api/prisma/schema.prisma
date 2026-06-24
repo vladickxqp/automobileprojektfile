@@ -62,6 +62,14 @@ enum DocumentType {
   other
 }
 
+enum ReminderKind {
+  service
+  insurance
+  tuv
+  oil
+  custom
+}
+
 model User {
   id               String           @id @default(uuid())
   email            String           @unique
@@ -99,6 +107,7 @@ model Vehicle {
   scans       DiagnosticScan[]
   scores      ReliabilityScore[]
   saleReports SaleReport[]
+  reminders   Reminder[]
 
   @@index([vin])
   @@map("vehicles")
@@ -210,4 +219,23 @@ model SaleReport {
   vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 
   @@map("sale_reports")
+}
+
+/// Explicit reminders (#8): due by date and/or mileage. Document-expiry reminders are derived
+/// on the fly from the Document table, not stored here.
+model Reminder {
+  id           String       @id @default(uuid())
+  vehicleId    String
+  kind         ReminderKind @default(custom)
+  title        String
+  dueDate      DateTime?
+  dueMileageKm Int?
+  completedAt  DateTime?
+  createdAt    DateTime     @default(now())
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@index([dueDate])
+  @@map("reminders")
 }

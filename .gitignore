@@ -22,6 +22,9 @@ android/
 # Prisma
 apps/api/prisma/migrations/dev.db*
 
+# Uploaded files (local dev storage)
+apps/api/storage/
+
 # Logs
 *.log
 npm-debug.log*

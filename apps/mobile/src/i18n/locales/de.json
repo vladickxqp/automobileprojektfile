@@ -36,6 +36,42 @@
     "year": "Jahr",
     "engine": "Motor",
     "mileage": "Kilometerstand",
-    "scoreSoon": "AutoScore folgt in einer späteren Phase"
+    "scoreSoon": "AutoScore folgt in einer späteren Phase",
+    "expenses": "Gesamtausgaben",
+    "reminders": "Anstehende Erinnerungen",
+    "noReminders": "Nichts fällig",
+    "history": "Servicehistorie",
+    "documents": "Dokumente",
+    "remindersScreen": "Erinnerungen"
+  },
+  "history": {
+    "title": "Verlauf",
+    "empty": "Noch keine Einträge",
+    "add": "Eintrag hinzufügen"
+  },
+  "addEvent": {
+    "title": "Eintrag hinzufügen",
+    "maintenance": "Wartung",
+    "expense": "Ausgabe",
+    "workTitle": "Was wurde gemacht",
+    "category": "Kategorie",
+    "amount": "Betrag",
+    "mileage": "Kilometerstand (km)",
+    "save": "Speichern",
+    "failed": "Speichern fehlgeschlagen"
+  },
+  "documents": {
+    "title": "Dokumente",
+    "empty": "Noch keine Dokumente",
+    "upload": "Dokument hochladen",
+    "expires": "läuft ab"
+  },
+  "reminders": {
+    "title": "Erinnerungen",
+    "empty": "Keine Erinnerungen",
+    "newTitle": "Neue Erinnerung",
+    "add": "Erinnerung hinzufügen",
+    "done": "Erledigt",
+    "noDate": "kein Datum"
   }
 }

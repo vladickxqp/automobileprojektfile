@@ -36,3 +36,47 @@ export const vehicleEventSchema = z.object({
   createdAt: z.coerce.date(),
 });
 export type VehicleEvent = z.infer<typeof vehicleEventSchema>;
+
+// --- Per-type payload schemas. Stored as JSON but always validated, so the timeline stays
+// structured and trainable (the whole point of the spine). ---
+
+export const maintenanceCategorySchema = z.enum([
+  "service",
+  "repair",
+  "inspection",
+  "tires",
+  "other",
+]);
+export type MaintenanceCategory = z.infer<typeof maintenanceCategorySchema>;
+
+/** Payload for `maintenance` / `repair` events (#6 service history). */
+export const maintenanceEventPayloadSchema = z.object({
+  title: z.string().min(1).max(120),
+  category: maintenanceCategorySchema.default("service"),
+  shopName: z.string().max(120).optional(),
+  partsCost: z.number().nonnegative().optional(),
+  laborCost: z.number().nonnegative().optional(),
+  currency: z.string().length(3).default("EUR"),
+  notes: z.string().max(2000).optional(),
+});
+export type MaintenanceEventPayload = z.infer<typeof maintenanceEventPayloadSchema>;
+
+export const expenseCategorySchema = z.enum([
+  "fuel",
+  "service",
+  "insurance",
+  "tax",
+  "parts",
+  "fine",
+  "other",
+]);
+export type ExpenseCategory = z.infer<typeof expenseCategorySchema>;
+
+/** Payload for `expense` events (#9 expense tracking). */
+export const expenseEventPayloadSchema = z.object({
+  category: expenseCategorySchema,
+  amount: z.number().positive(),
+  currency: z.string().length(3).default("EUR"),
+  note: z.string().max(500).optional(),
+});
+export type ExpenseEventPayload = z.infer<typeof expenseEventPayloadSchema>;
