@@ -1,0 +1,22 @@
+# Local dev services. Usage:
+#   docker compose up -d
+#   pnpm --filter @autolife/api prisma:migrate   # apply schema
+services:
+  postgres:
+    image: postgres:16
+    container_name: autolife-pg
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: autolife
+    ports:
+      - "5432:5432"
+    volumes:
+      - autolife-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d autolife"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  autolife-pgdata:

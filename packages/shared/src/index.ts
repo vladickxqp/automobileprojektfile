@@ -2,5 +2,6 @@
 // consumed by both apps/api and apps/mobile.
 export * from "./user";
 export * from "./vehicle";
+export * from "./vin-decode";
 export * from "./event";
 export * from "./score";

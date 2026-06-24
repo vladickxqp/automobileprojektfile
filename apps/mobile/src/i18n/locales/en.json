@@ -1,9 +1,41 @@
 {
+  "auth": {
+    "signInTitle": "Welcome back",
+    "signUpTitle": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "toSignUp": "No account? Sign up",
+    "toSignIn": "Have an account? Sign in",
+    "error": "Authentication failed"
+  },
   "garage": {
     "title": "My garage",
+    "addCar": "Add car",
     "empty": {
       "title": "No cars yet",
       "subtitle": "Add your first car by VIN or manually to start its digital life history."
     }
+  },
+  "addCar": {
+    "title": "Add car",
+    "vin": "VIN",
+    "vinHint": "Enter the 17-character VIN and tap Decode to auto-fill make, model and year.",
+    "vinInvalid": "A VIN must be exactly 17 characters.",
+    "decode": "Decode VIN",
+    "decodeFailed": "Could not decode VIN",
+    "make": "Make",
+    "model": "Model",
+    "year": "Year",
+    "save": "Save car",
+    "createFailed": "Could not save car"
+  },
+  "dashboard": {
+    "vin": "VIN",
+    "year": "Year",
+    "engine": "Engine",
+    "mileage": "Mileage",
+    "scoreSoon": "AutoScore arrives in a later phase"
   }
 }

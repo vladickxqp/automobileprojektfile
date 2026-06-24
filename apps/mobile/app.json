@@ -14,9 +14,13 @@
     "android": {
       "package": "com.autolife.app"
     },
-    "plugins": ["expo-router", "expo-localization"],
+    "plugins": [
+      "expo-router",
+      "expo-localization",
+      "expo-secure-store"
+    ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": false
     }
   }
 }

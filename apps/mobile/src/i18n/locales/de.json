@@ -1,9 +1,41 @@
 {
+  "auth": {
+    "signInTitle": "Willkommen zurück",
+    "signUpTitle": "Konto erstellen",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "toSignUp": "Kein Konto? Registrieren",
+    "toSignIn": "Schon ein Konto? Anmelden",
+    "error": "Anmeldung fehlgeschlagen"
+  },
   "garage": {
     "title": "Meine Garage",
+    "addCar": "Auto hinzufügen",
     "empty": {
       "title": "Noch keine Fahrzeuge",
       "subtitle": "Füge dein erstes Auto per VIN oder manuell hinzu und starte seine digitale Lebensgeschichte."
     }
+  },
+  "addCar": {
+    "title": "Auto hinzufügen",
+    "vin": "FIN",
+    "vinHint": "Gib die 17-stellige FIN ein und tippe auf „Auslesen“, um Marke, Modell und Jahr zu füllen.",
+    "vinInvalid": "Eine FIN muss genau 17 Zeichen haben.",
+    "decode": "FIN auslesen",
+    "decodeFailed": "FIN konnte nicht ausgelesen werden",
+    "make": "Marke",
+    "model": "Modell",
+    "year": "Jahr",
+    "save": "Auto speichern",
+    "createFailed": "Auto konnte nicht gespeichert werden"
+  },
+  "dashboard": {
+    "vin": "FIN",
+    "year": "Jahr",
+    "engine": "Motor",
+    "mileage": "Kilometerstand",
+    "scoreSoon": "AutoScore folgt in einer späteren Phase"
   }
 }
