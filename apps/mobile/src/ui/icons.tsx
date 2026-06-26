@@ -228,6 +228,52 @@ export function CalculatorIcon({ size = 22, color = "#fff", strokeWidth = 2 }: I
   );
 }
 
+export function SlidersIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Line x1={4} y1={8} x2={20} y2={8} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+      <Line x1={4} y1={16} x2={20} y2={16} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+      <Circle cx={9} cy={8} r={2.6} fill={color} />
+      <Circle cx={15} cy={16} r={2.6} fill={color} />
+    </Svg>
+  );
+}
+
+export function SearchIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Circle cx={11} cy={11} r={7} stroke={color} strokeWidth={strokeWidth} />
+      <Line x1={16} y1={16} x2={21} y2={21} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+export function MapPinIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11Z" stroke={color} strokeWidth={strokeWidth} strokeLinejoin="round" />
+      <Circle cx={12} cy={10} r={2.5} stroke={color} strokeWidth={strokeWidth} />
+    </Svg>
+  );
+}
+
+export function LayersIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Path d="M12 3l9 5-9 5-9-5 9-5Z" stroke={color} strokeWidth={strokeWidth} strokeLinejoin="round" />
+      <Path d="M3 13l9 5 9-5" stroke={color} strokeWidth={strokeWidth} strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+export function StarIcon({ size = 16, color = "#fff" }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 17l-5.2 2.6 1-5.8L3.5 9.7l5.9-.9L12 3.5Z" fill={color} />
+    </Svg>
+  );
+}
+
 export function GoogleIcon({ size = 20 }: IconProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24">

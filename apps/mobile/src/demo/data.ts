@@ -3,6 +3,7 @@
 import type {
   AiMessageDTO,
   DocumentDTO,
+  ModificationDTO,
   ReminderDTO,
   ScanDTO,
   ScoreDTO,
@@ -20,6 +21,7 @@ export interface DemoVehicle extends VehicleDTO {
   reminders: ReminderDTO[];
   scans: ScanDTO[];
   messages: AiMessageDTO[];
+  modifications: ModificationDTO[];
   score: ScoreDTO;
 }
 
@@ -52,6 +54,11 @@ export const demoVehicles: DemoVehicle[] = [
     createdAt: days(420),
     updatedAt: days(2),
     score: makeScore("veh-1", 86),
+    modifications: [
+      { id: "mod-1-1", vehicleId: "veh-1", title: "Eventuri Carbon-Ansaugung", category: "engine", installedAt: days(200), gainHp: 12, cost: 690, notes: null },
+      { id: "mod-1-2", vehicleId: "veh-1", title: "KW Gewindefahrwerk V3", category: "suspension", installedAt: days(150), gainHp: null, cost: 1850, notes: "Tieferlegung 25 mm" },
+      { id: "mod-1-3", vehicleId: "veh-1", title: "Akrapovič Endschalldämpfer", category: "exhaust", installedAt: days(90), gainHp: 8, cost: 2400, notes: null },
+    ],
     events: [
       {
         id: "ev-1-1",
@@ -129,6 +136,7 @@ export const demoVehicles: DemoVehicle[] = [
     createdAt: days(700),
     updatedAt: days(6),
     score: makeScore("veh-2", 72),
+    modifications: [],
     events: [
       {
         id: "ev-2-1",
@@ -173,6 +181,10 @@ export const demoVehicles: DemoVehicle[] = [
     createdAt: days(240),
     updatedAt: days(1),
     score: makeScore("veh-3", 91),
+    modifications: [
+      { id: "mod-3-1", vehicleId: "veh-3", title: "Stage 1 Software", category: "engine", installedAt: days(60), gainHp: 35, cost: 750, notes: "245 → 280 PS" },
+      { id: "mod-3-2", vehicleId: "veh-3", title: "19\" OZ Ultraleggera", category: "wheels", installedAt: days(45), gainHp: null, cost: 1600, notes: null },
+    ],
     events: [
       {
         id: "ev-3-1",

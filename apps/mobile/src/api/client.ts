@@ -166,6 +166,34 @@ export interface UploadFile {
   mimeType?: string;
 }
 
+export interface ModificationDTO {
+  id: string;
+  vehicleId: string;
+  title: string;
+  category: string; // engine | exhaust | suspension | wheels | exterior | interior | other
+  installedAt: string;
+  gainHp: number | null;
+  cost: number | null;
+  notes: string | null;
+}
+
+export interface CreateModificationInput {
+  title: string;
+  category: string;
+  installedAt: string;
+  gainHp?: number;
+  cost?: number;
+  notes?: string;
+}
+
+export interface FleetSummaryDTO {
+  vehicles: number;
+  totalKm: number;
+  totalSpentEur: number;
+  avgScore: number;
+  dueReminders: number;
+}
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -290,6 +318,11 @@ const realApi = {
     request<ScoreDTO>(`/vehicles/${vehicleId}/score`, { method: "POST", body: {} }),
   generateSaleReport: (vehicleId: string) =>
     request<SaleReportRefDTO>(`/vehicles/${vehicleId}/sale-report`, { method: "POST", body: {} }),
+  listModifications: (vehicleId: string) =>
+    request<ModificationDTO[]>(`/vehicles/${vehicleId}/modifications`),
+  createModification: (vehicleId: string, input: CreateModificationInput) =>
+    request<ModificationDTO>(`/vehicles/${vehicleId}/modifications`, { method: "POST", body: input }),
+  fleetSummary: () => request<FleetSummaryDTO>(`/fleet/summary`),
 };
 
 // In demo mode every call is served from built-in sample data (no backend). See src/api/config.ts.

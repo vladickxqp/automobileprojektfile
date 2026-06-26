@@ -11,7 +11,7 @@ import { Button } from "../src/ui/Button";
 import { Card } from "../src/ui/Card";
 import { LogoMark } from "../src/ui/Logo";
 import { Screen } from "../src/ui/Screen";
-import { ChevronRightIcon, CrownIcon, GaugeIcon, SettingsIcon } from "../src/ui/icons";
+import { ChevronRightIcon, CrownIcon, GaugeIcon, LayersIcon, SettingsIcon } from "../src/ui/icons";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -60,6 +60,8 @@ export default function ProfileScreen() {
         </Card>
 
         <Card style={{ gap: 0, paddingVertical: spacing.xs }}>
+          <Row icon={<LayersIcon size={20} color={colors.textMuted} />} label="Flotte / Mehrere Fahrzeuge" onPress={() => router.push("/fleet")} colors={colors} styles={styles} />
+          <View style={styles.divider} />
           <Row icon={<SettingsIcon size={20} color={colors.textMuted} />} label="Einstellungen" onPress={() => router.push("/settings")} colors={colors} styles={styles} />
         </Card>
 
@@ -126,4 +128,5 @@ const makeStyles = (colors: ThemeColors) =>
     row: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: spacing.md, paddingHorizontal: spacing.sm },
     rowLeft: { flexDirection: "row", alignItems: "center", gap: spacing.md },
     rowLabel: { ...typography.body, color: colors.text },
+    divider: { height: 1, backgroundColor: colors.border, marginHorizontal: spacing.sm },
   });

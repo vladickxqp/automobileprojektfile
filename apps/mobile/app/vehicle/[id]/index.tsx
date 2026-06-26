@@ -22,6 +22,9 @@ import {
   FileIcon,
   FuelIcon,
   GaugeIcon,
+  MapPinIcon,
+  SearchIcon,
+  SlidersIcon,
   SparkleIcon,
   WrenchIcon,
 } from "../../../src/ui/icons";
@@ -191,6 +194,27 @@ export default function VehicleDashboard() {
             label="Reparaturkosten"
             icon={<CalculatorIcon size={22} color={colors.primary} />}
             onPress={() => router.push(`/vehicle/${id}/calculator`)}
+            colors={colors}
+            styles={styles}
+          />
+          <ActionTile
+            label="Modifikationen"
+            icon={<SlidersIcon size={22} color={colors.primary} />}
+            onPress={() => router.push(`/vehicle/${id}/modifications`)}
+            colors={colors}
+            styles={styles}
+          />
+          <ActionTile
+            label="Teile-Suche"
+            icon={<SearchIcon size={22} color={colors.primary} />}
+            onPress={() => router.push(`/vehicle/${id}/parts`)}
+            colors={colors}
+            styles={styles}
+          />
+          <ActionTile
+            label="Services"
+            icon={<MapPinIcon size={22} color={colors.primary} />}
+            onPress={() => router.push(`/vehicle/${id}/services`)}
             colors={colors}
             styles={styles}
           />

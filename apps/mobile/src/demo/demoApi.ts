@@ -4,10 +4,13 @@ import type {
   AssistantReplyDTO,
   AuthResponse,
   CreateEventInput,
+  CreateModificationInput,
   CreateVehicleInput,
   DecodeDTO,
   DocumentDTO,
   ExpenseSummaryDTO,
+  FleetSummaryDTO,
+  ModificationDTO,
   ReminderDTO,
   SaleReportRefDTO,
   ScanDTO,
@@ -85,6 +88,7 @@ export const demoApi = {
       reminders: [],
       scans: [],
       messages: [],
+      modifications: [],
       score: {
         id: uid("score"),
         vehicleId: "",
@@ -267,5 +271,44 @@ export const demoApi = {
       },
       900,
     );
+  },
+
+  listModifications: (vehicleId: string): Promise<ModificationDTO[]> =>
+    delay([...find(vehicleId).modifications].sort((a, b) => +new Date(b.installedAt) - +new Date(a.installedAt))),
+
+  createModification: (vehicleId: string, input: CreateModificationInput): Promise<ModificationDTO> => {
+    const v = find(vehicleId);
+    const mod: ModificationDTO = {
+      id: uid("mod"),
+      vehicleId,
+      title: input.title,
+      category: input.category,
+      installedAt: input.installedAt,
+      gainHp: input.gainHp ?? null,
+      cost: input.cost ?? null,
+      notes: input.notes ?? null,
+    };
+    v.modifications.unshift(mod);
+    return delay(mod);
+  },
+
+  fleetSummary: (): Promise<FleetSummaryDTO> => {
+    const totalKm = store.reduce((s, v) => s + (v.mileageKm ?? 0), 0);
+    const totalSpentEur = store.reduce(
+      (s, v) =>
+        s +
+        v.events.reduce((a, e) => {
+          if (e.type === "expense") return a + (Number(e.payload.amount) || 0);
+          if (e.type === "maintenance" || e.type === "repair")
+            return a + (Number(e.payload.partsCost) || 0) + (Number(e.payload.laborCost) || 0);
+          return a;
+        }, 0),
+      0,
+    );
+    const avgScore = store.length
+      ? Math.round(store.reduce((s, v) => s + v.score.score, 0) / store.length)
+      : 0;
+    const dueReminders = store.reduce((s, v) => s + v.reminders.filter((r) => !r.completedAt).length, 0);
+    return delay({ vehicles: store.length, totalKm, totalSpentEur, avgScore, dueReminders });
   },
 };
