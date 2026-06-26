@@ -1,18 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, ScrollView, StyleSheet, Text } from "react-native";
 import { api } from "../src/api/client";
+import { useTheme } from "../src/theme/ThemeProvider";
+import { spacing, typography, type ThemeColors } from "../src/theme/tokens";
 import { Button } from "../src/ui/Button";
 import { Screen } from "../src/ui/Screen";
 import { TextField } from "../src/ui/TextField";
-import { colors, spacing, typography } from "../src/theme/tokens";
 
 export default function AddVehicleScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const [vin, setVin] = useState("");
   const [make, setMake] = useState("");
@@ -92,7 +95,8 @@ export default function AddVehicleScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  form: { gap: spacing.md, paddingBottom: spacing.xl },
-  hint: { ...typography.caption, color: colors.textMuted },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    form: { gap: spacing.md, paddingBottom: spacing.xl },
+    hint: { ...typography.caption, color: colors.textMuted },
+  });

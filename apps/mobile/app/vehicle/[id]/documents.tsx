@@ -1,18 +1,24 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as DocumentPicker from "expo-document-picker";
 import { Stack, useLocalSearchParams } from "expo-router";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, FlatList, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { api } from "../../../src/api/client";
+import { useTheme } from "../../../src/theme/ThemeProvider";
+import { spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
+import { Badge } from "../../../src/ui/Badge";
 import { Button } from "../../../src/ui/Button";
 import { Card } from "../../../src/ui/Card";
+import { FileIcon } from "../../../src/ui/icons";
 import { Screen } from "../../../src/ui/Screen";
-import { colors, spacing, typography } from "../../../src/theme/tokens";
 
 export default function DocumentsScreen() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const documents = useQuery({
     queryKey: ["documents", id],
@@ -51,13 +57,20 @@ export default function DocumentsScreen() {
           contentContainerStyle={styles.list}
           renderItem={({ item }) => (
             <Card>
-              <Text style={styles.title}>{item.title ?? item.type}</Text>
-              <Text style={styles.muted}>
-                {item.type}
-                {item.expiresAt
-                  ? ` · ${t("documents.expires")} ${new Date(item.expiresAt).toLocaleDateString()}`
-                  : ""}
-              </Text>
+              <View style={styles.row}>
+                <View style={styles.iconWrap}>
+                  <FileIcon size={20} color={colors.primary} />
+                </View>
+                <View style={styles.info}>
+                  <Text style={styles.title}>{item.title ?? item.type}</Text>
+                  <Text style={styles.muted}>
+                    {item.expiresAt
+                      ? `${t("documents.expires")} ${new Date(item.expiresAt).toLocaleDateString("de-DE")}`
+                      : item.type}
+                  </Text>
+                </View>
+                <Badge label={item.type} />
+              </View>
             </Card>
           )}
         />
@@ -67,8 +80,19 @@ export default function DocumentsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  list: { gap: spacing.md, paddingBottom: spacing.md },
-  title: { ...typography.body, color: colors.text, fontWeight: "600" },
-  muted: { ...typography.caption, color: colors.textMuted },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    list: { gap: spacing.md, paddingBottom: spacing.md },
+    row: { flexDirection: "row", alignItems: "center", gap: spacing.md },
+    iconWrap: {
+      width: 40,
+      height: 40,
+      borderRadius: 10,
+      backgroundColor: colors.primarySoft,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    info: { flex: 1, gap: 2 },
+    title: { ...typography.h3, color: colors.text },
+    muted: { ...typography.caption, color: colors.textMuted },
+  });

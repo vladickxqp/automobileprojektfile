@@ -1,19 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { api, type ReminderDTO } from "../../../src/api/client";
+import { useTheme } from "../../../src/theme/ThemeProvider";
+import { spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
 import { Button } from "../../../src/ui/Button";
 import { Card } from "../../../src/ui/Card";
 import { Screen } from "../../../src/ui/Screen";
 import { TextField } from "../../../src/ui/TextField";
-import { colors, spacing, typography } from "../../../src/theme/tokens";
 
 export default function RemindersScreen() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [title, setTitle] = useState("");
 
   const reminders = useQuery({
@@ -40,7 +43,7 @@ export default function RemindersScreen() {
       <Text style={styles.title}>{item.title}</Text>
       <View style={styles.row}>
         <Text style={styles.muted}>
-          {item.dueDate ? new Date(item.dueDate).toLocaleDateString() : t("reminders.noDate")} ·{" "}
+          {item.dueDate ? new Date(item.dueDate).toLocaleDateString("de-DE") : t("reminders.noDate")} ·{" "}
           {item.source}
         </Text>
         {item.source === "user" ? (
@@ -75,9 +78,10 @@ export default function RemindersScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  list: { gap: spacing.md, paddingBottom: spacing.md },
-  title: { ...typography.body, color: colors.text, fontWeight: "600" },
-  muted: { ...typography.caption, color: colors.textMuted },
-  row: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: spacing.sm },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    list: { gap: spacing.md, paddingBottom: spacing.md },
+    title: { ...typography.h3, color: colors.text },
+    muted: { ...typography.caption, color: colors.textMuted },
+    row: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: spacing.sm },
+  });

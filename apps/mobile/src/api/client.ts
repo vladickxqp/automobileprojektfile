@@ -1,5 +1,6 @@
 import { getAccessToken } from "../auth/store";
-import { API_URL } from "./config";
+import { demoApi } from "../demo/demoApi";
+import { API_URL, DEMO } from "./config";
 
 export interface VehicleDTO {
   id: string;
@@ -243,7 +244,7 @@ async function uploadDocument(
   return (await res.json()) as DocumentDTO;
 }
 
-export const api = {
+const realApi = {
   register: (email: string, password: string) =>
     request<AuthResponse>("/auth/register", { method: "POST", body: { email, password }, auth: false }),
   login: (email: string, password: string) =>
@@ -290,3 +291,6 @@ export const api = {
   generateSaleReport: (vehicleId: string) =>
     request<SaleReportRefDTO>(`/vehicles/${vehicleId}/sale-report`, { method: "POST", body: {} }),
 };
+
+// In demo mode every call is served from built-in sample data (no backend). See src/api/config.ts.
+export const api = (DEMO ? demoApi : realApi) as typeof realApi;

@@ -1,19 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { api, type AiMessageDTO } from "../../../src/api/client";
+import { useTheme } from "../../../src/theme/ThemeProvider";
+import { radius, spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
 import { Button } from "../../../src/ui/Button";
-import { Card } from "../../../src/ui/Card";
 import { Screen } from "../../../src/ui/Screen";
 import { TextField } from "../../../src/ui/TextField";
-import { colors, spacing, typography } from "../../../src/theme/tokens";
 
 export default function AssistantScreen() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [message, setMessage] = useState("");
 
   const history = useQuery({
@@ -34,14 +36,14 @@ export default function AssistantScreen() {
     const isUser = item.role === "user";
     return (
       <View style={[styles.row, isUser ? styles.rowRight : styles.rowLeft]}>
-        <Card style={[styles.bubble, isUser ? styles.userBubble : styles.assistantBubble]}>
-          <Text style={styles.text}>{item.content}</Text>
+        <View style={[styles.bubble, isUser ? styles.userBubble : styles.assistantBubble]}>
+          <Text style={[styles.text, isUser && styles.userText]}>{item.content}</Text>
           {item.sources && item.sources.length > 0 ? (
-            <Text style={styles.sources}>
+            <Text style={[styles.sources, isUser && styles.userText]}>
               {t("assistant.sources")}: {item.sources.map((s) => s.title).join("; ")}
             </Text>
           ) : null}
-        </Card>
+        </View>
       </View>
     );
   };
@@ -81,16 +83,23 @@ export default function AssistantScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  list: { gap: spacing.md, paddingBottom: spacing.md },
-  row: { flexDirection: "row" },
-  rowRight: { justifyContent: "flex-end" },
-  rowLeft: { justifyContent: "flex-start" },
-  bubble: { maxWidth: "88%" },
-  userBubble: { backgroundColor: colors.primary, borderColor: colors.primary },
-  assistantBubble: {},
-  text: { ...typography.body, color: colors.text },
-  sources: { ...typography.caption, color: colors.textMuted, marginTop: spacing.xs },
-  muted: { ...typography.caption, color: colors.textMuted },
-  error: { ...typography.caption, color: colors.danger },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    list: { gap: spacing.md, paddingBottom: spacing.md },
+    row: { flexDirection: "row" },
+    rowRight: { justifyContent: "flex-end" },
+    rowLeft: { justifyContent: "flex-start" },
+    bubble: {
+      maxWidth: "88%",
+      borderRadius: radius.lg,
+      padding: spacing.md,
+      borderWidth: 1,
+    },
+    userBubble: { backgroundColor: colors.primary, borderColor: colors.primary },
+    assistantBubble: { backgroundColor: colors.surface, borderColor: colors.border },
+    text: { ...typography.body, color: colors.text },
+    userText: { color: colors.onPrimary },
+    sources: { ...typography.caption, color: colors.textMuted, marginTop: spacing.xs },
+    muted: { ...typography.caption, color: colors.textMuted },
+    error: { ...typography.caption, color: colors.danger },
+  });

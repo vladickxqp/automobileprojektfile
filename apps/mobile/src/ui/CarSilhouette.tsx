@@ -1,5 +1,5 @@
 import Svg, { Circle, Line, Path } from "react-native-svg";
-import { colors } from "../theme/tokens";
+import { useTheme } from "../theme/ThemeProvider";
 
 /**
  * Blueprint-style side silhouette of a car — the app's signature "instrument" graphic.
@@ -7,6 +7,7 @@ import { colors } from "../theme/tokens";
  * roofline and brake discs. (A full interactive 3D model via react-three-fiber is a separate step.)
  */
 export function CarSilhouette({ width = 240, height = 104 }: { width?: number; height?: number }) {
+  const { colors } = useTheme();
   return (
     <Svg width={width} height={height} viewBox="0 0 280 120" fill="none">
       <Line x1="30" y1="96" x2="262" y2="96" stroke={colors.border} strokeWidth={2} />

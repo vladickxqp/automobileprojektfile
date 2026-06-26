@@ -1,19 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { api } from "../../../src/api/client";
 import { createElm327, type AdapterMode } from "../../../src/obd";
+import { useTheme } from "../../../src/theme/ThemeProvider";
+import { spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
 import { Button } from "../../../src/ui/Button";
 import { Card } from "../../../src/ui/Card";
 import { Screen } from "../../../src/ui/Screen";
-import { colors, spacing, typography } from "../../../src/theme/tokens";
 
 export default function DiagnosticsScreen() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [mode, setMode] = useState<AdapterMode>("demo");
   const [status, setStatus] = useState<string | null>(null);
 
@@ -78,7 +81,7 @@ export default function DiagnosticsScreen() {
           renderItem={({ item }) => (
             <Card>
               <Text style={styles.muted}>
-                {new Date(item.scannedAt).toLocaleString()}
+                {new Date(item.scannedAt).toLocaleString("de-DE")}
                 {item.adapterInfo ? ` · ${item.adapterInfo}` : ""}
               </Text>
               {item.decoded.length === 0 ? (
@@ -87,9 +90,7 @@ export default function DiagnosticsScreen() {
                 item.decoded.map((d) => (
                   <View key={d.code} style={styles.codeRow}>
                     <Text style={styles.code}>{d.code}</Text>
-                    <Text style={styles.codeDesc}>
-                      {d.description ?? t("diagnostics.unknownCode")}
-                    </Text>
+                    <Text style={styles.codeDesc}>{d.description ?? t("diagnostics.unknownCode")}</Text>
                   </View>
                 ))
               )}
@@ -101,14 +102,15 @@ export default function DiagnosticsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  tabs: { flexDirection: "row", gap: spacing.sm },
-  tab: { flex: 1 },
-  list: { gap: spacing.md, paddingVertical: spacing.md },
-  muted: { ...typography.caption, color: colors.textMuted },
-  error: { ...typography.caption, color: colors.danger },
-  ok: { ...typography.body, color: colors.success, marginTop: spacing.xs },
-  codeRow: { marginTop: spacing.sm },
-  code: { ...typography.body, color: colors.warning, fontWeight: "700" },
-  codeDesc: { ...typography.body, color: colors.text },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    tabs: { flexDirection: "row", gap: spacing.sm },
+    tab: { flex: 1 },
+    list: { gap: spacing.md, paddingVertical: spacing.md },
+    muted: { ...typography.caption, color: colors.textMuted },
+    error: { ...typography.caption, color: colors.danger },
+    ok: { ...typography.body, color: colors.success, marginTop: spacing.xs },
+    codeRow: { marginTop: spacing.sm },
+    code: { ...typography.body, color: colors.warning, fontWeight: "700" },
+    codeDesc: { ...typography.body, color: colors.text },
+  });

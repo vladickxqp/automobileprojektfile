@@ -1,6 +1,9 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { api } from "../api/client";
+import { DEMO } from "../api/config";
 import { clearToken, loadToken, saveToken } from "./store";
+
+const DEMO_USER: AuthUser = { id: "demo-user", email: "demo@autolife.app" };
 
 interface AuthUser {
   id: string;
@@ -22,6 +25,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    // Demo mode: start signed in so the preview lands straight in the garage. Sign-out still
+    // returns to the (fully styled) sign-in screen.
+    if (DEMO) {
+      setUser(DEMO_USER);
+      setReady(true);
+      return;
+    }
     void loadToken().then((token) => {
       // No /me endpoint yet (added in a later phase): a stored token means "signed in".
       if (token) setUser({ id: "", email: "" });

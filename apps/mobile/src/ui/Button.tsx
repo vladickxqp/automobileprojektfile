@@ -1,23 +1,44 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
-import { colors, radius, spacing, typography } from "../theme/tokens";
+import { useMemo, type ReactNode } from "react";
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native";
+import { useTheme } from "../theme/ThemeProvider";
+import { radius, spacing, typography } from "../theme/tokens";
+import type { ThemeColors } from "../theme/tokens";
 
 interface ButtonProps {
   title: string;
   onPress?: () => void;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "md" | "lg";
   loading?: boolean;
   disabled?: boolean;
+  icon?: ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
 export function Button({
   title,
   onPress,
   variant = "primary",
+  size = "md",
   loading = false,
   disabled = false,
+  icon,
+  style,
 }: ButtonProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const inactive = disabled || loading;
-  const secondary = variant === "secondary";
+  const labelColor =
+    variant === "primary" ? colors.onPrimary : variant === "ghost" ? colors.primary : colors.text;
 
   return (
     <Pressable
@@ -25,37 +46,55 @@ export function Button({
       disabled={inactive}
       style={({ pressed }) => [
         styles.base,
-        secondary ? styles.secondary : styles.primary,
+        size === "lg" && styles.lg,
+        variant === "primary" && styles.primary,
+        variant === "secondary" && styles.secondary,
+        variant === "ghost" && styles.ghost,
         inactive && styles.inactive,
-        pressed && !inactive && (secondary ? styles.secondaryPressed : styles.primaryPressed),
+        pressed && !inactive && styles.pressed,
+        style,
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={secondary ? colors.text : colors.onPrimary} />
+        <ActivityIndicator color={labelColor} />
       ) : (
-        <Text style={[styles.label, secondary ? styles.secondaryLabel : styles.primaryLabel]}>
-          {title}
-        </Text>
+        <View style={styles.content}>
+          {icon ? <View style={styles.icon}>{icon}</View> : null}
+          <Text style={[styles.label, { color: labelColor }]} numberOfLines={1}>
+            {title}
+          </Text>
+        </View>
       )}
     </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
-  base: {
-    height: 50,
-    borderRadius: radius.md,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: spacing.lg,
-    borderWidth: 1,
-  },
-  primary: { backgroundColor: colors.primary, borderColor: colors.primary },
-  primaryPressed: { opacity: 0.85 },
-  secondary: { backgroundColor: "transparent", borderColor: colors.borderStrong },
-  secondaryPressed: { backgroundColor: colors.surfaceAlt },
-  inactive: { opacity: 0.4 },
-  label: { ...typography.body, fontWeight: "700", textTransform: "uppercase", letterSpacing: 1 },
-  primaryLabel: { color: colors.onPrimary },
-  secondaryLabel: { color: colors.text },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    base: {
+      height: 50,
+      borderRadius: radius.md,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: spacing.lg,
+      borderWidth: 1,
+      borderColor: "transparent",
+      ...Platform.select({ web: { cursor: "pointer" } as object, default: {} }),
+    },
+    lg: { height: 56, borderRadius: radius.lg },
+    content: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+    icon: { marginLeft: -2 },
+    primary: {
+      backgroundColor: colors.primary,
+      borderColor: colors.primary,
+      ...Platform.select({
+        web: { boxShadow: "0 10px 26px -12px rgba(242,85,42,0.7)" } as object,
+        default: {},
+      }),
+    },
+    secondary: { backgroundColor: colors.surfaceAlt, borderColor: colors.borderStrong },
+    ghost: { backgroundColor: "transparent", borderColor: "transparent" },
+    inactive: { opacity: 0.4 },
+    pressed: { opacity: 0.85, transform: [{ scale: 0.99 }] },
+    label: { ...typography.body, fontWeight: "700", letterSpacing: 0.3 },
+  });

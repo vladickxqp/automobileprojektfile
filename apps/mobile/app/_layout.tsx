@@ -4,25 +4,40 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../src/i18n";
 import { AuthProvider } from "../src/auth/AuthContext";
-import { colors } from "../src/theme/tokens";
+import { ThemeProvider, useTheme } from "../src/theme/ThemeProvider";
+import { ThemeToggle } from "../src/ui/ThemeToggle";
 
 const queryClient = new QueryClient();
+
+function ThemedStack() {
+  const { colors, isDark } = useTheme();
+  return (
+    <>
+      <StatusBar style={isDark ? "light" : "dark"} />
+      <Stack
+        screenOptions={{
+          headerStyle: { backgroundColor: colors.background },
+          headerTintColor: colors.text,
+          headerTitleStyle: { fontWeight: "700" },
+          headerShadowVisible: false,
+          contentStyle: { backgroundColor: colors.background },
+          headerRight: () => <ThemeToggle />,
+        }}
+      />
+    </>
+  );
+}
 
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <StatusBar style="light" />
-          <Stack
-            screenOptions={{
-              headerStyle: { backgroundColor: colors.background },
-              headerTintColor: colors.text,
-              contentStyle: { backgroundColor: colors.background },
-            }}
-          />
-        </AuthProvider>
-      </QueryClientProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <ThemedStack />
+          </AuthProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }

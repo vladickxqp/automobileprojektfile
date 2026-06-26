@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, Text, TextInput, View, type TextInputProps } from "react-native";
-import { colors, radius, spacing, typography } from "../theme/tokens";
+import { useTheme } from "../theme/ThemeProvider";
+import { radius, spacing, typography } from "../theme/tokens";
+import type { ThemeColors } from "../theme/tokens";
 
 interface TextFieldProps extends TextInputProps {
   label?: string;
 }
 
 export function TextField({ label, style, onFocus, onBlur, ...props }: TextFieldProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [focused, setFocused] = useState(false);
 
   return (
@@ -29,23 +33,23 @@ export function TextField({ label, style, onFocus, onBlur, ...props }: TextField
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: { gap: spacing.xs },
-  label: {
-    ...typography.caption,
-    color: colors.textMuted,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-  },
-  input: {
-    ...typography.body,
-    color: colors.text,
-    backgroundColor: colors.surfaceAlt,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.md,
-    height: 50,
-  },
-  inputFocused: { borderColor: colors.primary },
-});
+const makeStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    wrap: { gap: spacing.xs },
+    label: {
+      ...typography.label,
+      color: colors.textMuted,
+      textTransform: "uppercase",
+    },
+    input: {
+      ...typography.body,
+      color: colors.text,
+      backgroundColor: colors.surfaceAlt,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: radius.md,
+      paddingHorizontal: spacing.md,
+      height: 52,
+    },
+    inputFocused: { borderColor: colors.primary },
+  });
