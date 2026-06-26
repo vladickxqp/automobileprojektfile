@@ -27,6 +27,14 @@ export default function GarageScreen() {
     queryFn: api.listVehicles,
     enabled: ready && !!user,
   });
+  const fleet = useQuery({
+    queryKey: ["fleetSummary"],
+    queryFn: api.fleetSummary,
+    enabled: ready && !!user,
+  });
+
+  const hour = new Date().getHours();
+  const greeting = hour < 11 ? "Guten Morgen" : hour < 18 ? "Guten Tag" : "Guten Abend";
 
   if (!ready) {
     return (
@@ -60,12 +68,21 @@ export default function GarageScreen() {
             <Card elevated style={styles.hero}>
               <View style={styles.heroTop}>
                 <View>
-                  <Text style={styles.heroLabel}>CarDNA</Text>
+                  <Text style={styles.heroLabel}>{greeting} 👋</Text>
                   <Text style={styles.heroTitle}>{t("garage.title")}</Text>
                 </View>
                 <Badge label={`${count} ${count === 1 ? "Auto" : "Autos"}`} tone="accent" />
               </View>
               <Car3D height={220} />
+              {fleet.data ? (
+                <View style={styles.glance}>
+                  <Glance value={String(fleet.data.vehicles)} label="Autos" colors={colors} styles={styles} />
+                  <View style={styles.glanceDiv} />
+                  <Glance value={String(fleet.data.avgScore)} label="Ø-Score" colors={colors} styles={styles} />
+                  <View style={styles.glanceDiv} />
+                  <Glance value={String(fleet.data.dueReminders)} label="Fällig" colors={colors} styles={styles} />
+                </View>
+              ) : null}
             </Card>
             {count > 0 ? <Text style={styles.sectionLabel}>FAHRZEUGE</Text> : null}
           </View>
@@ -121,9 +138,41 @@ export default function GarageScreen() {
   );
 }
 
+function Glance({
+  value,
+  label,
+  colors,
+  styles,
+}: {
+  value: string;
+  label: string;
+  colors: ThemeColors;
+  styles: ReturnType<typeof makeStyles>;
+}) {
+  return (
+    <View style={styles.glanceItem}>
+      <Text style={styles.glanceValue}>{value}</Text>
+      <Text style={styles.glanceLabel}>{label}</Text>
+    </View>
+  );
+}
+
 const makeStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     list: { padding: spacing.lg, gap: spacing.md, paddingBottom: spacing.xl },
+    glance: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-around",
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      paddingTop: spacing.md,
+      marginTop: spacing.xs,
+    },
+    glanceItem: { alignItems: "center", flex: 1, gap: 2 },
+    glanceValue: { ...typography.h2, color: colors.text },
+    glanceLabel: { ...typography.label, color: colors.textMuted },
+    glanceDiv: { width: 1, height: 28, backgroundColor: colors.border },
     headerWrap: { gap: spacing.md },
     hero: { gap: spacing.md, paddingBottom: spacing.sm },
     heroTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
