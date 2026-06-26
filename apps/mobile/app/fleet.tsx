@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { api } from "../src/api/client";
 import { useTheme } from "../src/theme/ThemeProvider";
@@ -13,6 +14,7 @@ import { StatTile } from "../src/ui/StatTile";
 import { BellIcon, ChartIcon, ChevronRightIcon, GaugeIcon, LayersIcon } from "../src/ui/icons";
 
 export default function FleetScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
@@ -23,7 +25,7 @@ export default function FleetScreen() {
   if (summary.isLoading || !summary.data) {
     return (
       <Screen>
-        <Stack.Screen options={{ title: "Flotte" }} />
+        <Stack.Screen options={{ title: t("fleet.title") }} />
         <ActivityIndicator color={colors.primary} />
       </Screen>
     );
@@ -33,28 +35,28 @@ export default function FleetScreen() {
 
   return (
     <Screen flush>
-      <Stack.Screen options={{ title: "Flotte" }} />
+      <Stack.Screen options={{ title: t("fleet.title") }} />
       <ScrollView contentContainerStyle={styles.content}>
         <Card elevated style={styles.hero}>
-          <ScoreRing score={s.avgScore} label="Ø ZUSTAND" size={120} />
+          <ScoreRing score={s.avgScore} label={t("fleet.avgCondition")} size={120} />
           <View style={styles.heroSide}>
             <View style={styles.heroRow}>
               <LayersIcon size={18} color={colors.primary} />
-              <Text style={styles.heroText}>{s.vehicles} Fahrzeuge</Text>
+              <Text style={styles.heroText}>{t("fleet.vehicles", { count: s.vehicles })}</Text>
             </View>
             <View style={styles.heroRow}>
               <BellIcon size={18} color={colors.warning} />
-              <Text style={styles.heroText}>{s.dueReminders} offene Erinnerungen</Text>
+              <Text style={styles.heroText}>{t("fleet.dueReminders", { count: s.dueReminders })}</Text>
             </View>
           </View>
         </Card>
 
         <View style={styles.statRow}>
-          <StatTile label="Gesamt-km" value={`${s.totalKm.toLocaleString("de-DE")} km`} icon={<GaugeIcon size={18} color={colors.primary} />} />
-          <StatTile label="Kosten gesamt" value={`${s.totalSpentEur.toLocaleString("de-DE")} €`} icon={<ChartIcon size={18} color={colors.primary} />} />
+          <StatTile label={t("fleet.totalKm")} value={`${s.totalKm.toLocaleString("de-DE")} km`} icon={<GaugeIcon size={18} color={colors.primary} />} />
+          <StatTile label={t("fleet.totalCost")} value={`${s.totalSpentEur.toLocaleString("de-DE")} €`} icon={<ChartIcon size={18} color={colors.primary} />} />
         </View>
 
-        <Text style={styles.sectionLabel}>FAHRZEUGE</Text>
+        <Text style={styles.sectionLabel}>{t("garage.vehicles")}</Text>
         {(vehicles.data ?? []).map((v) => (
           <Pressable key={v.id} onPress={() => router.push(`/vehicle/${v.id}`)}>
             {({ pressed }) => (

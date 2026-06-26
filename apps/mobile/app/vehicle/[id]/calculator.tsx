@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTheme } from "../../../src/theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
@@ -34,6 +35,7 @@ const RATES = [
 const fmt = (n: number) => `${Math.round(n).toLocaleString("de-DE")} €`;
 
 export default function CalculatorScreen() {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [repair, setRepair] = useState<Repair>(REPAIRS[1]);
@@ -46,28 +48,28 @@ export default function CalculatorScreen() {
 
   return (
     <Screen flush>
-      <Stack.Screen options={{ title: "Reparaturkosten" }} />
+      <Stack.Screen options={{ title: t("calculator.title") }} />
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.sectionLabel}>REPARATUR WÄHLEN</Text>
+        <Text style={styles.sectionLabel}>{t("calculator.chooseRepair")}</Text>
         <View style={styles.chips}>
           {REPAIRS.map((r) => {
             const active = r.key === repair.key;
             return (
               <Pressable key={r.key} onPress={() => setRepair(r)} style={[styles.chip, active && styles.chipActive]}>
-                <Text style={[styles.chipText, active && styles.chipTextActive]}>{r.label}</Text>
+                <Text style={[styles.chipText, active && styles.chipTextActive]}>{t(`calculator.repairs.${r.key}`)}</Text>
               </Pressable>
             );
           })}
         </View>
 
-        <Text style={styles.sectionLabel}>WERKSTATT</Text>
+        <Text style={styles.sectionLabel}>{t("calculator.workshop")}</Text>
         <View style={styles.segment}>
           {RATES.map((r) => {
             const active = r.key === rateKey;
             return (
               <Pressable key={r.key} onPress={() => setRateKey(r.key)} style={[styles.segmentItem, active && styles.segmentActive]}>
                 <Text style={[styles.segmentText, active && styles.segmentTextActive]}>
-                  {r.label} · {r.rate} €/h
+                  {t(`calculator.${r.key}`)} · {r.rate} €/h
                 </Text>
               </Pressable>
             );
@@ -76,27 +78,25 @@ export default function CalculatorScreen() {
 
         <View style={styles.cards}>
           <Card style={styles.estimate}>
-            <Text style={styles.estLabel}>Selbst (DIY)</Text>
+            <Text style={styles.estLabel}>{t("calculator.diy")}</Text>
             <Text style={styles.estValue}>{fmt(partsAvg)}</Text>
-            <Text style={styles.estSub}>Nur Teile · {fmt(repair.partsMin)}–{fmt(repair.partsMax)}</Text>
+            <Text style={styles.estSub}>{t("calculator.partsOnly")} · {fmt(repair.partsMin)}–{fmt(repair.partsMax)}</Text>
           </Card>
           <Card accent style={styles.estimate}>
-            <Text style={styles.estLabel}>Werkstatt</Text>
+            <Text style={styles.estLabel}>{t("calculator.workshopLabel")}</Text>
             <Text style={[styles.estValue, { color: colors.primary }]}>{fmt(proTotal)}</Text>
-            <Text style={styles.estSub}>Teile + {repair.laborHours} h Arbeit</Text>
+            <Text style={styles.estSub}>{t("calculator.partsAndLabor", { hours: repair.laborHours })}</Text>
           </Card>
         </View>
 
         <Card>
-          <Row label="Teile (Ø)" value={fmt(partsAvg)} colors={colors} styles={styles} />
-          <Row label={`Arbeit (${repair.laborHours} h × ${rate} €)`} value={fmt(labor)} colors={colors} styles={styles} />
+          <Row label={t("calculator.partsAvg")} value={fmt(partsAvg)} colors={colors} styles={styles} />
+          <Row label={t("calculator.labor", { hours: repair.laborHours, rate })} value={fmt(labor)} colors={colors} styles={styles} />
           <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>Werkstatt gesamt</Text>
+            <Text style={styles.totalLabel}>{t("calculator.totalWorkshop")}</Text>
             <Text style={styles.totalValue}>{fmt(proTotal)}</Text>
           </View>
-          <Text style={styles.disclaimer}>
-            Richtwerte zur Orientierung — abhängig von Modell, Region und Teilequalität. Kein verbindliches Angebot.
-          </Text>
+          <Text style={styles.disclaimer}>{t("calculator.disclaimer")}</Text>
         </Card>
       </ScrollView>
     </Screen>

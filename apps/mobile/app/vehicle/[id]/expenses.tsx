@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 import { api } from "../../../src/api/client";
 import { useTheme } from "../../../src/theme/ThemeProvider";
@@ -8,24 +9,14 @@ import { radius, spacing, typography, type ThemeColors } from "../../../src/them
 import { Card } from "../../../src/ui/Card";
 import { Screen } from "../../../src/ui/Screen";
 
-const CATEGORY_LABELS: Record<string, string> = {
-  fuel: "Kraftstoff",
-  service: "Service",
-  repair: "Reparatur",
-  insurance: "Versicherung",
-  tax: "Steuer",
-  tires: "Reifen",
-  parts: "Teile",
-  modification: "Tuning",
-  other: "Sonstiges",
-};
-
 const BAR_COLORS = ["#F2552A", "#2FB47C", "#E8A13C", "#5B8DEF", "#A77BCA", "#E5484D"];
 
 export default function ExpensesScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
+  const catLabel = (c: string) => t(`expenses.categories.${c}`, { defaultValue: c });
 
   const summary = useQuery({ queryKey: ["expenses", id], queryFn: () => api.expenseSummary(id), enabled: !!id });
   const events = useQuery({ queryKey: ["events", id, "expense"], queryFn: () => api.listEvents(id, "expense"), enabled: !!id });
@@ -33,7 +24,7 @@ export default function ExpensesScreen() {
   if (summary.isLoading) {
     return (
       <Screen>
-        <Stack.Screen options={{ title: "Ausgaben" }} />
+        <Stack.Screen options={{ title: t("expenses.title") }} />
         <ActivityIndicator color={colors.primary} />
       </Screen>
     );
@@ -49,21 +40,21 @@ export default function ExpensesScreen() {
       <Stack.Screen options={{ title: "Ausgaben" }} />
       <ScrollView contentContainerStyle={styles.content}>
         <Card elevated style={styles.totalCard}>
-          <Text style={styles.totalLabel}>GESAMTKOSTEN</Text>
+          <Text style={styles.totalLabel}>{t("expenses.total")}</Text>
           <Text style={styles.totalValue}>{totalEur.toLocaleString("de-DE")} €</Text>
-          <Text style={styles.totalSub}>{summary.data?.count ?? 0} Buchungen erfasst</Text>
+          <Text style={styles.totalSub}>{t("expenses.bookings", { count: summary.data?.count ?? 0 })}</Text>
         </Card>
 
         <Card>
-          <Text style={styles.cardTitle}>Nach Kategorie</Text>
+          <Text style={styles.cardTitle}>{t("expenses.byCategory")}</Text>
           {categories.length === 0 ? (
-            <Text style={styles.muted}>Noch keine Ausgaben erfasst.</Text>
+            <Text style={styles.muted}>{t("expenses.noExpenses")}</Text>
           ) : (
             <View style={styles.bars}>
               {categories.map(([cat, value], i) => (
                 <View key={cat} style={styles.barRow}>
                   <View style={styles.barHead}>
-                    <Text style={styles.barLabel}>{CATEGORY_LABELS[cat] ?? cat}</Text>
+                    <Text style={styles.barLabel}>{catLabel(cat)}</Text>
                     <Text style={styles.barValue}>{value.toLocaleString("de-DE")} €</Text>
                   </View>
                   <View style={styles.track}>
@@ -81,16 +72,14 @@ export default function ExpensesScreen() {
         </Card>
 
         <Card>
-          <Text style={styles.cardTitle}>Verlauf</Text>
+          <Text style={styles.cardTitle}>{t("expenses.timeline")}</Text>
           {(events.data?.length ?? 0) === 0 ? (
-            <Text style={styles.muted}>Keine Einzelbuchungen.</Text>
+            <Text style={styles.muted}>{t("expenses.noEntries")}</Text>
           ) : (
             events.data!.map((e) => (
               <View key={e.id} style={styles.eventRow}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.eventTitle}>
-                    {CATEGORY_LABELS[String(e.payload.category ?? "other")] ?? String(e.payload.category)}
-                  </Text>
+                  <Text style={styles.eventTitle}>{catLabel(String(e.payload.category ?? "other"))}</Text>
                   <Text style={styles.muted}>{new Date(e.occurredAt).toLocaleDateString("de-DE")}</Text>
                 </View>
                 <Text style={styles.eventAmount}>

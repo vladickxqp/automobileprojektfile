@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Svg, { Circle, Line, Rect } from "react-native-svg";
 import { useTheme } from "../../../src/theme/ThemeProvider";
@@ -38,6 +39,7 @@ const SERVICES: Service[] = [
 ];
 
 export default function ServicesScreen() {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [filter, setFilter] = useState("all");
@@ -48,7 +50,7 @@ export default function ServicesScreen() {
 
   return (
     <Screen flush>
-      <Stack.Screen options={{ title: "Services in der Nähe" }} />
+      <Stack.Screen options={{ title: t("services.title") }} />
       <ScrollView contentContainerStyle={styles.content}>
         {/* Faux map */}
         <View style={styles.mapWrap}>
@@ -78,7 +80,7 @@ export default function ServicesScreen() {
             const active = c.key === filter;
             return (
               <Pressable key={c.key} onPress={() => setFilter(c.key)} style={[styles.chip, active && styles.chipActive]}>
-                <Text style={[styles.chipText, active && styles.chipTextActive]}>{c.label}</Text>
+                <Text style={[styles.chipText, active && styles.chipTextActive]}>{t(`services.${c.key}`)}</Text>
               </Pressable>
             );
           })}
@@ -96,7 +98,7 @@ export default function ServicesScreen() {
                     <Text style={styles.ratingText}>{s.rating.toFixed(1)}</Text>
                   </View>
                   <Text style={styles.muted}>· {s.price}</Text>
-                  <Badge label={s.open ? "Geöffnet" : "Geschlossen"} tone={s.open ? "success" : "danger"} />
+                  <Badge label={s.open ? t("common.open") : t("common.closed")} tone={s.open ? "success" : "danger"} />
                 </View>
               </View>
               <View style={styles.distBox}>
@@ -106,7 +108,7 @@ export default function ServicesScreen() {
             </View>
           </Card>
         ))}
-        <Text style={styles.note}>Demo-Daten — echte Karte folgt mit Maps-Anbindung.</Text>
+        <Text style={styles.note}>{t("services.note")}</Text>
       </ScrollView>
     </Screen>
   );

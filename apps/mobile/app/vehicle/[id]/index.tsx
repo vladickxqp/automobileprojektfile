@@ -29,26 +29,24 @@ import {
   WrenchIcon,
 } from "../../../src/ui/icons";
 
-const DOC_LABEL: Record<string, string> = {
-  insurance: "Versicherung",
-  TÜV: "TÜV / HU",
-  techpassport: "Fahrzeugschein",
-  invoice: "Rechnung",
-  contract: "Vertrag",
-};
-
 interface Upcoming {
   id: string;
   label: string;
   date: string;
 }
 
-function buildUpcoming(reminders: ReminderDTO[], documents: DocumentDTO[]): Upcoming[] {
+function buildUpcoming(
+  reminders: ReminderDTO[],
+  documents: DocumentDTO[],
+  t: (key: string) => string,
+): Upcoming[] {
+  const docLabel = (type: string) =>
+    type === "insurance" ? t("settings.insurance") : type === "TÜV" ? t("settings.tuv") : type;
   const items: Upcoming[] = [
     ...reminders.filter((r) => r.dueDate).map((r) => ({ id: `r-${r.id}`, label: r.title, date: r.dueDate as string })),
     ...documents
       .filter((d) => d.expiresAt)
-      .map((d) => ({ id: `d-${d.id}`, label: `${DOC_LABEL[d.type] ?? d.type} läuft ab`, date: d.expiresAt as string })),
+      .map((d) => ({ id: `d-${d.id}`, label: `${docLabel(d.type)} ${t("documents.expires")}`, date: d.expiresAt as string })),
   ];
   return items.sort((a, b) => +new Date(a.date) - +new Date(b.date)).slice(0, 4);
 }
@@ -61,12 +59,6 @@ function dueColor(date: string, colors: ThemeColors): string {
   if (d < 30) return colors.danger;
   if (d < 90) return colors.warning;
   return colors.textMuted;
-}
-function dueText(date: string): string {
-  const d = daysUntil(date);
-  if (d < 0) return "überfällig";
-  if (d === 0) return "heute";
-  return `in ${d} Tg.`;
 }
 
 export default function VehicleDashboard() {
@@ -105,7 +97,7 @@ export default function VehicleDashboard() {
 
   const v = vehicle.data;
   const eur = summary.data?.byCurrency.EUR;
-  const upcoming = buildUpcoming(reminders.data ?? [], documents.data ?? []);
+  const upcoming = buildUpcoming(reminders.data ?? [], documents.data ?? [], t);
   const scoreValue = score.data?.score ?? null;
   const factors = score.data?.factors ?? [];
 
@@ -166,7 +158,7 @@ export default function VehicleDashboard() {
         {/* Upcoming deadlines (reminders + document expiries) */}
         <Card>
           <View style={styles.cardHeadRow}>
-            <Text style={styles.cardTitle}>Anstehend</Text>
+            <Text style={styles.cardTitle}>{t("dashboard.upcoming")}</Text>
             <BellIcon size={18} color={colors.textMuted} />
           </View>
           {upcoming.length === 0 ? (
@@ -174,6 +166,8 @@ export default function VehicleDashboard() {
           ) : (
             upcoming.map((u) => {
               const tone = dueColor(u.date, colors);
+              const days = daysUntil(u.date);
+              const inText = days < 0 ? t("common.overdue") : days === 0 ? t("common.today") : t("common.inDays", { count: days });
               return (
                 <View key={u.id} style={styles.upRow}>
                   <View style={[styles.upDot, { backgroundColor: tone }]} />
@@ -181,7 +175,7 @@ export default function VehicleDashboard() {
                     {u.label}
                   </Text>
                   <Text style={styles.upDate}>{new Date(u.date).toLocaleDateString("de-DE")}</Text>
-                  <Text style={[styles.upIn, { color: tone }]}>{dueText(u.date)}</Text>
+                  <Text style={[styles.upIn, { color: tone }]}>{inText}</Text>
                 </View>
               );
             })
@@ -206,7 +200,7 @@ export default function VehicleDashboard() {
         </Card>
 
         {/* Quick actions */}
-        <Text style={styles.sectionLabel}>WERKZEUGE</Text>
+        <Text style={styles.sectionLabel}>{t("dashboard.tools")}</Text>
         <View style={styles.actionsGrid}>
           <ActionTile
             label={t("dashboard.assistant")}
@@ -230,35 +224,35 @@ export default function VehicleDashboard() {
             styles={styles}
           />
           <ActionTile
-            label="Kosten"
+            label={t("dashboard.costs")}
             icon={<ChartIcon size={22} color={colors.primary} />}
             onPress={() => router.push(`/vehicle/${id}/expenses`)}
             colors={colors}
             styles={styles}
           />
           <ActionTile
-            label="Reparaturkosten"
+            label={t("dashboard.repairCosts")}
             icon={<CalculatorIcon size={22} color={colors.primary} />}
             onPress={() => router.push(`/vehicle/${id}/calculator`)}
             colors={colors}
             styles={styles}
           />
           <ActionTile
-            label="Modifikationen"
+            label={t("dashboard.modifications")}
             icon={<SlidersIcon size={22} color={colors.primary} />}
             onPress={() => router.push(`/vehicle/${id}/modifications`)}
             colors={colors}
             styles={styles}
           />
           <ActionTile
-            label="Teile-Suche"
+            label={t("dashboard.parts")}
             icon={<SearchIcon size={22} color={colors.primary} />}
             onPress={() => router.push(`/vehicle/${id}/parts`)}
             colors={colors}
             styles={styles}
           />
           <ActionTile
-            label="Services"
+            label={t("dashboard.services")}
             icon={<MapPinIcon size={22} color={colors.primary} />}
             onPress={() => router.push(`/vehicle/${id}/services`)}
             colors={colors}

@@ -1,5 +1,6 @@
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTheme } from "../../../src/theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
@@ -31,6 +32,7 @@ const CATALOG: Part[] = [
 ];
 
 export default function PartsScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
@@ -44,15 +46,15 @@ export default function PartsScreen() {
 
   return (
     <Screen flush>
-      <Stack.Screen options={{ title: "Teile-Suche" }} />
+      <Stack.Screen options={{ title: t("parts.title") }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.searchRow}>
           <SearchIcon size={18} color={colors.textMuted} />
           <View style={{ flex: 1 }}>
-            <TextField placeholder="Teil oder Marke suchen…" value={query} onChangeText={setQuery} autoCapitalize="none" />
+            <TextField placeholder={t("parts.searchPlaceholder")} value={query} onChangeText={setQuery} autoCapitalize="none" />
           </View>
         </View>
-        <Text style={styles.note}>Demo-Katalog — echte Anbindung an Teile-Shops folgt online.</Text>
+        <Text style={styles.note}>{t("parts.note")}</Text>
 
         {results.map((p) => (
           <Card key={p.name + p.brand}>
@@ -61,19 +63,19 @@ export default function PartsScreen() {
                 <Text style={styles.name}>{p.name}</Text>
                 <Text style={styles.muted}>{p.brand}</Text>
                 <View style={styles.badges}>
-                  <Badge label={p.oem ? "Original (OEM)" : "Alternative"} tone={p.oem ? "accent" : "neutral"} />
-                  <Badge label={p.condition === "neu" ? "Neu" : "Gebraucht"} tone={p.condition === "neu" ? "success" : "warning"} />
+                  <Badge label={p.oem ? t("parts.oem") : t("parts.alternative")} tone={p.oem ? "accent" : "neutral"} />
+                  <Badge label={p.condition === "neu" ? t("common.new") : t("common.used")} tone={p.condition === "neu" ? "success" : "warning"} />
                 </View>
               </View>
               <View style={styles.priceBox}>
-                <Text style={styles.priceLabel}>ab</Text>
+                <Text style={styles.priceLabel}>{t("parts.from")}</Text>
                 <Text style={styles.price}>{p.priceFrom} €</Text>
-                <Text style={styles.offers}>{p.offers} Angebote</Text>
+                <Text style={styles.offers}>{t("parts.offers", { count: p.offers })}</Text>
               </View>
             </View>
           </Card>
         ))}
-        {results.length === 0 ? <Text style={styles.muted}>Keine Treffer für „{query}".</Text> : null}
+        {results.length === 0 ? <Text style={styles.muted}>{t("parts.noResults", { query })}</Text> : null}
       </ScrollView>
     </Screen>
   );

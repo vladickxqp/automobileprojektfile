@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { api, type VehicleEventDTO } from "../../../src/api/client";
 import { useTheme } from "../../../src/theme/ThemeProvider";
@@ -37,17 +38,8 @@ function eventVisual(type: VehicleEventDTO["type"], colors: ThemeColors): { icon
   }
 }
 
-const TYPE_LABEL: Record<string, string> = {
-  maintenance: "Wartung",
-  repair: "Reparatur",
-  expense: "Ausgabe",
-  scan: "Diagnose",
-  document: "Dokument",
-  score: "Score",
-  incident: "Vorfall",
-};
-
 export default function HistoryScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
@@ -62,12 +54,12 @@ export default function HistoryScreen() {
 
   return (
     <Screen flush>
-      <Stack.Screen options={{ title: "Verlauf" }} />
+      <Stack.Screen options={{ title: t("history.title") }} />
       <View style={styles.body}>
         {events.isLoading ? (
           <ActivityIndicator color={colors.primary} />
         ) : sorted.length === 0 ? (
-          <Text style={styles.muted}>Noch keine Einträge in der Lebensakte.</Text>
+          <Text style={styles.muted}>{t("history.empty")}</Text>
         ) : (
           <View style={styles.timeline}>
             {sorted.map((e, i) => {
@@ -86,7 +78,7 @@ export default function HistoryScreen() {
                     <Card style={styles.entry}>
                       <Text style={styles.entryTitle}>{describe(e)}</Text>
                       <Text style={styles.muted}>
-                        {new Date(e.occurredAt).toLocaleDateString("de-DE")} · {TYPE_LABEL[e.type] ?? e.type}
+                        {new Date(e.occurredAt).toLocaleDateString("de-DE")} · {t(`history.types.${e.type}`, { defaultValue: e.type })}
                         {e.mileageKm != null ? ` · ${e.mileageKm.toLocaleString("de-DE")} km` : ""}
                       </Text>
                     </Card>
