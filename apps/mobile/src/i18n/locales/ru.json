@@ -297,7 +297,8 @@
     "note": "Демо-данные — нет интернета/геолокации.",
     "liveNote": "Реальные места рядом · © OpenStreetMap",
     "searching": "Поиск рядом…",
-    "priceNote": "Цены: data.gouv.fr / Tankerkönig · Места © OpenStreetMap"
+    "priceNote": "Цены: data.gouv.fr / Tankerkönig · Места © OpenStreetMap",
+    "myLocation": "Моё местоположение"
   },
   "fleet": {
     "title": "Автопарк",

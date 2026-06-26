@@ -30,6 +30,13 @@ interface Display {
 
 const CATEGORIES = [{ key: "all" }, { key: "workshop" }, { key: "tires" }, { key: "wash" }, { key: "fuel" }];
 
+// Test-location picker so live data (esp. FR fuel prices) is visible without travelling there.
+const PLACES: { key: string; lat?: number; lon?: number }[] = [
+  { key: "me" },
+  { key: "Paris", lat: 48.8566, lon: 2.3522 },
+  { key: "München", lat: 48.1374, lon: 11.5755 },
+];
+
 const DEMO: Display[] = [
   { id: "d1", name: "AutoTechnik Müller", category: "workshop", distanceKm: 1.2, rating: 4.7, price: "€€", open: true, x: 0.3, y: 0.35 },
   { id: "d2", name: "BoschCar Service", category: "workshop", distanceKm: 2.8, rating: 4.5, price: "€€€", open: true, x: 0.62, y: 0.5 },
@@ -46,19 +53,23 @@ export default function ServicesScreen() {
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [filter, setFilter] = useState("all");
+  const [placeKey, setPlaceKey] = useState("me");
 
   const location = useQuery({ queryKey: ["geo"], queryFn: getLocation, staleTime: Infinity });
-  const enabled = !!location.data;
+  const preset = PLACES.find((p) => p.key === placeKey);
+  const active =
+    placeKey === "me" ? location.data : preset?.lat != null ? { lat: preset.lat, lon: preset.lon! } : undefined;
+  const enabled = !!active;
   const places = useQuery({
-    queryKey: ["places", location.data?.lat, location.data?.lon],
-    queryFn: () => fetchNearbyServices(location.data!.lat, location.data!.lon),
+    queryKey: ["places", active?.lat, active?.lon],
+    queryFn: () => fetchNearbyServices(active!.lat, active!.lon),
     enabled,
     retry: 0,
     staleTime: 5 * 60_000,
   });
   const fuel = useQuery({
-    queryKey: ["fuel", location.data?.lat, location.data?.lon],
-    queryFn: () => fetchFuelPrices(location.data!.lat, location.data!.lon),
+    queryKey: ["fuel", active?.lat, active?.lon],
+    queryFn: () => fetchFuelPrices(active!.lat, active!.lon),
     enabled,
     retry: 0,
     staleTime: 5 * 60_000,
@@ -87,7 +98,7 @@ export default function ServicesScreen() {
 
   const base = pricedFuel ? [...osm.filter((s) => s.category !== "fuel"), ...pricedFuel] : osm;
   const list = base.filter((s) => filter === "all" || s.category === filter).sort((a, b) => a.distanceKm - b.distanceKm);
-  const loading = location.isLoading || places.isLoading || fuel.isLoading;
+  const loading = (placeKey === "me" && location.isLoading) || places.isLoading || fuel.isLoading;
 
   // Pin positions: from real lat/lon when available, else the demo preset.
   const geoItems = list.filter((s) => s.lat != null);
@@ -131,11 +142,24 @@ export default function ServicesScreen() {
         </View>
 
         <View style={styles.filters}>
-          {CATEGORIES.map((c) => {
-            const active = c.key === filter;
+          {PLACES.map((p) => {
+            const sel = p.key === placeKey;
             return (
-              <Pressable key={c.key} onPress={() => setFilter(c.key)} style={[styles.chip, active && styles.chipActive]}>
-                <Text style={[styles.chipText, active && styles.chipTextActive]}>{t(`services.${c.key}`)}</Text>
+              <Pressable key={p.key} onPress={() => setPlaceKey(p.key)} style={[styles.chip, sel && styles.chipActive]}>
+                <Text style={[styles.chipText, sel && styles.chipTextActive]}>
+                  {p.key === "me" ? `📍 ${t("services.myLocation")}` : p.key}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+
+        <View style={styles.filters}>
+          {CATEGORIES.map((c) => {
+            const sel = c.key === filter;
+            return (
+              <Pressable key={c.key} onPress={() => setFilter(c.key)} style={[styles.chip, sel && styles.chipActive]}>
+                <Text style={[styles.chipText, sel && styles.chipTextActive]}>{t(`services.${c.key}`)}</Text>
               </Pressable>
             );
           })}
