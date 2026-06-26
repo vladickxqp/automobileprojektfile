@@ -10,6 +10,7 @@ import { Card } from "../src/ui/Card";
 import { CarSilhouette } from "../src/ui/CarSilhouette";
 import { Screen } from "../src/ui/Screen";
 import { TextField } from "../src/ui/TextField";
+import { AppleIcon, GoogleIcon } from "../src/ui/icons";
 
 export default function SignInScreen() {
   const { t } = useTranslation();
@@ -28,7 +29,19 @@ export default function SignInScreen() {
     try {
       if (mode === "signIn") await signIn(email.trim(), password);
       else await signUp(email.trim(), password);
-      router.replace("/");
+      router.replace("/garage");
+    } catch (e) {
+      Alert.alert(t("auth.error"), e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const oauth = async (provider: "google" | "apple") => {
+    setBusy(true);
+    try {
+      await signIn(`demo+${provider}@cardna.app`, "demo-oauth");
+      router.replace("/garage");
     } catch (e) {
       Alert.alert(t("auth.error"), e instanceof Error ? e.message : String(e));
     } finally {
@@ -38,7 +51,7 @@ export default function SignInScreen() {
 
   return (
     <Screen flush>
-      <Stack.Screen options={{ title: "AutoLife" }} />
+      <Stack.Screen options={{ title: "CarDNA" }} />
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -48,7 +61,7 @@ export default function SignInScreen() {
             <CarSilhouette width={300} height={140} />
           </View>
 
-          <Text style={styles.brand}>AutoLife</Text>
+          <Text style={styles.brand}>CarDNA</Text>
           <Text style={styles.tagline}>Die digitale Lebensakte deines Autos.</Text>
 
           <Card elevated style={styles.form}>
@@ -78,6 +91,26 @@ export default function SignInScreen() {
               loading={busy}
               disabled={!email.trim() || password.length < 8}
             />
+
+            <View style={styles.divider}>
+              <View style={styles.line} />
+              <Text style={styles.dividerText}>oder</Text>
+              <View style={styles.line} />
+            </View>
+
+            <Button
+              variant="secondary"
+              title="Mit Google fortfahren"
+              icon={<GoogleIcon size={18} />}
+              onPress={() => oauth("google")}
+            />
+            <Button
+              variant="secondary"
+              title="Mit Apple fortfahren"
+              icon={<AppleIcon size={18} color={colors.text} />}
+              onPress={() => oauth("apple")}
+            />
+
             <Button
               variant="ghost"
               title={t(mode === "signIn" ? "auth.toSignUp" : "auth.toSignIn")}
@@ -116,5 +149,8 @@ const makeStyles = (colors: ThemeColors) =>
     },
     form: { gap: spacing.md },
     formTitle: { ...typography.h2, color: colors.text },
+    divider: { flexDirection: "row", alignItems: "center", gap: spacing.md },
+    line: { flex: 1, height: 1, backgroundColor: colors.border },
+    dividerText: { ...typography.caption, color: colors.textFaint },
     demoHint: { ...typography.caption, color: colors.textFaint, textAlign: "center", marginTop: spacing.md },
   });

@@ -52,7 +52,7 @@ export default function AddVehicleScreen() {
       }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["vehicles"] });
-      router.replace("/");
+      router.replace("/garage");
     },
     onError: (e) =>
       Alert.alert(t("addCar.createFailed"), e instanceof Error ? e.message : String(e)),

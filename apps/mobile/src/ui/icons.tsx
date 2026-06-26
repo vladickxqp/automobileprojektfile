@@ -153,3 +153,74 @@ export function CalendarIcon({ size = 22, color = "#fff", strokeWidth = 2 }: Ico
     </Svg>
   );
 }
+
+export function UserIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Circle cx={12} cy={8} r={4} stroke={color} strokeWidth={strokeWidth} />
+      <Path d="M5 21a7 7 0 0 1 14 0" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+export function SettingsIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Circle cx={12} cy={12} r={3} stroke={color} strokeWidth={strokeWidth} />
+      <Path
+        d="M12 2.5l1.5 2.3 2.7-.6.5 2.7 2.4 1.3-1 2.6 1 2.6-2.4 1.3-.5 2.7-2.7-.6L12 21.5l-1.5-2.3-2.7.6-.5-2.7-2.4-1.3 1-2.6-1-2.6 2.4-1.3.5-2.7 2.7.6L12 2.5Z"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}
+
+export function GlobeIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Circle cx={12} cy={12} r={9} stroke={color} strokeWidth={strokeWidth} />
+      <Path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18" stroke={color} strokeWidth={strokeWidth} />
+    </Svg>
+  );
+}
+
+export function ShieldIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z" stroke={color} strokeWidth={strokeWidth} strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+export function CrownIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Path d="M3 7l4 4 5-6 5 6 4-4-1.5 12h-15L3 7Z" stroke={color} strokeWidth={strokeWidth} strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+export function GoogleIcon({ size = 20 }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24">
+      <Path d="M21.8 12.2c0-.7-.06-1.4-.18-2H12v3.8h5.5a4.7 4.7 0 0 1-2 3.1v2.6h3.2c1.9-1.7 3-4.3 3-7.5Z" fill="#4285F4" />
+      <Path d="M12 22c2.7 0 5-.9 6.7-2.4l-3.2-2.6c-.9.6-2 1-3.5 1-2.7 0-5-1.8-5.8-4.3H2.9v2.7A10 10 0 0 0 12 22Z" fill="#34A853" />
+      <Path d="M6.2 13.7a6 6 0 0 1 0-3.8V7.2H2.9a10 10 0 0 0 0 9l3.3-2.5Z" fill="#FBBC05" />
+      <Path d="M12 5.9c1.5 0 2.8.5 3.9 1.5l2.9-2.9A10 10 0 0 0 2.9 7.2l3.3 2.6C7 7.7 9.3 5.9 12 5.9Z" fill="#EA4335" />
+    </Svg>
+  );
+}
+
+export function AppleIcon({ size = 20, color = "#fff" }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M16 13c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.15-2.8.85-3.5.85-.7 0-1.85-.83-3-.8-1.55.02-3 .9-3.8 2.3-1.6 2.8-.4 7 1.15 9.3.76 1.12 1.66 2.38 2.85 2.33 1.14-.05 1.57-.74 2.95-.74 1.37 0 1.76.74 2.96.72 1.22-.02 2-1.13 2.75-2.26.86-1.3 1.22-2.56 1.24-2.62-.03-.01-2.38-.91-2.4-3.6Z"
+        fill={color}
+      />
+      <Path d="M13.7 6.3c.63-.77 1.06-1.83.94-2.9-.91.04-2.01.61-2.66 1.37-.58.68-1.1 1.77-.96 2.81 1.02.08 2.05-.52 2.68-1.28Z" fill={color} />
+    </Svg>
+  );
+}

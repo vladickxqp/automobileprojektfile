@@ -216,11 +216,11 @@ export const demoApi = {
         vehicleId,
         role: "assistant",
         content: answer,
-        sources: [{ title: "AutoLife Wissensbasis", source: "Demo" }],
+        sources: [{ title: "CarDNA Wissensbasis", source: "Demo" }],
         createdAt: new Date().toISOString(),
       },
     );
-    return delay({ answer, sources: [{ title: "AutoLife Wissensbasis", source: "Demo" }] }, 700);
+    return delay({ answer, sources: [{ title: "CarDNA Wissensbasis", source: "Demo" }] }, 700);
   },
 
   listScans: (vehicleId: string): Promise<ScanDTO[]> => delay(find(vehicleId).scans),

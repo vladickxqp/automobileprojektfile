@@ -3,7 +3,7 @@ import { api } from "../api/client";
 import { DEMO } from "../api/config";
 import { clearToken, loadToken, saveToken } from "./store";
 
-const DEMO_USER: AuthUser = { id: "demo-user", email: "demo@autolife.app" };
+const DEMO_USER: AuthUser = { id: "demo-user", email: "demo@cardna.app" };
 
 interface AuthUser {
   id: string;
