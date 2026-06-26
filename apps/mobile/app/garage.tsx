@@ -13,6 +13,7 @@ import { Card } from "../src/ui/Card";
 import { Car3D } from "../src/ui/Car3D";
 import { IconButton } from "../src/ui/IconButton";
 import { Screen } from "../src/ui/Screen";
+import { Skeleton } from "../src/ui/Skeleton";
 import { ChevronRightIcon, PlusIcon, UserIcon } from "../src/ui/icons";
 
 export default function GarageScreen() {
@@ -120,7 +121,11 @@ export default function GarageScreen() {
         )}
         ListEmptyComponent={
           vehicles.isLoading ? (
-            <ActivityIndicator color={colors.primary} style={{ marginTop: spacing.xl }} />
+            <View style={{ gap: spacing.md }}>
+              {[0, 1, 2].map((i) => (
+                <Skeleton key={i} height={92} radius={16} />
+              ))}
+            </View>
           ) : (
             <View style={styles.empty}>
               <Text style={styles.emptyTitle}>{t("garage.empty.title")}</Text>

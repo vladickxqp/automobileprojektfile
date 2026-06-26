@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import type { DocumentDTO, ReminderDTO, ScoreFactorDTO } from "../../../src/api/client";
 import { api } from "../../../src/api/client";
 import { API_URL } from "../../../src/api/config";
@@ -13,6 +13,7 @@ import { Card } from "../../../src/ui/Card";
 import { Car3D } from "../../../src/ui/Car3D";
 import { Screen } from "../../../src/ui/Screen";
 import { ScoreRing, scoreColor } from "../../../src/ui/ScoreRing";
+import { Skeleton } from "../../../src/ui/Skeleton";
 import { StatTile } from "../../../src/ui/StatTile";
 import {
   ActivityIcon,
@@ -90,7 +91,9 @@ export default function VehicleDashboard() {
     return (
       <Screen>
         <Stack.Screen options={{ title: "" }} />
-        <ActivityIndicator color={colors.primary} />
+        <Skeleton height={250} radius={16} />
+        <Skeleton height={140} radius={16} />
+        <Skeleton height={90} radius={16} />
       </Screen>
     );
   }
