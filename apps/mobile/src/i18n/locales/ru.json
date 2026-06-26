@@ -296,7 +296,8 @@
     "fuel": "Заправка",
     "note": "Демо-данные — нет интернета/геолокации.",
     "liveNote": "Реальные места рядом · © OpenStreetMap",
-    "searching": "Поиск рядом…"
+    "searching": "Поиск рядом…",
+    "priceNote": "Цены: data.gouv.fr / Tankerkönig · Места © OpenStreetMap"
   },
   "fleet": {
     "title": "Автопарк",

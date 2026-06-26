@@ -296,7 +296,8 @@
     "fuel": "Tanken",
     "note": "Demo-Daten — kein Internet/Standort verfügbar.",
     "liveNote": "Echte Orte in deiner Nähe · © OpenStreetMap",
-    "searching": "Suche in deiner Nähe…"
+    "searching": "Suche in deiner Nähe…",
+    "priceNote": "Preise via data.gouv.fr / Tankerkönig · Orte © OpenStreetMap"
   },
   "fleet": {
     "title": "Flotte",

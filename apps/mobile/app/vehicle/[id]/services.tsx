@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Svg, { Circle, Line, Rect } from "react-native-svg";
+import { fetchFuelPrices } from "../../../src/api/fuel";
 import { fetchNearbyServices, getLocation, type PlaceCategory } from "../../../src/api/places";
 import { useTheme } from "../../../src/theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
@@ -17,16 +18,18 @@ interface Display {
   name: string;
   category: PlaceCategory;
   distanceKm: number;
-  x: number;
-  y: number;
+  lat?: number;
+  lon?: number;
+  x?: number;
+  y?: number;
   rating?: number;
   price?: string;
   open?: boolean;
+  fuel?: { diesel: number | null; e5: number | null; e10: number | null };
 }
 
-const CATEGORIES: { key: string }[] = [{ key: "all" }, { key: "workshop" }, { key: "tires" }, { key: "wash" }, { key: "fuel" }];
+const CATEGORIES = [{ key: "all" }, { key: "workshop" }, { key: "tires" }, { key: "wash" }, { key: "fuel" }];
 
-// Fallback (offline / no location): fully fictional demo entries.
 const DEMO: Display[] = [
   { id: "d1", name: "AutoTechnik Müller", category: "workshop", distanceKm: 1.2, rating: 4.7, price: "€€", open: true, x: 0.3, y: 0.35 },
   { id: "d2", name: "BoschCar Service", category: "workshop", distanceKm: 2.8, rating: 4.5, price: "€€€", open: true, x: 0.62, y: 0.5 },
@@ -36,6 +39,7 @@ const DEMO: Display[] = [
 ];
 
 const clamp = (v: number) => Math.max(0.08, Math.min(0.92, v));
+const eur = (v: number) => v.toFixed(3).replace(".", ",");
 
 export default function ServicesScreen() {
   const { t } = useTranslation();
@@ -44,38 +48,59 @@ export default function ServicesScreen() {
   const [filter, setFilter] = useState("all");
 
   const location = useQuery({ queryKey: ["geo"], queryFn: getLocation, staleTime: Infinity });
+  const enabled = !!location.data;
   const places = useQuery({
     queryKey: ["places", location.data?.lat, location.data?.lon],
     queryFn: () => fetchNearbyServices(location.data!.lat, location.data!.lon),
-    enabled: !!location.data,
+    enabled,
+    retry: 0,
+    staleTime: 5 * 60_000,
+  });
+  const fuel = useQuery({
+    queryKey: ["fuel", location.data?.lat, location.data?.lon],
+    queryFn: () => fetchFuelPrices(location.data!.lat, location.data!.lon),
+    enabled,
     retry: 0,
     staleTime: 5 * 60_000,
   });
 
-  // Map live OSM results to display items, positioning pins by their real lat/lon spread.
-  const live = useMemo<Display[] | null>(() => {
+  const osm = useMemo<Display[]>(() => {
     const data = places.data;
-    if (!data || data.length === 0) return null;
-    const lats = data.map((p) => p.lat);
-    const lons = data.map((p) => p.lon);
-    const minLat = Math.min(...lats), maxLat = Math.max(...lats);
-    const minLon = Math.min(...lons), maxLon = Math.max(...lons);
-    const spanLat = maxLat - minLat || 1;
-    const spanLon = maxLon - minLon || 1;
-    return data.map((p) => ({
-      id: p.id,
-      name: p.name,
-      category: p.category,
-      distanceKm: p.distanceKm,
-      x: clamp((p.lon - minLon) / spanLon),
-      y: clamp(1 - (p.lat - minLat) / spanLat),
-    }));
+    if (!data || data.length === 0) return DEMO;
+    return data.map((p) => ({ id: p.id, name: p.name, category: p.category, distanceKm: p.distanceKm, lat: p.lat, lon: p.lon }));
   }, [places.data]);
 
-  const isLive = live != null;
-  const all = live ?? DEMO;
-  const list = all.filter((s) => filter === "all" || s.category === filter);
-  const loading = location.isLoading || places.isLoading;
+  const pricedFuel = useMemo<Display[] | null>(() => {
+    const data = fuel.data;
+    if (!data || data.length === 0) return null;
+    return data.map((s) => ({
+      id: s.id,
+      name: s.name,
+      category: "fuel" as const,
+      distanceKm: s.distanceKm,
+      lat: s.lat,
+      lon: s.lon,
+      open: s.isOpen,
+      fuel: { diesel: s.diesel, e5: s.e5, e10: s.e10 },
+    }));
+  }, [fuel.data]);
+
+  const base = pricedFuel ? [...osm.filter((s) => s.category !== "fuel"), ...pricedFuel] : osm;
+  const list = base.filter((s) => filter === "all" || s.category === filter).sort((a, b) => a.distanceKm - b.distanceKm);
+  const loading = location.isLoading || places.isLoading || fuel.isLoading;
+
+  // Pin positions: from real lat/lon when available, else the demo preset.
+  const geoItems = list.filter((s) => s.lat != null);
+  const lats = geoItems.map((s) => s.lat!);
+  const lons = geoItems.map((s) => s.lon!);
+  const minLat = Math.min(...lats), spanLat = Math.max(...lats) - minLat || 1;
+  const minLon = Math.min(...lons), spanLon = Math.max(...lons) - minLon || 1;
+  const pos = (s: Display) =>
+    s.lat != null
+      ? { x: clamp((s.lon! - minLon) / spanLon), y: clamp(1 - (s.lat! - minLat) / spanLat) }
+      : { x: s.x ?? 0.5, y: s.y ?? 0.5 };
+
+  const note = pricedFuel ? t("services.priceNote") : osm !== DEMO ? t("services.liveNote") : t("services.note");
 
   return (
     <Screen flush>
@@ -95,11 +120,14 @@ export default function ServicesScreen() {
             <Circle cx={160} cy={90} r={7} fill={colors.primary} />
             <Circle cx={160} cy={90} r={13} fill="none" stroke={colors.primary} strokeWidth={2} opacity={0.5} />
           </Svg>
-          {list.map((s) => (
-            <View key={s.id} style={[styles.pin, { left: `${s.x * 100}%`, top: `${s.y * 100}%` }]}>
-              <MapPinIcon size={26} color={colors.primary} />
-            </View>
-          ))}
+          {list.map((s) => {
+            const p = pos(s);
+            return (
+              <View key={s.id} style={[styles.pin, { left: `${p.x * 100}%`, top: `${p.y * 100}%` }]}>
+                <MapPinIcon size={26} color={colors.primary} />
+              </View>
+            );
+          })}
         </View>
 
         <View style={styles.filters}>
@@ -126,6 +154,13 @@ export default function ServicesScreen() {
               <View style={styles.info}>
                 <Text style={styles.name}>{s.name}</Text>
                 <Text style={styles.muted}>{t(`services.${s.category}`)}</Text>
+                {s.fuel ? (
+                  <View style={styles.fuelRow}>
+                    {s.fuel.diesel ? <Text style={styles.fuelPrice}>Diesel {eur(s.fuel.diesel)} €</Text> : null}
+                    {s.fuel.e10 ? <Text style={styles.fuelPrice}>E10 {eur(s.fuel.e10)} €</Text> : null}
+                    {s.fuel.e5 ? <Text style={styles.fuelPrice}>E5 {eur(s.fuel.e5)} €</Text> : null}
+                  </View>
+                ) : null}
                 <View style={styles.metaRow}>
                   {s.rating != null ? (
                     <View style={styles.rating}>
@@ -147,7 +182,7 @@ export default function ServicesScreen() {
           </Card>
         ))}
 
-        <Text style={styles.note}>{isLive ? t("services.liveNote") : t("services.note")}</Text>
+        <Text style={styles.note}>{note}</Text>
       </ScrollView>
     </Screen>
   );
@@ -168,6 +203,8 @@ const makeStyles = (colors: ThemeColors) =>
     info: { flex: 1, gap: spacing.xs },
     name: { ...typography.h3, color: colors.text },
     muted: { ...typography.caption, color: colors.textMuted },
+    fuelRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginTop: 2 },
+    fuelPrice: { ...typography.caption, color: colors.primary, fontWeight: "700" },
     metaRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm, marginTop: spacing.xs, flexWrap: "wrap" },
     rating: { flexDirection: "row", alignItems: "center", gap: 3 },
     ratingText: { ...typography.caption, color: colors.text, fontWeight: "700" },
