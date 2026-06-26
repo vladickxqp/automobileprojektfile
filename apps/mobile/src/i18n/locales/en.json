@@ -294,7 +294,9 @@
     "tires": "Tires",
     "wash": "Wash",
     "fuel": "Fuel",
-    "note": "Demo data — real map to follow with Maps integration."
+    "note": "Demo data — no internet/location available.",
+    "liveNote": "Real places near you · © OpenStreetMap",
+    "searching": "Searching nearby…"
   },
   "fleet": {
     "title": "Fleet",

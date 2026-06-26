@@ -294,7 +294,9 @@
     "tires": "Reifen",
     "wash": "Waschen",
     "fuel": "Tanken",
-    "note": "Demo-Daten — echte Karte folgt mit Maps-Anbindung."
+    "note": "Demo-Daten — kein Internet/Standort verfügbar.",
+    "liveNote": "Echte Orte in deiner Nähe · © OpenStreetMap",
+    "searching": "Suche in deiner Nähe…"
   },
   "fleet": {
     "title": "Flotte",
