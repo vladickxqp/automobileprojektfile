@@ -7,6 +7,7 @@ import { api } from "../../../src/api/client";
 import { API_URL } from "../../../src/api/config";
 import { Button } from "../../../src/ui/Button";
 import { Card } from "../../../src/ui/Card";
+import { CarSilhouette } from "../../../src/ui/CarSilhouette";
 import { Screen } from "../../../src/ui/Screen";
 import { colors, spacing, typography } from "../../../src/theme/tokens";
 
@@ -60,6 +61,9 @@ export default function VehicleDashboard() {
     <Screen>
       <Stack.Screen options={{ title: `${v.make} ${v.model}` }} />
       <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.hero}>
+          <CarSilhouette />
+        </View>
         <Card style={styles.scoreCard}>
           <Text style={styles.scoreLabel}>AutoScore</Text>
           <Text
@@ -165,6 +169,7 @@ function Row({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   content: { gap: spacing.md, paddingBottom: spacing.xl },
+  hero: { alignItems: "center", paddingTop: spacing.sm },
   scoreCard: { alignItems: "center", gap: spacing.sm },
   scoreLabel: { ...typography.caption, color: colors.textMuted, letterSpacing: 1 },
   scoreValue: { fontSize: 48, fontWeight: "700" },

@@ -27,13 +27,15 @@ export function Button({
         styles.base,
         secondary ? styles.secondary : styles.primary,
         inactive && styles.inactive,
-        pressed && !inactive && styles.pressed,
+        pressed && !inactive && (secondary ? styles.secondaryPressed : styles.primaryPressed),
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={colors.text} />
+        <ActivityIndicator color={secondary ? colors.text : colors.onPrimary} />
       ) : (
-        <Text style={[styles.label, secondary && styles.secondaryLabel]}>{title}</Text>
+        <Text style={[styles.label, secondary ? styles.secondaryLabel : styles.primaryLabel]}>
+          {title}
+        </Text>
       )}
     </Pressable>
   );
@@ -46,11 +48,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: spacing.lg,
+    borderWidth: 1,
   },
-  primary: { backgroundColor: colors.primary },
-  secondary: { backgroundColor: "transparent", borderWidth: 1, borderColor: colors.border },
-  inactive: { opacity: 0.5 },
-  pressed: { opacity: 0.85 },
-  label: { ...typography.body, color: colors.text, fontWeight: "600" },
-  secondaryLabel: { color: colors.textMuted },
+  primary: { backgroundColor: colors.primary, borderColor: colors.primary },
+  primaryPressed: { opacity: 0.85 },
+  secondary: { backgroundColor: "transparent", borderColor: colors.borderStrong },
+  secondaryPressed: { backgroundColor: colors.surfaceAlt },
+  inactive: { opacity: 0.4 },
+  label: { ...typography.body, fontWeight: "700", textTransform: "uppercase", letterSpacing: 1 },
+  primaryLabel: { color: colors.onPrimary },
+  secondaryLabel: { color: colors.text },
 });
