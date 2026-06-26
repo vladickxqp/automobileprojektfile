@@ -202,6 +202,32 @@ export function CrownIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconPr
   );
 }
 
+export function ChartIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Line x1={4} y1={20} x2={20} y2={20} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+      <Rect x={6} y={11} width={3} height={6} rx={1} stroke={color} strokeWidth={strokeWidth} />
+      <Rect x={11} y={7} width={3} height={10} rx={1} stroke={color} strokeWidth={strokeWidth} />
+      <Rect x={16} y={13} width={3} height={4} rx={1} stroke={color} strokeWidth={strokeWidth} />
+    </Svg>
+  );
+}
+
+export function CalculatorIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Rect x={5} y={2.5} width={14} height={19} rx={2.5} stroke={color} strokeWidth={strokeWidth} />
+      <Line x1={8} y1={6.5} x2={16} y2={6.5} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+      <Line x1={8.5} y1={11} x2={8.5} y2={11} stroke={color} strokeWidth={strokeWidth + 0.5} strokeLinecap="round" />
+      <Line x1={12} y1={11} x2={12} y2={11} stroke={color} strokeWidth={strokeWidth + 0.5} strokeLinecap="round" />
+      <Line x1={15.5} y1={11} x2={15.5} y2={11} stroke={color} strokeWidth={strokeWidth + 0.5} strokeLinecap="round" />
+      <Line x1={8.5} y1={15} x2={8.5} y2={15} stroke={color} strokeWidth={strokeWidth + 0.5} strokeLinecap="round" />
+      <Line x1={12} y1={15} x2={12} y2={15} stroke={color} strokeWidth={strokeWidth + 0.5} strokeLinecap="round" />
+      <Line x1={15.5} y1={15} x2={15.5} y2={18} stroke={color} strokeWidth={strokeWidth + 0.5} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
 export function GoogleIcon({ size = 20 }: IconProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24">

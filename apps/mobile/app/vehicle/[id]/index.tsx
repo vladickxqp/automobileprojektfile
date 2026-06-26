@@ -17,6 +17,8 @@ import { StatTile } from "../../../src/ui/StatTile";
 import {
   ActivityIcon,
   BellIcon,
+  CalculatorIcon,
+  ChartIcon,
   FileIcon,
   FuelIcon,
   GaugeIcon,
@@ -175,6 +177,20 @@ export default function VehicleDashboard() {
             label={t("dashboard.history")}
             icon={<WrenchIcon size={22} color={colors.primary} />}
             onPress={() => router.push(`/vehicle/${id}/history`)}
+            colors={colors}
+            styles={styles}
+          />
+          <ActionTile
+            label="Kosten"
+            icon={<ChartIcon size={22} color={colors.primary} />}
+            onPress={() => router.push(`/vehicle/${id}/expenses`)}
+            colors={colors}
+            styles={styles}
+          />
+          <ActionTile
+            label="Reparaturkosten"
+            icon={<CalculatorIcon size={22} color={colors.primary} />}
+            onPress={() => router.push(`/vehicle/${id}/calculator`)}
             colors={colors}
             styles={styles}
           />
