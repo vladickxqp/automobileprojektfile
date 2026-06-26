@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
 import { useMemo, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { api } from "../src/api/client";
 import { useAuth } from "../src/auth/AuthContext";
@@ -14,6 +15,7 @@ import { Screen } from "../src/ui/Screen";
 import { ChevronRightIcon, CrownIcon, GaugeIcon, LayersIcon, SettingsIcon } from "../src/ui/icons";
 
 export default function ProfileScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { user, signOut } = useAuth();
   const { colors } = useTheme();
@@ -24,26 +26,26 @@ export default function ProfileScreen() {
 
   return (
     <Screen flush>
-      <Stack.Screen options={{ title: "Profil" }} />
+      <Stack.Screen options={{ title: t("profile.title") }} />
       <ScrollView contentContainerStyle={styles.content}>
         <Card elevated style={styles.head}>
           <View style={styles.avatar}>
             <LogoMark size={56} />
           </View>
-          <Text style={styles.name}>{user?.email ?? "Gast"}</Text>
-          <Badge label="Free-Tarif" tone="neutral" />
+          <Text style={styles.name}>{user?.email ?? t("profile.guest")}</Text>
+          <Badge label={t("profile.freeTier")} tone="neutral" />
         </Card>
 
         <View style={styles.statRow}>
           <View style={styles.stat}>
             <GaugeIcon size={20} color={colors.primary} />
             <Text style={styles.statValue}>{count}</Text>
-            <Text style={styles.statLabel}>Fahrzeuge</Text>
+            <Text style={styles.statLabel}>{t("profile.vehicles")}</Text>
           </View>
           <View style={styles.stat}>
             <CrownIcon size={20} color={colors.primary} />
             <Text style={styles.statValue}>Free</Text>
-            <Text style={styles.statLabel}>Tarif</Text>
+            <Text style={styles.statLabel}>{t("profile.tier")}</Text>
           </View>
         </View>
 
@@ -51,21 +53,19 @@ export default function ProfileScreen() {
         <Card accent style={styles.premium}>
           <View style={styles.premiumHead}>
             <CrownIcon size={20} color={colors.primary} />
-            <Text style={styles.premiumTitle}>CarDNA Premium</Text>
+            <Text style={styles.premiumTitle}>{t("profile.premiumTitle")}</Text>
           </View>
-          <Text style={styles.premiumText}>
-            Unbegrenzte Fahrzeuge, KI-Diagnose ohne Limit, Verkaufs-Reports und Cloud-Backup.
-          </Text>
-          <Button title="Premium entdecken" onPress={() => router.push("/premium")} />
+          <Text style={styles.premiumText}>{t("profile.premiumText")}</Text>
+          <Button title={t("profile.discoverPremium")} onPress={() => router.push("/premium")} />
         </Card>
 
         <Card style={{ gap: 0, paddingVertical: spacing.xs }}>
-          <Row icon={<LayersIcon size={20} color={colors.textMuted} />} label="Flotte / Mehrere Fahrzeuge" onPress={() => router.push("/fleet")} colors={colors} styles={styles} />
+          <Row icon={<LayersIcon size={20} color={colors.textMuted} />} label={t("profile.fleet")} onPress={() => router.push("/fleet")} colors={colors} styles={styles} />
           <View style={styles.divider} />
-          <Row icon={<SettingsIcon size={20} color={colors.textMuted} />} label="Einstellungen" onPress={() => router.push("/settings")} colors={colors} styles={styles} />
+          <Row icon={<SettingsIcon size={20} color={colors.textMuted} />} label={t("profile.settings")} onPress={() => router.push("/settings")} colors={colors} styles={styles} />
         </Card>
 
-        <Button variant="secondary" title="Abmelden" onPress={() => { void signOut(); router.replace("/"); }} />
+        <Button variant="secondary" title={t("profile.signOut")} onPress={() => { void signOut(); router.replace("/"); }} />
       </ScrollView>
     </Screen>
   );

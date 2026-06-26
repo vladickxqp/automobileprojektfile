@@ -1,4 +1,17 @@
 {
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "add": "Add",
+    "demo": "Demo",
+    "today": "today",
+    "overdue": "overdue",
+    "inDays": "in {{count}}d",
+    "open": "Open",
+    "closed": "Closed",
+    "new": "New",
+    "used": "Used"
+  },
   "auth": {
     "signInTitle": "Welcome back",
     "signUpTitle": "Create account",
@@ -8,11 +21,22 @@
     "signUp": "Sign up",
     "toSignUp": "No account? Sign up",
     "toSignIn": "Have an account? Sign in",
-    "error": "Authentication failed"
+    "error": "Authentication failed",
+    "or": "or",
+    "continueGoogle": "Continue with Google",
+    "continueApple": "Continue with Apple",
+    "tagline": "Your car's digital life record."
   },
   "garage": {
     "title": "My garage",
     "addCar": "Add car",
+    "vehicles": "VEHICLES",
+    "greetingMorning": "Good morning",
+    "greetingDay": "Good afternoon",
+    "greetingEvening": "Good evening",
+    "cars": "Cars",
+    "avgScore": "Avg score",
+    "due": "Due",
     "empty": {
       "title": "No cars yet",
       "subtitle": "Add your first car by VIN or manually to start its digital life history."
@@ -50,12 +74,28 @@
     "prepareSale": "Prepare for sale",
     "prepareSaleHint": "Generate a shareable report for buyers.",
     "generateReport": "Generate report",
-    "regenerateReport": "Regenerate report"
+    "regenerateReport": "Regenerate report",
+    "tools": "TOOLS",
+    "costs": "Costs",
+    "repairCosts": "Repair costs",
+    "modifications": "Modifications",
+    "parts": "Parts",
+    "services": "Services",
+    "upcoming": "Upcoming"
   },
   "history": {
     "title": "History",
-    "empty": "No records yet",
-    "add": "Add record"
+    "empty": "No entries in the life record yet.",
+    "add": "Add record",
+    "types": {
+      "maintenance": "Maintenance",
+      "repair": "Repair",
+      "expense": "Expense",
+      "scan": "Diagnostics",
+      "document": "Document",
+      "score": "Score",
+      "incident": "Incident"
+    }
   },
   "addEvent": {
     "title": "Add record",
@@ -99,5 +139,161 @@
     "empty": "No scans yet",
     "noCodes": "No fault codes — all clear",
     "unknownCode": "Unknown code"
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "createAccount": "Create account",
+    "haveAccount": "I already have an account",
+    "slides": [
+      { "title": "Your car. Its story.", "text": "Every vehicle gets a complete digital life record — from purchase to resale." },
+      { "title": "AI-powered diagnostics.", "text": "Describe symptoms, read fault codes and understand problems instantly — with clear recommendations." },
+      { "title": "Digital vehicle passport.", "text": "Maintenance, documents and costs in one place — transferable to the next owner at resale." },
+      { "title": "Maintain smarter. Save money.", "text": "AutoScore shows the condition; reminders prevent costly damage before it happens." }
+    ]
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "appearance": "Appearance",
+    "dark": "Dark",
+    "light": "Light",
+    "notifications": "Notifications",
+    "maintenance": "Maintenance & service",
+    "tuv": "Inspection",
+    "insurance": "Insurance",
+    "offers": "Offers & tips",
+    "privacy": "Privacy & account",
+    "privacyPolicy": "Privacy policy",
+    "exportData": "Export my data",
+    "deleteAccount": "Delete account",
+    "demoNotice": "Not available in this demo."
+  },
+  "profile": {
+    "title": "Profile",
+    "guest": "Guest",
+    "freeTier": "Free plan",
+    "vehicles": "Vehicles",
+    "tier": "Plan",
+    "premiumTitle": "CarDNA Premium",
+    "premiumText": "Unlimited vehicles, unlimited AI diagnostics, sale reports and cloud backup.",
+    "discoverPremium": "Discover Premium",
+    "fleet": "Fleet / multiple vehicles",
+    "settings": "Settings",
+    "signOut": "Sign out"
+  },
+  "premium": {
+    "title": "CarDNA Premium",
+    "heroTitle": "Get more from every car.",
+    "heroSubtitle": "All premium features in one plan.",
+    "features": [
+      "Unlimited vehicles in your profile",
+      "AI mechanic with no request limit",
+      "OBD diagnostics history & trends",
+      "Professional sale reports with link",
+      "Cloud backup of all documents",
+      "Priority support"
+    ],
+    "yearly": "Yearly",
+    "monthly": "Monthly",
+    "yearlyPrice": "€49.99 / year",
+    "monthlyPrice": "€4.99 / month",
+    "monthsFree": "2 months free",
+    "start": "Start Premium",
+    "notActive": "Purchase is not active in this demo. App Store / Google Play integration to follow.",
+    "legal": "Demo — no real purchase. Cancel anytime."
+  },
+  "calculator": {
+    "title": "Repair costs",
+    "chooseRepair": "CHOOSE REPAIR",
+    "workshop": "WORKSHOP",
+    "diy": "DIY",
+    "partsOnly": "Parts only",
+    "workshopLabel": "Workshop",
+    "partsAndLabor": "Parts + {{hours}}h labor",
+    "partsAvg": "Parts (avg)",
+    "labor": "Labor ({{hours}}h × €{{rate}})",
+    "totalWorkshop": "Workshop total",
+    "disclaimer": "Reference values for orientation — depend on model, region and parts quality. Not a binding quote.",
+    "indie": "Independent shop",
+    "dealer": "Dealer",
+    "repairs": {
+      "oil": "Oil service",
+      "brakes_front": "Front brakes",
+      "clutch": "Clutch",
+      "timing_belt": "Timing belt",
+      "battery": "Battery",
+      "suspension": "Shocks (axle)",
+      "turbo": "Turbocharger",
+      "exhaust": "Exhaust/Cat"
+    }
+  },
+  "expenses": {
+    "title": "Expenses",
+    "total": "TOTAL COST",
+    "bookings": "{{count}} entries recorded",
+    "byCategory": "By category",
+    "noExpenses": "No expenses recorded yet.",
+    "timeline": "History",
+    "noEntries": "No individual entries.",
+    "categories": {
+      "fuel": "Fuel",
+      "service": "Service",
+      "repair": "Repair",
+      "insurance": "Insurance",
+      "tax": "Tax",
+      "tires": "Tires",
+      "parts": "Parts",
+      "modification": "Tuning",
+      "other": "Other"
+    }
+  },
+  "modifications": {
+    "title": "Modifications",
+    "hpGained": "HP GAINED",
+    "invested": "INVESTED",
+    "none": "No modifications recorded yet.",
+    "addMod": "Add modification",
+    "name": "Name",
+    "namePlaceholder": "e.g. Stage 1 software",
+    "category": "CATEGORY",
+    "hp": "+HP",
+    "cost": "Cost €",
+    "categories": {
+      "engine": "Engine",
+      "exhaust": "Exhaust",
+      "suspension": "Suspension",
+      "wheels": "Wheels",
+      "exterior": "Exterior",
+      "interior": "Interior",
+      "other": "Other"
+    }
+  },
+  "parts": {
+    "title": "Parts search",
+    "searchPlaceholder": "Search part or brand…",
+    "note": "Demo catalog — real shop integration to follow online.",
+    "oem": "Original (OEM)",
+    "alternative": "Aftermarket",
+    "from": "from",
+    "offers": "{{count}} offers",
+    "noResults": "No results for \"{{query}}\"."
+  },
+  "services": {
+    "title": "Nearby services",
+    "all": "All",
+    "workshop": "Workshop",
+    "tires": "Tires",
+    "wash": "Wash",
+    "fuel": "Fuel",
+    "note": "Demo data — real map to follow with Maps integration."
+  },
+  "fleet": {
+    "title": "Fleet",
+    "vehicles": "{{count}} vehicles",
+    "dueReminders": "{{count}} open reminders",
+    "totalKm": "Total km",
+    "totalCost": "Total cost",
+    "avgCondition": "AVG CONDITION"
   }
 }

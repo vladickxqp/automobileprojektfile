@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTheme } from "../src/theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../src/theme/tokens";
@@ -9,34 +10,27 @@ import { Card } from "../src/ui/Card";
 import { Screen } from "../src/ui/Screen";
 import { CrownIcon } from "../src/ui/icons";
 
-const FEATURES = [
-  "Unbegrenzte Fahrzeuge im Profil",
-  "KI-Mechaniker ohne Anfragelimit",
-  "OBD-Diagnose-Verlauf & Trends",
-  "Professionelle Verkaufs-Reports mit Link",
-  "Cloud-Backup aller Dokumente",
-  "Vorrangiger Support",
-];
-
 export default function PremiumScreen() {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [plan, setPlan] = useState<"yearly" | "monthly">("yearly");
+  const features = t("premium.features", { returnObjects: true }) as unknown as string[];
 
   return (
     <Screen flush>
-      <Stack.Screen options={{ title: "CarDNA Premium" }} />
+      <Stack.Screen options={{ title: t("premium.title") }} />
       <ScrollView contentContainerStyle={styles.content}>
         <Card accent style={styles.hero}>
           <View style={styles.crown}>
             <CrownIcon size={28} color={colors.primary} />
           </View>
-          <Text style={styles.title}>Hol mehr aus jedem Auto.</Text>
-          <Text style={styles.subtitle}>Alle Premium-Funktionen in einem Tarif.</Text>
+          <Text style={styles.title}>{t("premium.heroTitle")}</Text>
+          <Text style={styles.subtitle}>{t("premium.heroSubtitle")}</Text>
         </Card>
 
         <Card style={styles.features}>
-          {FEATURES.map((f) => (
+          {features.map((f) => (
             <View key={f} style={styles.featureRow}>
               <View style={styles.check}>
                 <Text style={styles.checkMark}>✓</Text>
@@ -48,17 +42,17 @@ export default function PremiumScreen() {
 
         <View style={styles.plans}>
           <Plan
-            label="Jährlich"
-            price="49,99 € / Jahr"
-            hint="2 Monate gratis"
+            label={t("premium.yearly")}
+            price={t("premium.yearlyPrice")}
+            hint={t("premium.monthsFree")}
             active={plan === "yearly"}
             onPress={() => setPlan("yearly")}
             colors={colors}
             styles={styles}
           />
           <Plan
-            label="Monatlich"
-            price="4,99 € / Monat"
+            label={t("premium.monthly")}
+            price={t("premium.monthlyPrice")}
             active={plan === "monthly"}
             onPress={() => setPlan("monthly")}
             colors={colors}
@@ -68,10 +62,10 @@ export default function PremiumScreen() {
 
         <Button
           size="lg"
-          title="Premium starten"
-          onPress={() => Alert.alert("CarDNA Premium", "In dieser Demo ist der Kauf nicht aktiv. Anbindung an App Store / Google Play folgt.")}
+          title={t("premium.start")}
+          onPress={() => Alert.alert(t("premium.title"), t("premium.notActive"))}
         />
-        <Text style={styles.legal}>Demo — kein echter Kauf. Jederzeit kündbar.</Text>
+        <Text style={styles.legal}>{t("premium.legal")}</Text>
       </ScrollView>
     </Screen>
   );

@@ -1,4 +1,17 @@
 {
+  "common": {
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "add": "Hinzufügen",
+    "demo": "Demo",
+    "today": "heute",
+    "overdue": "überfällig",
+    "inDays": "in {{count}} Tg.",
+    "open": "Geöffnet",
+    "closed": "Geschlossen",
+    "new": "Neu",
+    "used": "Gebraucht"
+  },
   "auth": {
     "signInTitle": "Willkommen zurück",
     "signUpTitle": "Konto erstellen",
@@ -8,11 +21,22 @@
     "signUp": "Registrieren",
     "toSignUp": "Kein Konto? Registrieren",
     "toSignIn": "Schon ein Konto? Anmelden",
-    "error": "Anmeldung fehlgeschlagen"
+    "error": "Anmeldung fehlgeschlagen",
+    "or": "oder",
+    "continueGoogle": "Mit Google fortfahren",
+    "continueApple": "Mit Apple fortfahren",
+    "tagline": "Die digitale Lebensakte deines Autos."
   },
   "garage": {
     "title": "Meine Garage",
     "addCar": "Auto hinzufügen",
+    "vehicles": "FAHRZEUGE",
+    "greetingMorning": "Guten Morgen",
+    "greetingDay": "Guten Tag",
+    "greetingEvening": "Guten Abend",
+    "cars": "Autos",
+    "avgScore": "Ø-Score",
+    "due": "Fällig",
     "empty": {
       "title": "Noch keine Fahrzeuge",
       "subtitle": "Füge dein erstes Auto per VIN oder manuell hinzu und starte seine digitale Lebensgeschichte."
@@ -50,12 +74,28 @@
     "prepareSale": "Verkauf vorbereiten",
     "prepareSaleHint": "Erstelle einen teilbaren Bericht für Käufer.",
     "generateReport": "Bericht erstellen",
-    "regenerateReport": "Bericht neu erstellen"
+    "regenerateReport": "Bericht neu erstellen",
+    "tools": "WERKZEUGE",
+    "costs": "Kosten",
+    "repairCosts": "Reparaturkosten",
+    "modifications": "Modifikationen",
+    "parts": "Teile-Suche",
+    "services": "Services",
+    "upcoming": "Anstehend"
   },
   "history": {
     "title": "Verlauf",
-    "empty": "Noch keine Einträge",
-    "add": "Eintrag hinzufügen"
+    "empty": "Noch keine Einträge in der Lebensakte.",
+    "add": "Eintrag hinzufügen",
+    "types": {
+      "maintenance": "Wartung",
+      "repair": "Reparatur",
+      "expense": "Ausgabe",
+      "scan": "Diagnose",
+      "document": "Dokument",
+      "score": "Score",
+      "incident": "Vorfall"
+    }
   },
   "addEvent": {
     "title": "Eintrag hinzufügen",
@@ -99,5 +139,161 @@
     "empty": "Noch keine Scans",
     "noCodes": "Keine Fehlercodes — alles in Ordnung",
     "unknownCode": "Unbekannter Code"
+  },
+  "onboarding": {
+    "skip": "Überspringen",
+    "next": "Weiter",
+    "createAccount": "Konto erstellen",
+    "haveAccount": "Ich habe schon ein Konto",
+    "slides": [
+      { "title": "Dein Auto. Seine Geschichte.", "text": "Jedes Fahrzeug bekommt eine vollständige digitale Lebensakte — von der Anschaffung bis zum Verkauf." },
+      { "title": "KI-gestützte Diagnose.", "text": "Beschreibe Symptome, lies Fehlercodes aus und verstehe Probleme sofort — mit klaren Handlungsempfehlungen." },
+      { "title": "Digitaler Fahrzeugpass.", "text": "Wartung, Dokumente und Kosten an einem Ort — übertragbar an den nächsten Besitzer beim Verkauf." },
+      { "title": "Schlauer warten. Geld sparen.", "text": "Der AutoScore zeigt den Zustand, Erinnerungen verhindern teure Schäden, bevor sie entstehen." }
+    ]
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "appearance": "Darstellung",
+    "dark": "Dunkel",
+    "light": "Hell",
+    "notifications": "Benachrichtigungen",
+    "maintenance": "Wartung & Service",
+    "tuv": "TÜV / HU",
+    "insurance": "Versicherung",
+    "offers": "Angebote & Tipps",
+    "privacy": "Datenschutz & Konto",
+    "privacyPolicy": "Datenschutzerklärung",
+    "exportData": "Meine Daten exportieren",
+    "deleteAccount": "Konto löschen",
+    "demoNotice": "In dieser Demo nicht verfügbar."
+  },
+  "profile": {
+    "title": "Profil",
+    "guest": "Gast",
+    "freeTier": "Free-Tarif",
+    "vehicles": "Fahrzeuge",
+    "tier": "Tarif",
+    "premiumTitle": "CarDNA Premium",
+    "premiumText": "Unbegrenzte Fahrzeuge, KI-Diagnose ohne Limit, Verkaufs-Reports und Cloud-Backup.",
+    "discoverPremium": "Premium entdecken",
+    "fleet": "Flotte / Mehrere Fahrzeuge",
+    "settings": "Einstellungen",
+    "signOut": "Abmelden"
+  },
+  "premium": {
+    "title": "CarDNA Premium",
+    "heroTitle": "Hol mehr aus jedem Auto.",
+    "heroSubtitle": "Alle Premium-Funktionen in einem Tarif.",
+    "features": [
+      "Unbegrenzte Fahrzeuge im Profil",
+      "KI-Mechaniker ohne Anfragelimit",
+      "OBD-Diagnose-Verlauf & Trends",
+      "Professionelle Verkaufs-Reports mit Link",
+      "Cloud-Backup aller Dokumente",
+      "Vorrangiger Support"
+    ],
+    "yearly": "Jährlich",
+    "monthly": "Monatlich",
+    "yearlyPrice": "49,99 € / Jahr",
+    "monthlyPrice": "4,99 € / Monat",
+    "monthsFree": "2 Monate gratis",
+    "start": "Premium starten",
+    "notActive": "In dieser Demo ist der Kauf nicht aktiv. Anbindung an App Store / Google Play folgt.",
+    "legal": "Demo — kein echter Kauf. Jederzeit kündbar."
+  },
+  "calculator": {
+    "title": "Reparaturkosten",
+    "chooseRepair": "REPARATUR WÄHLEN",
+    "workshop": "WERKSTATT",
+    "diy": "Selbst (DIY)",
+    "partsOnly": "Nur Teile",
+    "workshopLabel": "Werkstatt",
+    "partsAndLabor": "Teile + {{hours}} h Arbeit",
+    "partsAvg": "Teile (Ø)",
+    "labor": "Arbeit ({{hours}} h × {{rate}} €)",
+    "totalWorkshop": "Werkstatt gesamt",
+    "disclaimer": "Richtwerte zur Orientierung — abhängig von Modell, Region und Teilequalität. Kein verbindliches Angebot.",
+    "indie": "Freie Werkstatt",
+    "dealer": "Vertragswerkstatt",
+    "repairs": {
+      "oil": "Ölservice",
+      "brakes_front": "Bremsen vorne",
+      "clutch": "Kupplung",
+      "timing_belt": "Zahnriemen",
+      "battery": "Batterie",
+      "suspension": "Stoßdämpfer (Achse)",
+      "turbo": "Turbolader",
+      "exhaust": "Auspuff/Kat"
+    }
+  },
+  "expenses": {
+    "title": "Ausgaben",
+    "total": "GESAMTKOSTEN",
+    "bookings": "{{count}} Buchungen erfasst",
+    "byCategory": "Nach Kategorie",
+    "noExpenses": "Noch keine Ausgaben erfasst.",
+    "timeline": "Verlauf",
+    "noEntries": "Keine Einzelbuchungen.",
+    "categories": {
+      "fuel": "Kraftstoff",
+      "service": "Service",
+      "repair": "Reparatur",
+      "insurance": "Versicherung",
+      "tax": "Steuer",
+      "tires": "Reifen",
+      "parts": "Teile",
+      "modification": "Tuning",
+      "other": "Sonstiges"
+    }
+  },
+  "modifications": {
+    "title": "Modifikationen",
+    "hpGained": "PS GEWONNEN",
+    "invested": "INVESTIERT",
+    "none": "Noch keine Umbauten erfasst.",
+    "addMod": "Umbau hinzufügen",
+    "name": "Bezeichnung",
+    "namePlaceholder": "z. B. Stage 1 Software",
+    "category": "KATEGORIE",
+    "hp": "+PS",
+    "cost": "Kosten €",
+    "categories": {
+      "engine": "Motor",
+      "exhaust": "Abgas",
+      "suspension": "Fahrwerk",
+      "wheels": "Räder",
+      "exterior": "Exterieur",
+      "interior": "Interieur",
+      "other": "Sonstiges"
+    }
+  },
+  "parts": {
+    "title": "Teile-Suche",
+    "searchPlaceholder": "Teil oder Marke suchen…",
+    "note": "Demo-Katalog — echte Anbindung an Teile-Shops folgt online.",
+    "oem": "Original (OEM)",
+    "alternative": "Alternative",
+    "from": "ab",
+    "offers": "{{count}} Angebote",
+    "noResults": "Keine Treffer für „{{query}}“."
+  },
+  "services": {
+    "title": "Services in der Nähe",
+    "all": "Alle",
+    "workshop": "Werkstatt",
+    "tires": "Reifen",
+    "wash": "Waschen",
+    "fuel": "Tanken",
+    "note": "Demo-Daten — echte Karte folgt mit Maps-Anbindung."
+  },
+  "fleet": {
+    "title": "Flotte",
+    "vehicles": "{{count}} Fahrzeuge",
+    "dueReminders": "{{count}} offene Erinnerungen",
+    "totalKm": "Gesamt-km",
+    "totalCost": "Kosten gesamt",
+    "avgCondition": "Ø ZUSTAND"
   }
 }

@@ -15,7 +15,7 @@ const LANGS: { code: string; label: string }[] = [
 ];
 
 export default function SettingsScreen() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { colors, isDark, setMode } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
@@ -24,9 +24,9 @@ export default function SettingsScreen() {
 
   return (
     <Screen flush>
-      <Stack.Screen options={{ title: "Einstellungen" }} />
+      <Stack.Screen options={{ title: t("settings.title") }} />
       <ScrollView contentContainerStyle={styles.content}>
-        <Section title="Sprache" icon={<GlobeIcon size={18} color={colors.primary} />} colors={colors} styles={styles}>
+        <Section title={t("settings.language")} icon={<GlobeIcon size={18} color={colors.primary} />} colors={colors} styles={styles}>
           {LANGS.map((l) => {
             const active = current === l.code;
             return (
@@ -41,7 +41,7 @@ export default function SettingsScreen() {
         </Section>
 
         <Section
-          title="Darstellung"
+          title={t("settings.appearance")}
           icon={isDark ? <MoonIcon size={18} color={colors.primary} /> : <SunIcon size={18} color={colors.primary} />}
           colors={colors}
           styles={styles}
@@ -51,28 +51,28 @@ export default function SettingsScreen() {
               style={[styles.segmentItem, isDark && styles.segmentActive]}
               onPress={() => setMode("dark")}
             >
-              <Text style={[styles.segmentText, isDark && styles.segmentTextActive]}>Dunkel</Text>
+              <Text style={[styles.segmentText, isDark && styles.segmentTextActive]}>{t("settings.dark")}</Text>
             </Pressable>
             <Pressable
               style={[styles.segmentItem, !isDark && styles.segmentActive]}
               onPress={() => setMode("light")}
             >
-              <Text style={[styles.segmentText, !isDark && styles.segmentTextActive]}>Hell</Text>
+              <Text style={[styles.segmentText, !isDark && styles.segmentTextActive]}>{t("settings.light")}</Text>
             </Pressable>
           </View>
         </Section>
 
-        <Section title="Benachrichtigungen" colors={colors} styles={styles}>
-          <ToggleRow label="Wartung & Service" value={notif.maintenance} onChange={(v) => setNotif({ ...notif, maintenance: v })} colors={colors} styles={styles} />
-          <ToggleRow label="TÜV / HU" value={notif.tuv} onChange={(v) => setNotif({ ...notif, tuv: v })} colors={colors} styles={styles} />
-          <ToggleRow label="Versicherung" value={notif.insurance} onChange={(v) => setNotif({ ...notif, insurance: v })} colors={colors} styles={styles} />
-          <ToggleRow label="Angebote & Tipps" value={notif.offers} onChange={(v) => setNotif({ ...notif, offers: v })} colors={colors} styles={styles} />
+        <Section title={t("settings.notifications")} colors={colors} styles={styles}>
+          <ToggleRow label={t("settings.maintenance")} value={notif.maintenance} onChange={(v) => setNotif({ ...notif, maintenance: v })} colors={colors} styles={styles} />
+          <ToggleRow label={t("settings.tuv")} value={notif.tuv} onChange={(v) => setNotif({ ...notif, tuv: v })} colors={colors} styles={styles} />
+          <ToggleRow label={t("settings.insurance")} value={notif.insurance} onChange={(v) => setNotif({ ...notif, insurance: v })} colors={colors} styles={styles} />
+          <ToggleRow label={t("settings.offers")} value={notif.offers} onChange={(v) => setNotif({ ...notif, offers: v })} colors={colors} styles={styles} />
         </Section>
 
-        <Section title="Datenschutz & Konto" icon={<ShieldIcon size={18} color={colors.primary} />} colors={colors} styles={styles}>
-          <LinkRow label="Datenschutzerklärung" onPress={() => Alert.alert("Datenschutz", "In dieser Demo nicht hinterlegt.")} colors={colors} styles={styles} />
-          <LinkRow label="Meine Daten exportieren" onPress={() => Alert.alert("Export", "In dieser Demo nicht verfügbar.")} colors={colors} styles={styles} />
-          <LinkRow label="Konto löschen" onPress={() => Alert.alert("Konto löschen", "In dieser Demo nicht verfügbar.")} danger colors={colors} styles={styles} />
+        <Section title={t("settings.privacy")} icon={<ShieldIcon size={18} color={colors.primary} />} colors={colors} styles={styles}>
+          <LinkRow label={t("settings.privacyPolicy")} onPress={() => Alert.alert(t("settings.privacyPolicy"), t("settings.demoNotice"))} colors={colors} styles={styles} />
+          <LinkRow label={t("settings.exportData")} onPress={() => Alert.alert(t("settings.exportData"), t("settings.demoNotice"))} colors={colors} styles={styles} />
+          <LinkRow label={t("settings.deleteAccount")} onPress={() => Alert.alert(t("settings.deleteAccount"), t("settings.demoNotice"))} danger colors={colors} styles={styles} />
         </Section>
 
         <Text style={styles.version}>CarDNA · Demo · v0.0.1</Text>

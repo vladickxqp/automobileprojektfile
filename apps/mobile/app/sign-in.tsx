@@ -62,7 +62,7 @@ export default function SignInScreen() {
           </View>
 
           <Text style={styles.brand}>CarDNA</Text>
-          <Text style={styles.tagline}>Die digitale Lebensakte deines Autos.</Text>
+          <Text style={styles.tagline}>{t("auth.tagline")}</Text>
 
           <Card elevated style={styles.form}>
             <Text style={styles.formTitle}>
@@ -94,19 +94,19 @@ export default function SignInScreen() {
 
             <View style={styles.divider}>
               <View style={styles.line} />
-              <Text style={styles.dividerText}>oder</Text>
+              <Text style={styles.dividerText}>{t("auth.or")}</Text>
               <View style={styles.line} />
             </View>
 
             <Button
               variant="secondary"
-              title="Mit Google fortfahren"
+              title={t("auth.continueGoogle")}
               icon={<GoogleIcon size={18} />}
               onPress={() => oauth("google")}
             />
             <Button
               variant="secondary"
-              title="Mit Apple fortfahren"
+              title={t("auth.continueApple")}
               icon={<AppleIcon size={18} color={colors.text} />}
               onPress={() => oauth("apple")}
             />
@@ -118,7 +118,7 @@ export default function SignInScreen() {
             />
           </Card>
 
-          <Text style={styles.demoHint}>Demo · Tippe einfach auf Anmelden</Text>
+          <Text style={styles.demoHint}>{t("common.demo")}</Text>
         </ScrollView>
       </KeyboardAvoidingView>
     </Screen>

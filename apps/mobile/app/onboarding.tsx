@@ -1,5 +1,6 @@
 import { Stack, useRouter } from "expo-router";
 import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Pressable,
   ScrollView,
@@ -16,38 +17,17 @@ import { spacing, typography, type ThemeColors } from "../src/theme/tokens";
 import { Button } from "../src/ui/Button";
 import { LogoMark } from "../src/ui/Logo";
 import { Screen } from "../src/ui/Screen";
-import { ActivityIcon, FileIcon, GaugeIcon, SparkleIcon } from "../src/ui/icons";
+import { ActivityIcon, FileIcon, GaugeIcon } from "../src/ui/icons";
 
-interface Slide {
-  icon: (color: string) => ReactNode;
-  title: string;
-  text: string;
-}
-
-const SLIDES: Slide[] = [
-  {
-    icon: () => <LogoMark size={92} />,
-    title: "Dein Auto. Seine Geschichte.",
-    text: "Jedes Fahrzeug bekommt eine vollständige digitale Lebensakte — von der Anschaffung bis zum Verkauf.",
-  },
-  {
-    icon: (c) => <ActivityIcon size={52} color={c} />,
-    title: "KI-gestützte Diagnose.",
-    text: "Beschreibe Symptome, lies Fehlercodes aus und verstehe Probleme sofort — mit klaren Handlungsempfehlungen.",
-  },
-  {
-    icon: (c) => <FileIcon size={52} color={c} />,
-    title: "Digitaler Fahrzeugpass.",
-    text: "Wartung, Dokumente und Kosten an einem Ort — übertragbar an den nächsten Besitzer beim Verkauf.",
-  },
-  {
-    icon: (c) => <GaugeIcon size={52} color={c} />,
-    title: "Schlauer warten. Geld sparen.",
-    text: "Der AutoScore zeigt den Zustand, Erinnerungen verhindern teure Schäden, bevor sie entstehen.",
-  },
+const ICONS: ((color: string) => ReactNode)[] = [
+  () => <LogoMark size={92} />,
+  (c) => <ActivityIcon size={52} color={c} />,
+  (c) => <FileIcon size={52} color={c} />,
+  (c) => <GaugeIcon size={52} color={c} />,
 ];
 
 export default function OnboardingScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
@@ -55,6 +35,11 @@ export default function OnboardingScreen() {
   const slideWidth = Math.min(width, 520);
   const scroller = useRef<ScrollView>(null);
   const [index, setIndex] = useState(0);
+
+  const slides = t("onboarding.slides", { returnObjects: true }) as unknown as {
+    title: string;
+    text: string;
+  }[];
 
   const finish = () => {
     setOnboarded();
@@ -67,11 +52,11 @@ export default function OnboardingScreen() {
   };
 
   const next = () => {
-    if (index >= SLIDES.length - 1) return finish();
+    if (index >= slides.length - 1) return finish();
     scroller.current?.scrollTo({ x: (index + 1) * slideWidth, animated: true });
   };
 
-  const isLast = index === SLIDES.length - 1;
+  const isLast = index === slides.length - 1;
 
   return (
     <Screen flush>
@@ -79,7 +64,7 @@ export default function OnboardingScreen() {
       <View style={styles.top}>
         <Text style={styles.brand}>CarDNA</Text>
         <Pressable onPress={finish} hitSlop={10}>
-          <Text style={styles.skip}>Überspringen</Text>
+          <Text style={styles.skip}>{t("onboarding.skip")}</Text>
         </Pressable>
       </View>
 
@@ -91,9 +76,9 @@ export default function OnboardingScreen() {
         onMomentumScrollEnd={onScroll}
         style={styles.flex}
       >
-        {SLIDES.map((s, i) => (
+        {slides.map((s, i) => (
           <View key={i} style={[styles.slide, { width: slideWidth }]}>
-            <View style={styles.iconWrap}>{s.icon(colors.primary)}</View>
+            <View style={styles.iconWrap}>{ICONS[i]?.(colors.primary)}</View>
             <Text style={styles.title}>{s.title}</Text>
             <Text style={styles.text}>{s.text}</Text>
           </View>
@@ -101,14 +86,14 @@ export default function OnboardingScreen() {
       </ScrollView>
 
       <View style={styles.dots}>
-        {SLIDES.map((_, i) => (
+        {slides.map((_, i) => (
           <View key={i} style={[styles.dot, i === index && styles.dotActive]} />
         ))}
       </View>
 
       <View style={styles.actions}>
-        <Button size="lg" title={isLast ? "Konto erstellen" : "Weiter"} onPress={next} />
-        {isLast ? <Button variant="ghost" title="Ich habe schon ein Konto" onPress={finish} /> : null}
+        <Button size="lg" title={isLast ? t("onboarding.createAccount") : t("onboarding.next")} onPress={next} />
+        {isLast ? <Button variant="ghost" title={t("onboarding.haveAccount")} onPress={finish} /> : null}
       </View>
     </Screen>
   );

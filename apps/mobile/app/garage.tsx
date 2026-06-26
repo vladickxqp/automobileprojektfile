@@ -34,7 +34,12 @@ export default function GarageScreen() {
   });
 
   const hour = new Date().getHours();
-  const greeting = hour < 11 ? "Guten Morgen" : hour < 18 ? "Guten Tag" : "Guten Abend";
+  const greeting =
+    hour < 11
+      ? t("garage.greetingMorning")
+      : hour < 18
+        ? t("garage.greetingDay")
+        : t("garage.greetingEvening");
 
   if (!ready) {
     return (
@@ -71,20 +76,20 @@ export default function GarageScreen() {
                   <Text style={styles.heroLabel}>{greeting} 👋</Text>
                   <Text style={styles.heroTitle}>{t("garage.title")}</Text>
                 </View>
-                <Badge label={`${count} ${count === 1 ? "Auto" : "Autos"}`} tone="accent" />
+                <Badge label={`${count} ${t("garage.cars")}`} tone="accent" />
               </View>
               <Car3D height={220} />
               {fleet.data ? (
                 <View style={styles.glance}>
-                  <Glance value={String(fleet.data.vehicles)} label="Autos" colors={colors} styles={styles} />
+                  <Glance value={String(fleet.data.vehicles)} label={t("garage.cars")} colors={colors} styles={styles} />
                   <View style={styles.glanceDiv} />
-                  <Glance value={String(fleet.data.avgScore)} label="Ø-Score" colors={colors} styles={styles} />
+                  <Glance value={String(fleet.data.avgScore)} label={t("garage.avgScore")} colors={colors} styles={styles} />
                   <View style={styles.glanceDiv} />
-                  <Glance value={String(fleet.data.dueReminders)} label="Fällig" colors={colors} styles={styles} />
+                  <Glance value={String(fleet.data.dueReminders)} label={t("garage.due")} colors={colors} styles={styles} />
                 </View>
               ) : null}
             </Card>
-            {count > 0 ? <Text style={styles.sectionLabel}>FAHRZEUGE</Text> : null}
+            {count > 0 ? <Text style={styles.sectionLabel}>{t("garage.vehicles")}</Text> : null}
           </View>
         }
         renderItem={({ item }) => (
