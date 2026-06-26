@@ -91,6 +91,9 @@ export default function SignInScreen() {
               loading={busy}
               disabled={!email.trim() || password.length < 8}
             />
+            {mode === "signIn" ? (
+              <Button variant="ghost" title={t("auth.forgot")} onPress={() => router.push("/forgot-password")} />
+            ) : null}
 
             <View style={styles.divider}>
               <View style={styles.line} />

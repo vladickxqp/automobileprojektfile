@@ -25,7 +25,15 @@
     "or": "or",
     "continueGoogle": "Continue with Google",
     "continueApple": "Continue with Apple",
-    "tagline": "Your car's digital life record."
+    "tagline": "Your car's digital life record.",
+    "forgot": "Forgot password?"
+  },
+  "forgot": {
+    "title": "Reset password",
+    "intro": "Enter your email — we'll send you a reset link.",
+    "send": "Send link",
+    "sent": "If an account exists, an email is on its way.",
+    "back": "Back to sign in"
   },
   "garage": {
     "title": "My garage",

@@ -25,7 +25,15 @@
     "or": "oder",
     "continueGoogle": "Mit Google fortfahren",
     "continueApple": "Mit Apple fortfahren",
-    "tagline": "Die digitale Lebensakte deines Autos."
+    "tagline": "Die digitale Lebensakte deines Autos.",
+    "forgot": "Passwort vergessen?"
+  },
+  "forgot": {
+    "title": "Passwort zurücksetzen",
+    "intro": "Gib deine E-Mail ein — wir senden dir einen Link zum Zurücksetzen.",
+    "send": "Link senden",
+    "sent": "Wenn ein Konto existiert, ist eine E-Mail unterwegs.",
+    "back": "Zurück zur Anmeldung"
   },
   "garage": {
     "title": "Meine Garage",
