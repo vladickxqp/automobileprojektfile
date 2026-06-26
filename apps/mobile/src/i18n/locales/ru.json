@@ -43,7 +43,8 @@
     "history": "История обслуживания",
     "documents": "Документы",
     "remindersScreen": "Напоминания",
-    "assistant": "ИИ-ассистент"
+    "assistant": "ИИ-ассистент",
+    "diagnostics": "Диагностика"
   },
   "history": {
     "title": "История",
@@ -81,5 +82,16 @@
     "placeholder": "напр. Можно ли ехать с ошибкой P0401?",
     "send": "Отправить",
     "sources": "Источники"
+  },
+  "diagnostics": {
+    "title": "Диагностика OBD-II",
+    "demo": "Демо",
+    "bluetooth": "Bluetooth",
+    "scan": "Подключить и сканировать",
+    "connecting": "Подключение…",
+    "reading": "Чтение ошибок…",
+    "empty": "Пока нет сканов",
+    "noCodes": "Ошибок нет — всё чисто",
+    "unknownCode": "Неизвестный код"
   }
 }

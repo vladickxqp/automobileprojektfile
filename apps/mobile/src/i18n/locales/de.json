@@ -43,7 +43,8 @@
     "history": "Servicehistorie",
     "documents": "Dokumente",
     "remindersScreen": "Erinnerungen",
-    "assistant": "KI-Assistent"
+    "assistant": "KI-Assistent",
+    "diagnostics": "Diagnose"
   },
   "history": {
     "title": "Verlauf",
@@ -81,5 +82,16 @@
     "placeholder": "z. B. Kann ich mit P0401 fahren?",
     "send": "Senden",
     "sources": "Quellen"
+  },
+  "diagnostics": {
+    "title": "OBD-II-Diagnose",
+    "demo": "Demo",
+    "bluetooth": "Bluetooth",
+    "scan": "Verbinden & scannen",
+    "connecting": "Verbinde…",
+    "reading": "Lese Codes…",
+    "empty": "Noch keine Scans",
+    "noCodes": "Keine Fehlercodes — alles in Ordnung",
+    "unknownCode": "Unbekannter Code"
   }
 }

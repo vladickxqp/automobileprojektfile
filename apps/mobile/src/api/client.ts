@@ -120,6 +120,23 @@ export interface AssistantReplyDTO {
   sources: AssistantSource[];
 }
 
+export interface DecodedDtcDTO {
+  code: string;
+  description: string | null;
+  system: string | null;
+  severity: number | null;
+}
+
+export interface ScanDTO {
+  id: string;
+  vehicleId: string;
+  adapterInfo: string | null;
+  dtcCodes: string[];
+  mileageKm: number | null;
+  scannedAt: string;
+  decoded: DecodedDtcDTO[];
+}
+
 export interface UploadFile {
   uri: string;
   name: string;
@@ -240,4 +257,9 @@ export const api = {
       method: "POST",
       body: { message },
     }),
+  listScans: (vehicleId: string) => request<ScanDTO[]>(`/vehicles/${vehicleId}/scans`),
+  createScan: (
+    vehicleId: string,
+    body: { dtcCodes: string[]; adapterInfo?: string; mileageKm?: number },
+  ) => request<ScanDTO>(`/vehicles/${vehicleId}/scans`, { method: "POST", body }),
 };

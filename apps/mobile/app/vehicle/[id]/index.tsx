@@ -76,6 +76,10 @@ export default function VehicleDashboard() {
             onPress={() => router.push(`/vehicle/${id}/assistant`)}
           />
           <Button
+            title={t("dashboard.diagnostics")}
+            onPress={() => router.push(`/vehicle/${id}/diagnostics`)}
+          />
+          <Button
             variant="secondary"
             title={t("dashboard.history")}
             onPress={() => router.push(`/vehicle/${id}/history`)}

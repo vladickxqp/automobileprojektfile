@@ -43,7 +43,8 @@
     "history": "Service history",
     "documents": "Documents",
     "remindersScreen": "Reminders",
-    "assistant": "AI assistant"
+    "assistant": "AI assistant",
+    "diagnostics": "Diagnostics"
   },
   "history": {
     "title": "History",
@@ -81,5 +82,16 @@
     "placeholder": "e.g. Can I drive with P0401?",
     "send": "Send",
     "sources": "Sources"
+  },
+  "diagnostics": {
+    "title": "OBD-II diagnostics",
+    "demo": "Demo",
+    "bluetooth": "Bluetooth",
+    "scan": "Connect & scan",
+    "connecting": "Connecting…",
+    "reading": "Reading codes…",
+    "empty": "No scans yet",
+    "noCodes": "No fault codes — all clear",
+    "unknownCode": "Unknown code"
   }
 }

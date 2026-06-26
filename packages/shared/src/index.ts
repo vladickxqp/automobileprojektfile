@@ -6,4 +6,5 @@ export * from "./vin-decode";
 export * from "./event";
 export * from "./document";
 export * from "./reminder";
+export * from "./obd";
 export * from "./score";
