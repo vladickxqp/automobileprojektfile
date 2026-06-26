@@ -163,6 +163,23 @@ export function UserIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconPro
   );
 }
 
+export function CarIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Path
+        d="M5 13l1.6-4.6A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.4L19 13"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Rect x={3} y={13} width={18} height={5} rx={1.5} stroke={color} strokeWidth={strokeWidth} />
+      <Circle cx={7.5} cy={18.5} r={1.4} fill={color} />
+      <Circle cx={16.5} cy={18.5} r={1.4} fill={color} />
+    </Svg>
+  );
+}
+
 export function SettingsIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
   return (
     <Svg {...base(size)}>

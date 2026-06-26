@@ -1,18 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useMemo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { api } from "../src/api/client";
-import { useAuth } from "../src/auth/AuthContext";
-import { useTheme } from "../src/theme/ThemeProvider";
-import { radius, spacing, typography, type ThemeColors } from "../src/theme/tokens";
-import { Badge } from "../src/ui/Badge";
-import { Button } from "../src/ui/Button";
-import { Card } from "../src/ui/Card";
-import { LogoMark } from "../src/ui/Logo";
-import { Screen } from "../src/ui/Screen";
-import { ChevronRightIcon, CrownIcon, GaugeIcon, LayersIcon, SettingsIcon } from "../src/ui/icons";
+import { api } from "../../src/api/client";
+import { useAuth } from "../../src/auth/AuthContext";
+import { useTheme } from "../../src/theme/ThemeProvider";
+import { radius, spacing, typography, type ThemeColors } from "../../src/theme/tokens";
+import { Badge } from "../../src/ui/Badge";
+import { Button } from "../../src/ui/Button";
+import { Card } from "../../src/ui/Card";
+import { LogoMark } from "../../src/ui/Logo";
+import { Screen } from "../../src/ui/Screen";
+import { ChevronRightIcon, CrownIcon, GaugeIcon, LayersIcon, SettingsIcon } from "../../src/ui/icons";
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
@@ -26,7 +26,6 @@ export default function ProfileScreen() {
 
   return (
     <Screen flush>
-      <Stack.Screen options={{ title: t("profile.title") }} />
       <ScrollView contentContainerStyle={styles.content}>
         <Card elevated style={styles.head}>
           <View style={styles.avatar}>

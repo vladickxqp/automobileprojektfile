@@ -1,20 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import { Redirect, Stack, useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import { api } from "../src/api/client";
-import { useAuth } from "../src/auth/AuthContext";
-import { useTheme } from "../src/theme/ThemeProvider";
-import { spacing, typography, type ThemeColors } from "../src/theme/tokens";
-import { Badge } from "../src/ui/Badge";
-import { Button } from "../src/ui/Button";
-import { Card } from "../src/ui/Card";
-import { CarPhoto } from "../src/ui/CarPhoto";
-import { IconButton } from "../src/ui/IconButton";
-import { Screen } from "../src/ui/Screen";
-import { Skeleton } from "../src/ui/Skeleton";
-import { ChevronRightIcon, PlusIcon, UserIcon } from "../src/ui/icons";
+import { api } from "../../src/api/client";
+import { useAuth } from "../../src/auth/AuthContext";
+import { useTheme } from "../../src/theme/ThemeProvider";
+import { spacing, typography, type ThemeColors } from "../../src/theme/tokens";
+import { Badge } from "../../src/ui/Badge";
+import { Button } from "../../src/ui/Button";
+import { Card } from "../../src/ui/Card";
+import { CarPhoto } from "../../src/ui/CarPhoto";
+import { Screen } from "../../src/ui/Screen";
+import { Skeleton } from "../../src/ui/Skeleton";
+import { ChevronRightIcon, PlusIcon } from "../../src/ui/icons";
 
 export default function GarageScreen() {
   const { t } = useTranslation();
@@ -55,16 +54,6 @@ export default function GarageScreen() {
 
   return (
     <Screen flush>
-      <Stack.Screen
-        options={{
-          title: t("garage.title"),
-          headerLeft: () => (
-            <IconButton variant="ghost" accessibilityLabel="Profil" onPress={() => router.push("/profile")}>
-              <UserIcon size={20} color={colors.textMuted} />
-            </IconButton>
-          ),
-        }}
-      />
       <FlatList
         data={vehicles.data ?? []}
         keyExtractor={(v) => v.id}

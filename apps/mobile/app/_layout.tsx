@@ -23,7 +23,9 @@ function ThemedStack() {
           contentStyle: { backgroundColor: colors.background },
           headerRight: () => <ThemeToggle />,
         }}
-      />
+      >
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
     </>
   );
 }

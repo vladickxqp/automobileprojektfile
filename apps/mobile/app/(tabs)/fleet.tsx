@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { api } from "../src/api/client";
-import { useTheme } from "../src/theme/ThemeProvider";
-import { spacing, typography, type ThemeColors } from "../src/theme/tokens";
-import { Badge } from "../src/ui/Badge";
-import { Card } from "../src/ui/Card";
-import { Screen } from "../src/ui/Screen";
-import { ScoreRing } from "../src/ui/ScoreRing";
-import { StatTile } from "../src/ui/StatTile";
-import { BellIcon, ChartIcon, ChevronRightIcon, GaugeIcon, LayersIcon } from "../src/ui/icons";
+import { api } from "../../src/api/client";
+import { useTheme } from "../../src/theme/ThemeProvider";
+import { spacing, typography, type ThemeColors } from "../../src/theme/tokens";
+import { Badge } from "../../src/ui/Badge";
+import { Card } from "../../src/ui/Card";
+import { Screen } from "../../src/ui/Screen";
+import { ScoreRing } from "../../src/ui/ScoreRing";
+import { StatTile } from "../../src/ui/StatTile";
+import { BellIcon, ChartIcon, ChevronRightIcon, GaugeIcon, LayersIcon } from "../../src/ui/icons";
 
 export default function FleetScreen() {
   const { t } = useTranslation();
@@ -25,7 +25,6 @@ export default function FleetScreen() {
   if (summary.isLoading || !summary.data) {
     return (
       <Screen>
-        <Stack.Screen options={{ title: t("fleet.title") }} />
         <ActivityIndicator color={colors.primary} />
       </Screen>
     );
@@ -35,7 +34,6 @@ export default function FleetScreen() {
 
   return (
     <Screen flush>
-      <Stack.Screen options={{ title: t("fleet.title") }} />
       <ScrollView contentContainerStyle={styles.content}>
         <Card elevated style={styles.hero}>
           <ScoreRing score={s.avgScore} label={t("fleet.avgCondition")} size={120} />
