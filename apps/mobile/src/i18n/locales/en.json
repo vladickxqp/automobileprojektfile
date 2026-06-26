@@ -44,7 +44,13 @@
     "documents": "Documents",
     "remindersScreen": "Reminders",
     "assistant": "AI assistant",
-    "diagnostics": "Diagnostics"
+    "diagnostics": "Diagnostics",
+    "computeScore": "Compute AutoScore",
+    "recomputeScore": "Recompute",
+    "prepareSale": "Prepare for sale",
+    "prepareSaleHint": "Generate a shareable report for buyers.",
+    "generateReport": "Generate report",
+    "regenerateReport": "Regenerate report"
   },
   "history": {
     "title": "History",

@@ -137,6 +137,28 @@ export interface ScanDTO {
   decoded: DecodedDtcDTO[];
 }
 
+export interface ScoreFactorDTO {
+  key: string;
+  label: string;
+  weight: number;
+  score: number;
+}
+
+export interface ScoreDTO {
+  id: string;
+  vehicleId: string;
+  score: number;
+  factors: ScoreFactorDTO[];
+  computedAt: string;
+}
+
+export interface SaleReportRefDTO {
+  id: string;
+  slug: string;
+  url: string;
+  expiresAt: string;
+}
+
 export interface UploadFile {
   uri: string;
   name: string;
@@ -262,4 +284,9 @@ export const api = {
     vehicleId: string,
     body: { dtcCodes: string[]; adapterInfo?: string; mileageKm?: number },
   ) => request<ScanDTO>(`/vehicles/${vehicleId}/scans`, { method: "POST", body }),
+  getScore: (vehicleId: string) => request<ScoreDTO>(`/vehicles/${vehicleId}/score`),
+  computeScore: (vehicleId: string) =>
+    request<ScoreDTO>(`/vehicles/${vehicleId}/score`, { method: "POST", body: {} }),
+  generateSaleReport: (vehicleId: string) =>
+    request<SaleReportRefDTO>(`/vehicles/${vehicleId}/sale-report`, { method: "POST", body: {} }),
 };

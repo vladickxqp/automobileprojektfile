@@ -44,7 +44,13 @@
     "documents": "Dokumente",
     "remindersScreen": "Erinnerungen",
     "assistant": "KI-Assistent",
-    "diagnostics": "Diagnose"
+    "diagnostics": "Diagnose",
+    "computeScore": "AutoScore berechnen",
+    "recomputeScore": "Neu berechnen",
+    "prepareSale": "Verkauf vorbereiten",
+    "prepareSaleHint": "Erstelle einen teilbaren Bericht für Käufer.",
+    "generateReport": "Bericht erstellen",
+    "regenerateReport": "Bericht neu erstellen"
   },
   "history": {
     "title": "Verlauf",

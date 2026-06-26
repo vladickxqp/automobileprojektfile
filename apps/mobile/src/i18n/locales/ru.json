@@ -44,7 +44,13 @@
     "documents": "Документы",
     "remindersScreen": "Напоминания",
     "assistant": "ИИ-ассистент",
-    "diagnostics": "Диагностика"
+    "diagnostics": "Диагностика",
+    "computeScore": "Посчитать AutoScore",
+    "recomputeScore": "Пересчитать",
+    "prepareSale": "Подготовить к продаже",
+    "prepareSaleHint": "Создайте ссылку-отчёт для покупателей.",
+    "generateReport": "Создать отчёт",
+    "regenerateReport": "Пересоздать отчёт"
   },
   "history": {
     "title": "История",

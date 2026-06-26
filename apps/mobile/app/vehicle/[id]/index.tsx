@@ -1,21 +1,47 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 import { api } from "../../../src/api/client";
+import { API_URL } from "../../../src/api/config";
 import { Button } from "../../../src/ui/Button";
 import { Card } from "../../../src/ui/Card";
 import { Screen } from "../../../src/ui/Screen";
 import { colors, spacing, typography } from "../../../src/theme/tokens";
 
+function scoreColor(score: number): string {
+  if (score >= 80) return colors.success;
+  if (score >= 60) return colors.warning;
+  return colors.danger;
+}
+
 export default function VehicleDashboard() {
   const { t } = useTranslation();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const [reportUrl, setReportUrl] = useState<string | null>(null);
 
   const vehicle = useQuery({ queryKey: ["vehicle", id], queryFn: () => api.getVehicle(id), enabled: !!id });
   const summary = useQuery({ queryKey: ["expenses", id], queryFn: () => api.expenseSummary(id), enabled: !!id });
   const reminders = useQuery({ queryKey: ["reminders", id], queryFn: () => api.listReminders(id), enabled: !!id });
+  const score = useQuery({
+    queryKey: ["score", id],
+    queryFn: () => api.getScore(id),
+    enabled: !!id,
+    retry: false,
+  });
+
+  const computeScore = useMutation({
+    mutationFn: () => api.computeScore(id),
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ["score", id] }),
+  });
+
+  const saleReport = useMutation({
+    mutationFn: () => api.generateSaleReport(id),
+    onSuccess: (report) => setReportUrl(`${API_URL}${report.url}`),
+  });
 
   if (vehicle.isLoading || !vehicle.data) {
     return (
@@ -29,6 +55,7 @@ export default function VehicleDashboard() {
   const v = vehicle.data;
   const eur = summary.data?.byCurrency.EUR;
   const nextReminders = (reminders.data ?? []).slice(0, 2);
+  const scoreValue = score.data?.score ?? null;
 
   return (
     <Screen>
@@ -36,8 +63,20 @@ export default function VehicleDashboard() {
       <ScrollView contentContainerStyle={styles.content}>
         <Card style={styles.scoreCard}>
           <Text style={styles.scoreLabel}>AutoScore</Text>
-          <Text style={styles.scoreValue}>—</Text>
-          <Text style={styles.muted}>{t("dashboard.scoreSoon")}</Text>
+          <Text
+            style={[
+              styles.scoreValue,
+              { color: scoreValue != null ? scoreColor(scoreValue) : colors.textMuted },
+            ]}
+          >
+            {scoreValue ?? "—"}
+          </Text>
+          <Button
+            variant="secondary"
+            title={scoreValue == null ? t("dashboard.computeScore") : t("dashboard.recomputeScore")}
+            loading={computeScore.isPending}
+            onPress={() => computeScore.mutate()}
+          />
         </Card>
 
         <Card>
@@ -68,6 +107,22 @@ export default function VehicleDashboard() {
               />
             ))
           )}
+        </Card>
+
+        <Card>
+          <Text style={styles.cardTitle}>{t("dashboard.prepareSale")}</Text>
+          {reportUrl ? (
+            <Text selectable style={styles.link}>
+              {reportUrl}
+            </Text>
+          ) : (
+            <Text style={styles.muted}>{t("dashboard.prepareSaleHint")}</Text>
+          )}
+          <Button
+            title={reportUrl ? t("dashboard.regenerateReport") : t("dashboard.generateReport")}
+            loading={saleReport.isPending}
+            onPress={() => saleReport.mutate()}
+          />
         </Card>
 
         <View style={styles.actions}>
@@ -111,12 +166,13 @@ function Row({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   content: { gap: spacing.md, paddingBottom: spacing.xl },
-  scoreCard: { alignItems: "center", gap: spacing.xs },
+  scoreCard: { alignItems: "center", gap: spacing.sm },
   scoreLabel: { ...typography.caption, color: colors.textMuted, letterSpacing: 1 },
-  scoreValue: { fontSize: 48, fontWeight: "700", color: colors.primary },
+  scoreValue: { fontSize: 48, fontWeight: "700" },
   cardTitle: { ...typography.caption, color: colors.textMuted, letterSpacing: 1 },
   bigValue: { ...typography.h1, color: colors.text },
-  muted: { ...typography.caption, color: colors.textMuted },
+  muted: { ...typography.caption, color: colors.textMuted, marginBottom: spacing.sm },
+  link: { ...typography.caption, color: colors.primary, marginBottom: spacing.sm },
   row: { flexDirection: "row", justifyContent: "space-between", paddingVertical: spacing.xs },
   rowLabel: { ...typography.body, color: colors.textMuted, flexShrink: 1, paddingRight: spacing.sm },
   rowValue: { ...typography.body, color: colors.text, fontWeight: "600" },
