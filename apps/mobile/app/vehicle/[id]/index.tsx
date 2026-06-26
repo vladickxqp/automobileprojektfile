@@ -3,7 +3,7 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import type { ScoreFactorDTO } from "../../../src/api/client";
+import type { DocumentDTO, ReminderDTO, ScoreFactorDTO } from "../../../src/api/client";
 import { api } from "../../../src/api/client";
 import { API_URL } from "../../../src/api/config";
 import { useTheme } from "../../../src/theme/ThemeProvider";
@@ -29,6 +29,46 @@ import {
   WrenchIcon,
 } from "../../../src/ui/icons";
 
+const DOC_LABEL: Record<string, string> = {
+  insurance: "Versicherung",
+  TÜV: "TÜV / HU",
+  techpassport: "Fahrzeugschein",
+  invoice: "Rechnung",
+  contract: "Vertrag",
+};
+
+interface Upcoming {
+  id: string;
+  label: string;
+  date: string;
+}
+
+function buildUpcoming(reminders: ReminderDTO[], documents: DocumentDTO[]): Upcoming[] {
+  const items: Upcoming[] = [
+    ...reminders.filter((r) => r.dueDate).map((r) => ({ id: `r-${r.id}`, label: r.title, date: r.dueDate as string })),
+    ...documents
+      .filter((d) => d.expiresAt)
+      .map((d) => ({ id: `d-${d.id}`, label: `${DOC_LABEL[d.type] ?? d.type} läuft ab`, date: d.expiresAt as string })),
+  ];
+  return items.sort((a, b) => +new Date(a.date) - +new Date(b.date)).slice(0, 4);
+}
+
+function daysUntil(date: string): number {
+  return Math.ceil((+new Date(date) - Date.now()) / 86_400_000);
+}
+function dueColor(date: string, colors: ThemeColors): string {
+  const d = daysUntil(date);
+  if (d < 30) return colors.danger;
+  if (d < 90) return colors.warning;
+  return colors.textMuted;
+}
+function dueText(date: string): string {
+  const d = daysUntil(date);
+  if (d < 0) return "überfällig";
+  if (d === 0) return "heute";
+  return `in ${d} Tg.`;
+}
+
 export default function VehicleDashboard() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -41,6 +81,7 @@ export default function VehicleDashboard() {
   const vehicle = useQuery({ queryKey: ["vehicle", id], queryFn: () => api.getVehicle(id), enabled: !!id });
   const summary = useQuery({ queryKey: ["expenses", id], queryFn: () => api.expenseSummary(id), enabled: !!id });
   const reminders = useQuery({ queryKey: ["reminders", id], queryFn: () => api.listReminders(id), enabled: !!id });
+  const documents = useQuery({ queryKey: ["documents", id], queryFn: () => api.listDocuments(id), enabled: !!id });
   const score = useQuery({ queryKey: ["score", id], queryFn: () => api.getScore(id), enabled: !!id });
 
   const computeScore = useMutation({
@@ -64,7 +105,7 @@ export default function VehicleDashboard() {
 
   const v = vehicle.data;
   const eur = summary.data?.byCurrency.EUR;
-  const nextReminders = (reminders.data ?? []).slice(0, 2);
+  const upcoming = buildUpcoming(reminders.data ?? [], documents.data ?? []);
   const scoreValue = score.data?.score ?? null;
   const factors = score.data?.factors ?? [];
 
@@ -122,23 +163,28 @@ export default function VehicleDashboard() {
           </Text>
         </Card>
 
-        {/* Reminders */}
+        {/* Upcoming deadlines (reminders + document expiries) */}
         <Card>
           <View style={styles.cardHeadRow}>
-            <Text style={styles.cardTitle}>{t("dashboard.reminders")}</Text>
+            <Text style={styles.cardTitle}>Anstehend</Text>
             <BellIcon size={18} color={colors.textMuted} />
           </View>
-          {nextReminders.length === 0 ? (
+          {upcoming.length === 0 ? (
             <Text style={styles.muted}>{t("dashboard.noReminders")}</Text>
           ) : (
-            nextReminders.map((r) => (
-              <View key={r.id} style={styles.row}>
-                <Text style={styles.rowLabel}>{r.title}</Text>
-                <Text style={styles.rowValue}>
-                  {r.dueDate ? new Date(r.dueDate).toLocaleDateString("de-DE") : "—"}
-                </Text>
-              </View>
-            ))
+            upcoming.map((u) => {
+              const tone = dueColor(u.date, colors);
+              return (
+                <View key={u.id} style={styles.upRow}>
+                  <View style={[styles.upDot, { backgroundColor: tone }]} />
+                  <Text style={styles.upLabel} numberOfLines={1}>
+                    {u.label}
+                  </Text>
+                  <Text style={styles.upDate}>{new Date(u.date).toLocaleDateString("de-DE")}</Text>
+                  <Text style={[styles.upIn, { color: tone }]}>{dueText(u.date)}</Text>
+                </View>
+              );
+            })
           )}
         </Card>
 
@@ -301,6 +347,11 @@ const makeStyles = (colors: ThemeColors) =>
     row: { flexDirection: "row", justifyContent: "space-between", paddingVertical: spacing.xs },
     rowLabel: { ...typography.body, color: colors.textMuted, flexShrink: 1, paddingRight: spacing.sm },
     rowValue: { ...typography.body, color: colors.text, fontWeight: "600" },
+    upRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm, paddingVertical: spacing.sm },
+    upDot: { width: 8, height: 8, borderRadius: 4 },
+    upLabel: { ...typography.body, color: colors.text, flex: 1 },
+    upDate: { ...typography.caption, color: colors.textMuted },
+    upIn: { ...typography.caption, fontWeight: "700", width: 66, textAlign: "right" },
     sectionLabel: { ...typography.label, color: colors.textMuted, marginTop: spacing.sm },
     actionsGrid: { flexDirection: "row", flexWrap: "wrap", gap: spacing.md },
     action: {
