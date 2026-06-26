@@ -61,7 +61,9 @@
     "model": "Modell",
     "year": "Jahr",
     "save": "Auto speichern",
-    "createFailed": "Auto konnte nicht gespeichert werden"
+    "createFailed": "Auto konnte nicht gespeichert werden",
+    "addPhoto": "Foto hinzufügen",
+    "changePhoto": "Foto ändern"
   },
   "dashboard": {
     "vin": "FIN",

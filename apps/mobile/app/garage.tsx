@@ -10,7 +10,7 @@ import { spacing, typography, type ThemeColors } from "../src/theme/tokens";
 import { Badge } from "../src/ui/Badge";
 import { Button } from "../src/ui/Button";
 import { Card } from "../src/ui/Card";
-import { Car3D } from "../src/ui/Car3D";
+import { CarPhoto } from "../src/ui/CarPhoto";
 import { IconButton } from "../src/ui/IconButton";
 import { Screen } from "../src/ui/Screen";
 import { Skeleton } from "../src/ui/Skeleton";
@@ -79,7 +79,6 @@ export default function GarageScreen() {
                 </View>
                 <Badge label={`${count} ${t("garage.cars")}`} tone="accent" />
               </View>
-              <Car3D height={220} />
               {fleet.data ? (
                 <View style={styles.glance}>
                   <Glance value={String(fleet.data.vehicles)} label={t("garage.cars")} colors={colors} styles={styles} />
@@ -98,6 +97,7 @@ export default function GarageScreen() {
             {({ pressed }) => (
               <Card style={[styles.carCard, pressed && styles.carCardPressed]}>
                 <View style={styles.carCardRow}>
+                  <CarPhoto uri={item.photoUrl} width={88} height={64} radius={10} />
                   <View style={styles.carInfo}>
                     <Text style={styles.carTitle}>
                       {item.make} {item.model}

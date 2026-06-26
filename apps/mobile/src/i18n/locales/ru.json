@@ -61,7 +61,9 @@
     "model": "Модель",
     "year": "Год",
     "save": "Сохранить авто",
-    "createFailed": "Не удалось сохранить авто"
+    "createFailed": "Не удалось сохранить авто",
+    "addPhoto": "Добавить фото",
+    "changePhoto": "Изменить фото"
   },
   "dashboard": {
     "vin": "VIN",

@@ -61,7 +61,9 @@
     "model": "Model",
     "year": "Year",
     "save": "Save car",
-    "createFailed": "Could not save car"
+    "createFailed": "Could not save car",
+    "addPhoto": "Add photo",
+    "changePhoto": "Change photo"
   },
   "dashboard": {
     "vin": "VIN",

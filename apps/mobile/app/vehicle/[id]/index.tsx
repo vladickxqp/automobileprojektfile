@@ -10,7 +10,7 @@ import { useTheme } from "../../../src/theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
 import { Button } from "../../../src/ui/Button";
 import { Card } from "../../../src/ui/Card";
-import { Car3D } from "../../../src/ui/Car3D";
+import { CarPhoto } from "../../../src/ui/CarPhoto";
 import { Screen } from "../../../src/ui/Screen";
 import { ScoreRing, scoreColor } from "../../../src/ui/ScoreRing";
 import { Skeleton } from "../../../src/ui/Skeleton";
@@ -109,7 +109,7 @@ export default function VehicleDashboard() {
       <Stack.Screen options={{ title: `${v.make} ${v.model}` }} />
       <ScrollView contentContainerStyle={styles.content}>
         <Card elevated style={styles.hero}>
-          <Car3D height={250} />
+          <CarPhoto uri={v.photoUrl} height={210} />
           <Text style={styles.heroTitle}>
             {v.make} {v.model}
           </Text>

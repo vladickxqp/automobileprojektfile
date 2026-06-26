@@ -39,6 +39,7 @@ export interface CreateVehicleInput {
   engine?: string;
   plate?: string;
   mileageKm?: number;
+  photoUrl?: string;
 }
 
 export interface VehicleEventDTO {

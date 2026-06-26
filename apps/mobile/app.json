@@ -18,6 +18,7 @@
       "expo-router",
       "expo-localization",
       "expo-secure-store",
+      "expo-image-picker",
       "react-native-ble-plx"
     ],
     "experiments": {

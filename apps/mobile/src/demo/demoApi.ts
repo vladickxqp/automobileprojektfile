@@ -79,7 +79,7 @@ export const demoApi = {
       year: input.year,
       engine: input.engine ?? null,
       plate: input.plate ?? null,
-      photoUrl: null,
+      photoUrl: input.photoUrl ?? null,
       mileageKm: input.mileageKm ?? null,
       createdAt: nowIso,
       updatedAt: nowIso,

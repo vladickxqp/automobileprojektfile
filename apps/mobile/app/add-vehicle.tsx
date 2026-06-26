@@ -1,13 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
+import * as ImagePicker from "expo-image-picker";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, ScrollView, StyleSheet, Text } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { api } from "../src/api/client";
 import { decodeVin as decodeVinReal } from "../src/api/vin";
 import { useTheme } from "../src/theme/ThemeProvider";
 import { spacing, typography, type ThemeColors } from "../src/theme/tokens";
 import { Button } from "../src/ui/Button";
+import { CarPhoto } from "../src/ui/CarPhoto";
 import { Screen } from "../src/ui/Screen";
 import { TextField } from "../src/ui/TextField";
 
@@ -22,7 +24,17 @@ export default function AddVehicleScreen() {
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
+  const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [decoding, setDecoding] = useState(false);
+
+  const pickPhoto = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      quality: 0.7,
+    });
+    if (!result.canceled && result.assets[0]) setPhotoUri(result.assets[0].uri);
+  };
 
   const onDecode = async () => {
     const value = vin.trim().toUpperCase();
@@ -56,6 +68,7 @@ export default function AddVehicleScreen() {
         make: make.trim(),
         model: model.trim(),
         year: Number(year),
+        photoUrl: photoUri ?? undefined,
       }),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["vehicles"] });
@@ -72,6 +85,14 @@ export default function AddVehicleScreen() {
     <Screen>
       <Stack.Screen options={{ title: t("addCar.title") }} />
       <ScrollView contentContainerStyle={styles.form}>
+        <View style={styles.photoWrap}>
+          <CarPhoto uri={photoUri} height={180} />
+        </View>
+        <Button
+          variant="secondary"
+          title={photoUri ? t("addCar.changePhoto") : t("addCar.addPhoto")}
+          onPress={pickPhoto}
+        />
         <Text style={styles.hint}>{t("addCar.vinHint")}</Text>
         <TextField
           label={t("addCar.vin")}
@@ -105,5 +126,6 @@ export default function AddVehicleScreen() {
 const makeStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     form: { gap: spacing.md, paddingBottom: spacing.xl },
+    photoWrap: { marginBottom: spacing.xs },
     hint: { ...typography.caption, color: colors.textMuted },
   });
