@@ -7,7 +7,7 @@ import { useTheme } from "../src/theme/ThemeProvider";
 import { spacing, typography, type ThemeColors } from "../src/theme/tokens";
 import { Button } from "../src/ui/Button";
 import { Card } from "../src/ui/Card";
-import { Car3D } from "../src/ui/Car3D";
+import { CarSilhouette } from "../src/ui/CarSilhouette";
 import { Screen } from "../src/ui/Screen";
 import { TextField } from "../src/ui/TextField";
 
@@ -45,7 +45,7 @@ export default function SignInScreen() {
       >
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <View style={styles.hero}>
-            <Car3D height={250} />
+            <CarSilhouette width={300} height={140} />
           </View>
 
           <Text style={styles.brand}>AutoLife</Text>
@@ -102,6 +102,9 @@ const makeStyles = (colors: ThemeColors) =>
       borderWidth: 1,
       borderColor: colors.border,
       overflow: "hidden",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: spacing.xl,
       marginBottom: spacing.sm,
     },
     brand: { ...typography.display, color: colors.text, textAlign: "center" },

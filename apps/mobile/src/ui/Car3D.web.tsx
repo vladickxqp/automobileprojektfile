@@ -5,57 +5,115 @@ import { ContactShadows, Environment, Lightformer, OrbitControls, RoundedBox } f
 import { useTheme } from "../theme/ThemeProvider";
 import type { Car3DProps } from "./Car3D";
 
-// A real WebGL 3D car, built from primitives so it needs no external model asset. Glossy
-// car-paint material + studio lighting + contact shadow; drag to orbit, gentle auto-rotate.
+// A real WebGL 3D car built from primitives (no external model asset, works offline). Shaped like a
+// low sports coupé: stepped body, raked greenhouse, wheel wells and spoked rims. Glossy car-paint
+// material + studio lighting + contact shadow; drag to orbit, gentle auto-rotate.
+
+function Wheel({ x, z }: { x: number; z: number }) {
+  const spokes = [0, 1, 2, 3, 4];
+  return (
+    <group position={[x, 0.5, z]} rotation={[Math.PI / 2, 0, 0]}>
+      {/* tyre */}
+      <mesh castShadow>
+        <cylinderGeometry args={[0.5, 0.5, 0.36, 40]} />
+        <meshStandardMaterial color="#0b0c0f" roughness={0.85} metalness={0.1} />
+      </mesh>
+      {/* rim dish */}
+      <mesh position={[0, 0.19, 0]}>
+        <cylinderGeometry args={[0.33, 0.33, 0.04, 32]} />
+        <meshStandardMaterial color="#d7dce2" metalness={0.95} roughness={0.22} />
+      </mesh>
+      {/* spokes */}
+      {spokes.map((i) => (
+        <mesh key={i} position={[0, 0.2, 0]} rotation={[0, (i / spokes.length) * Math.PI, 0]}>
+          <boxGeometry args={[0.06, 0.05, 0.5]} />
+          <meshStandardMaterial color="#b9c0c8" metalness={0.9} roughness={0.3} />
+        </mesh>
+      ))}
+      {/* hub cap */}
+      <mesh position={[0, 0.215, 0]}>
+        <cylinderGeometry args={[0.09, 0.09, 0.06, 16]} />
+        <meshStandardMaterial color="#5f656d" metalness={0.8} roughness={0.4} />
+      </mesh>
+    </group>
+  );
+}
+
 function CarModel({ paint, glass }: { paint: string; glass: string }) {
-  const wheelPositions: [number, number][] = [
-    [1.18, 0.82],
-    [1.18, -0.82],
-    [-1.18, 0.82],
-    [-1.18, -0.82],
+  const wheels: [number, number][] = [
+    [1.4, 0.86],
+    [1.4, -0.86],
+    [-1.4, 0.86],
+    [-1.4, -0.86],
   ];
+  const paintMat = (
+    <meshPhysicalMaterial color={paint} metalness={0.7} roughness={0.27} clearcoat={1} clearcoatRoughness={0.13} />
+  );
+  const glassMat = (
+    <meshPhysicalMaterial color={glass} metalness={0.5} roughness={0.06} clearcoat={1} clearcoatRoughness={0.04} />
+  );
 
   return (
     <group position={[0, 0, 0]}>
       {/* lower body */}
-      <RoundedBox args={[3.9, 0.6, 1.75]} radius={0.22} smoothness={6} position={[0, 0.52, 0]} castShadow>
-        <meshPhysicalMaterial color={paint} metalness={0.7} roughness={0.28} clearcoat={1} clearcoatRoughness={0.14} />
+      <RoundedBox args={[4.3, 0.5, 1.85]} radius={0.26} smoothness={6} position={[0, 0.5, 0]} castShadow>
+        {paintMat}
       </RoundedBox>
-      {/* hood / boot deck wedge */}
-      <RoundedBox args={[3.5, 0.42, 1.6]} radius={0.2} smoothness={6} position={[0, 0.86, 0]} castShadow>
-        <meshPhysicalMaterial color={paint} metalness={0.7} roughness={0.3} clearcoat={1} clearcoatRoughness={0.16} />
+      {/* shoulder line (slightly narrower upper) */}
+      <RoundedBox args={[4.05, 0.42, 1.72]} radius={0.26} smoothness={6} position={[0, 0.8, 0]} castShadow>
+        {paintMat}
+      </RoundedBox>
+      {/* hood — sloped down toward the nose */}
+      <RoundedBox args={[1.3, 0.3, 1.66]} radius={0.14} smoothness={6} position={[1.4, 0.86, 0]} rotation={[0, 0, -0.09]} castShadow>
+        {paintMat}
+      </RoundedBox>
+      {/* rear deck */}
+      <RoundedBox args={[1.05, 0.32, 1.66]} radius={0.14} smoothness={6} position={[-1.55, 0.88, 0]} castShadow>
+        {paintMat}
       </RoundedBox>
       {/* greenhouse / cabin */}
-      <RoundedBox args={[1.95, 0.6, 1.45]} radius={0.26} smoothness={6} position={[-0.15, 1.2, 0]} castShadow>
-        <meshPhysicalMaterial color={glass} metalness={0.5} roughness={0.06} clearcoat={1} clearcoatRoughness={0.05} />
+      <RoundedBox args={[2.0, 0.5, 1.4]} radius={0.3} smoothness={6} position={[-0.15, 1.12, 0]} castShadow>
+        {glassMat}
       </RoundedBox>
+      {/* raked windshield */}
+      <RoundedBox args={[0.7, 0.5, 1.36]} radius={0.08} smoothness={5} position={[0.82, 1.02, 0]} rotation={[0, 0, 0.55]}>
+        {glassMat}
+      </RoundedBox>
+      {/* rear glass */}
+      <RoundedBox args={[0.7, 0.46, 1.36]} radius={0.08} smoothness={5} position={[-1.08, 1.04, 0]} rotation={[0, 0, -0.62]}>
+        {glassMat}
+      </RoundedBox>
+
       {/* headlights */}
-      <mesh position={[1.95, 0.6, 0.55]}>
-        <boxGeometry args={[0.08, 0.16, 0.32]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={1.6} toneMapped={false} />
+      {[0.62, -0.62].map((z) => (
+        <mesh key={z} position={[2.0, 0.62, z]}>
+          <boxGeometry args={[0.08, 0.16, 0.34]} />
+          <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={1.7} toneMapped={false} />
+        </mesh>
+      ))}
+      {/* full-width tail light bar */}
+      <mesh position={[-2.04, 0.66, 0]}>
+        <boxGeometry args={[0.06, 0.14, 1.32]} />
+        <meshStandardMaterial color={paint} emissive={paint} emissiveIntensity={1.4} toneMapped={false} />
       </mesh>
-      <mesh position={[1.95, 0.6, -0.55]}>
-        <boxGeometry args={[0.08, 0.16, 0.32]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={1.6} toneMapped={false} />
+      {/* front splitter + rear diffuser */}
+      <mesh position={[2.0, 0.28, 0]}>
+        <boxGeometry args={[0.4, 0.08, 1.7]} />
+        <meshStandardMaterial color="#141414" roughness={0.6} metalness={0.2} />
       </mesh>
-      {/* tail lights (accent) */}
-      <mesh position={[-1.97, 0.62, 0]}>
-        <boxGeometry args={[0.06, 0.14, 1.2]} />
-        <meshStandardMaterial color={paint} emissive={paint} emissiveIntensity={1.3} toneMapped={false} />
+      <mesh position={[-2.05, 0.3, 0]}>
+        <boxGeometry args={[0.3, 0.12, 1.6]} />
+        <meshStandardMaterial color="#141414" roughness={0.6} metalness={0.2} />
       </mesh>
 
-      {wheelPositions.map(([x, z], i) => (
-        <group key={i} position={[x, 0.42, z]} rotation={[Math.PI / 2, 0, 0]}>
-          {/* tyre */}
-          <mesh castShadow>
-            <cylinderGeometry args={[0.42, 0.42, 0.34, 32]} />
-            <meshStandardMaterial color="#0c0d10" roughness={0.85} metalness={0.1} />
+      {/* wheel wells (dark recess behind each wheel) + wheels */}
+      {wheels.map(([x, z], i) => (
+        <group key={i}>
+          <mesh position={[x, 0.5, z * 0.82]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.62, 0.62, 0.34, 32]} />
+            <meshStandardMaterial color="#08090a" roughness={1} metalness={0} />
           </mesh>
-          {/* rim */}
-          <mesh position={[0, 0.18, 0]}>
-            <cylinderGeometry args={[0.24, 0.24, 0.05, 24]} />
-            <meshStandardMaterial color="#cfd4da" metalness={0.9} roughness={0.25} />
-          </mesh>
+          <Wheel x={x} z={z} />
         </group>
       ))}
     </group>
@@ -70,7 +128,7 @@ export function Car3D({ paint, glass, height = 240, autoRotate = true }: Car3DPr
   return (
     <View style={{ width: "100%", height }}>
       <Canvas
-        camera={{ position: [4.4, 2.3, 5.2], fov: 34 }}
+        camera={{ position: [4.9, 2.3, 5.7], fov: 32 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true }}
         style={{ width: "100%", height: "100%" }}
@@ -81,9 +139,9 @@ export function Car3D({ paint, glass, height = 240, autoRotate = true }: Car3DPr
         <spotLight position={[0, 8, 0]} angle={0.5} penumbra={1} intensity={0.6} />
         <Suspense fallback={null}>
           <CarModel paint={bodyColor} glass={glassColor} />
-          <ContactShadows position={[0, 0, 0]} opacity={0.55} scale={11} blur={2.6} far={4.5} resolution={512} />
+          <ContactShadows position={[0, 0, 0]} opacity={0.6} scale={12} blur={2.6} far={5} resolution={512} />
           <Environment resolution={128} frames={1}>
-            <Lightformer form="rect" intensity={2.2} position={[0, 4, 3]} scale={[7, 3, 1]} color="#ffffff" />
+            <Lightformer form="rect" intensity={2.2} position={[0, 4, 3]} scale={[8, 3, 1]} color="#ffffff" />
             <Lightformer form="rect" intensity={1.2} position={[-5, 2, -3]} scale={[5, 2, 1]} color={bodyColor} />
             <Lightformer form="rect" intensity={1} position={[5, 3, -2]} scale={[4, 2, 1]} color="#9fb4ff" />
           </Environment>
