@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, ScrollView, StyleSheet, Text } from "react-native";
 import { api } from "../src/api/client";
+import { decodeVin as decodeVinReal } from "../src/api/vin";
 import { useTheme } from "../src/theme/ThemeProvider";
 import { spacing, typography, type ThemeColors } from "../src/theme/tokens";
 import { Button } from "../src/ui/Button";
@@ -31,7 +32,13 @@ export default function AddVehicleScreen() {
     }
     setDecoding(true);
     try {
-      const decoded = await api.decodeVin(value);
+      // Real decode via NHTSA vPIC; fall back to the demo decoder if offline / unrecognised.
+      let decoded;
+      try {
+        decoded = await decodeVinReal(value);
+      } catch {
+        decoded = await api.decodeVin(value);
+      }
       if (decoded.make) setMake(decoded.make);
       if (decoded.model) setModel(decoded.model);
       if (decoded.year) setYear(String(decoded.year));
