@@ -30,7 +30,6 @@ export default function VehicleDashboard() {
     queryKey: ["score", id],
     queryFn: () => api.getScore(id),
     enabled: !!id,
-    retry: false,
   });
 
   const computeScore = useMutation({
