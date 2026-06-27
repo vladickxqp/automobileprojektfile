@@ -25,6 +25,9 @@ export function ScoreRing({ score, size = 132, strokeWidth = 12, label = "AutoSc
   const circumference = 2 * Math.PI * radius;
   const pct = score == null ? 0 : Math.max(0, Math.min(100, score)) / 100;
   const ring = score == null ? colors.textFaint : scoreColor(score, colors);
+  const valueSize = Math.round(size * 0.3);
+  const labelSize = Math.max(8, Math.round(size * 0.1));
+  const showLabel = size >= 56;
 
   return (
     <View style={{ width: size, height: size, alignItems: "center", justifyContent: "center" }}>
@@ -51,8 +54,14 @@ export function ScoreRing({ score, size = 132, strokeWidth = 12, label = "AutoSc
         />
       </Svg>
       <View style={styles.center}>
-        <Text style={[styles.value, { color: ring }]}>{score ?? "—"}</Text>
-        <Text style={[styles.label, { color: colors.textMuted }]}>{label}</Text>
+        <Text style={[styles.value, { color: ring, fontSize: valueSize, lineHeight: valueSize + 2 }]}>
+          {score ?? "—"}
+        </Text>
+        {showLabel ? (
+          <Text style={[styles.label, { color: colors.textMuted, fontSize: labelSize, letterSpacing: 0.4 }]} numberOfLines={1}>
+            {label}
+          </Text>
+        ) : null}
       </View>
     </View>
   );
