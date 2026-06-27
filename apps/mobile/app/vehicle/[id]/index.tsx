@@ -12,6 +12,7 @@ import { Badge, type BadgeTone } from "../../../src/ui/Badge";
 import { Button } from "../../../src/ui/Button";
 import { Card } from "../../../src/ui/Card";
 import { CarPhoto } from "../../../src/ui/CarPhoto";
+import { IconButton } from "../../../src/ui/IconButton";
 import { Screen } from "../../../src/ui/Screen";
 import { ScoreRing, scoreColor } from "../../../src/ui/ScoreRing";
 import { Skeleton } from "../../../src/ui/Skeleton";
@@ -118,7 +119,18 @@ export default function VehicleDashboard() {
 
   return (
     <Screen flush>
-      <Stack.Screen options={{ title: `${v.make} ${v.model}` }} />
+      <Stack.Screen
+        options={{
+          title: `${v.make} ${v.model}`,
+          headerRight: () => (
+            <View style={{ paddingRight: 4 }}>
+              <IconButton variant="ghost" accessibilityLabel={t("dashboard.edit")} onPress={() => router.push(`/vehicle/${id}/edit`)}>
+                <PencilIcon size={20} color={colors.text} />
+              </IconButton>
+            </View>
+          ),
+        }}
+      />
       <ScrollView contentContainerStyle={styles.content}>
         <Card elevated style={styles.hero}>
           <CarPhoto uri={v.photoUrl} height={210} />
@@ -129,12 +141,6 @@ export default function VehicleDashboard() {
             {v.year}
             {v.engine ? ` · ${v.engine}` : ""}
           </Text>
-          <Button
-            variant="secondary"
-            title={t("dashboard.edit")}
-            icon={<PencilIcon size={18} color={colors.text} />}
-            onPress={() => router.push(`/vehicle/${id}/edit`)}
-          />
         </Card>
 
         <View style={styles.segment}>
