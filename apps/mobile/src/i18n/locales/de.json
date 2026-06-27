@@ -10,7 +10,8 @@
     "open": "Geöffnet",
     "closed": "Geschlossen",
     "new": "Neu",
-    "used": "Gebraucht"
+    "used": "Gebraucht",
+    "retry": "Erneut versuchen"
   },
   "auth": {
     "signInTitle": "Willkommen zurück",
@@ -327,7 +328,10 @@
     "searching": "Suche in deiner Nähe…",
     "priceNote": "Preise via data.gouv.fr / Tankerkönig · Orte © OpenStreetMap",
     "myLocation": "Mein Standort",
-    "tab": "Karte"
+    "tab": "Karte",
+    "enableLocation": "Standort aktivieren",
+    "locationHint": "Aktiviere deinen Standort, um Werkstätten, Tankstellen & mehr in der Nähe zu finden.",
+    "locationDenied": "Standortzugriff verweigert. Bitte im Browser erlauben."
   },
   "mechaniker": {
     "tab": "KI-Mechaniker",

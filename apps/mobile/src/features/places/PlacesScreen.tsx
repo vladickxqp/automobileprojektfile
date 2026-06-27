@@ -4,10 +4,11 @@ import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Svg, { Circle, Line, Rect } from "react-native-svg";
 import { fetchFuelPrices } from "../../api/fuel";
-import { fetchNearbyServices, getLocation, type PlaceCategory } from "../../api/places";
+import { fetchNearbyServices, type PlaceCategory } from "../../api/places";
 import { useTheme } from "../../theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../../theme/tokens";
 import { Badge } from "../../ui/Badge";
+import { Button } from "../../ui/Button";
 import { Card } from "../../ui/Card";
 import { Screen } from "../../ui/Screen";
 import { MapPinIcon, StarIcon } from "../../ui/icons";
@@ -19,8 +20,6 @@ interface Display {
   distanceKm: number;
   lat?: number;
   lon?: number;
-  x?: number;
-  y?: number;
   rating?: number;
   price?: string;
   open?: boolean;
@@ -29,48 +28,48 @@ interface Display {
 
 const CATEGORIES = [{ key: "all" }, { key: "workshop" }, { key: "tires" }, { key: "wash" }, { key: "fuel" }];
 
-// Test-location picker so live data (esp. FR fuel prices) is visible without travelling there.
-const PLACES: { key: string; lat?: number; lon?: number }[] = [
-  { key: "me" },
-  { key: "Paris", lat: 48.8566, lon: 2.3522 },
-  { key: "München", lat: 48.1374, lon: 11.5755 },
-];
-
-const DEMO: Display[] = [
-  { id: "d1", name: "AutoTechnik Müller", category: "workshop", distanceKm: 1.2, rating: 4.7, price: "€€", open: true, x: 0.3, y: 0.35 },
-  { id: "d2", name: "BoschCar Service", category: "workshop", distanceKm: 2.8, rating: 4.5, price: "€€€", open: true, x: 0.62, y: 0.5 },
-  { id: "d3", name: "ReifenProfi", category: "tires", distanceKm: 3.1, rating: 4.6, price: "€€", open: false, x: 0.5, y: 0.7 },
-  { id: "d4", name: "CleanCar Waschpark", category: "wash", distanceKm: 0.8, rating: 4.3, price: "€", open: true, x: 0.2, y: 0.62 },
-  { id: "d5", name: "Shell Station", category: "fuel", distanceKm: 0.5, rating: 4.1, price: "€€", open: true, x: 0.75, y: 0.28 },
-];
-
 const clamp = (v: number) => Math.max(0.08, Math.min(0.92, v));
 const eur = (v: number) => v.toFixed(3).replace(".", ",");
 
-// Location-based map + nearby services (workshops, fuel with live prices, tyres, wash).
-// Used both as a vehicle tab and as the global "Karte" section.
+type LocStatus = "idle" | "loading" | "denied";
+
+// Location-based map + nearby services. The user enables location first, then searches by category.
 export default function PlacesScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [filter, setFilter] = useState("all");
-  const [placeKey, setPlaceKey] = useState("me");
+  const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
+  const [locStatus, setLocStatus] = useState<LocStatus>("idle");
 
-  const location = useQuery({ queryKey: ["geo"], queryFn: getLocation, staleTime: Infinity });
-  const preset = PLACES.find((p) => p.key === placeKey);
-  const activeLoc =
-    placeKey === "me" ? location.data : preset?.lat != null ? { lat: preset.lat, lon: preset.lon! } : undefined;
-  const enabled = !!activeLoc;
+  const requestLocation = () => {
+    setLocStatus("loading");
+    const geo = (globalThis as { navigator?: { geolocation?: Geolocation } }).navigator?.geolocation;
+    if (!geo) {
+      setLocStatus("denied");
+      return;
+    }
+    geo.getCurrentPosition(
+      (p) => {
+        setCoords({ lat: p.coords.latitude, lon: p.coords.longitude });
+        setLocStatus("idle");
+      },
+      () => setLocStatus("denied"),
+      { timeout: 8000, maximumAge: 600_000 },
+    );
+  };
+
+  const enabled = !!coords;
   const places = useQuery({
-    queryKey: ["places", activeLoc?.lat, activeLoc?.lon],
-    queryFn: () => fetchNearbyServices(activeLoc!.lat, activeLoc!.lon),
+    queryKey: ["places", coords?.lat, coords?.lon],
+    queryFn: () => fetchNearbyServices(coords!.lat, coords!.lon),
     enabled,
     retry: 0,
     staleTime: 5 * 60_000,
   });
   const fuel = useQuery({
-    queryKey: ["fuel", activeLoc?.lat, activeLoc?.lon],
-    queryFn: () => fetchFuelPrices(activeLoc!.lat, activeLoc!.lon),
+    queryKey: ["fuel", coords?.lat, coords?.lon],
+    queryFn: () => fetchFuelPrices(coords!.lat, coords!.lon),
     enabled,
     retry: 0,
     staleTime: 5 * 60_000,
@@ -78,7 +77,7 @@ export default function PlacesScreen() {
 
   const osm = useMemo<Display[]>(() => {
     const data = places.data;
-    if (!data || data.length === 0) return DEMO;
+    if (!data) return [];
     return data.map((p) => ({ id: p.id, name: p.name, category: p.category, distanceKm: p.distanceKm, lat: p.lat, lon: p.lon }));
   }, [places.data]);
 
@@ -99,37 +98,67 @@ export default function PlacesScreen() {
 
   const base = pricedFuel ? [...osm.filter((s) => s.category !== "fuel"), ...pricedFuel] : osm;
   const list = base.filter((s) => filter === "all" || s.category === filter).sort((a, b) => a.distanceKm - b.distanceKm);
-  const loading = (placeKey === "me" && location.isLoading) || places.isLoading || fuel.isLoading;
+  const loading = places.isLoading || fuel.isLoading;
 
-  const geoItems = list.filter((s) => s.lat != null);
-  const lats = geoItems.map((s) => s.lat!);
-  const lons = geoItems.map((s) => s.lon!);
+  const lats = list.filter((s) => s.lat != null).map((s) => s.lat!);
+  const lons = list.filter((s) => s.lon != null).map((s) => s.lon!);
   const minLat = Math.min(...lats), spanLat = Math.max(...lats) - minLat || 1;
   const minLon = Math.min(...lons), spanLon = Math.max(...lons) - minLon || 1;
   const pos = (s: Display) =>
-    s.lat != null
-      ? { x: clamp((s.lon! - minLon) / spanLon), y: clamp(1 - (s.lat! - minLat) / spanLat) }
-      : { x: s.x ?? 0.5, y: s.y ?? 0.5 };
+    s.lat != null ? { x: clamp((s.lon! - minLon) / spanLon), y: clamp(1 - (s.lat! - minLat) / spanLat) } : { x: 0.5, y: 0.5 };
 
-  const note = pricedFuel ? t("services.priceNote") : osm !== DEMO ? t("services.liveNote") : t("services.note");
+  const mapSvg = (
+    <Svg width="100%" height={180} viewBox="0 0 320 180">
+      <Rect x={0} y={0} width={320} height={180} fill={colors.surfaceAlt} />
+      {[40, 80, 120, 160, 200, 240, 280].map((x) => (
+        <Line key={`v${x}`} x1={x} y1={0} x2={x} y2={180} stroke={colors.border} strokeWidth={1} />
+      ))}
+      {[30, 60, 90, 120, 150].map((y) => (
+        <Line key={`h${y}`} x1={0} y1={y} x2={320} y2={y} stroke={colors.border} strokeWidth={1} />
+      ))}
+      <Line x1={0} y1={95} x2={320} y2={70} stroke={colors.borderStrong} strokeWidth={6} />
+      <Line x1={120} y1={0} x2={150} y2={180} stroke={colors.borderStrong} strokeWidth={6} />
+      {coords ? (
+        <>
+          <Circle cx={160} cy={90} r={7} fill={colors.primary} />
+          <Circle cx={160} cy={90} r={13} fill="none" stroke={colors.primary} strokeWidth={2} opacity={0.5} />
+        </>
+      ) : null}
+    </Svg>
+  );
+
+  // Gate: ask the user to enable location before anything loads.
+  if (!coords) {
+    return (
+      <Screen flush>
+        <View style={styles.content}>
+          <View style={styles.mapWrap}>
+            {mapSvg}
+            <View style={styles.gateOverlay}>
+              <MapPinIcon size={34} color={colors.primary} />
+              <Text style={styles.gateHint}>{t("services.locationHint")}</Text>
+              {locStatus === "loading" ? (
+                <ActivityIndicator color={colors.primary} />
+              ) : (
+                <Button
+                  title={locStatus === "denied" ? t("common.retry") : t("services.enableLocation")}
+                  icon={<MapPinIcon size={20} color={colors.onPrimary} />}
+                  onPress={requestLocation}
+                />
+              )}
+              {locStatus === "denied" ? <Text style={styles.denied}>{t("services.locationDenied")}</Text> : null}
+            </View>
+          </View>
+        </View>
+      </Screen>
+    );
+  }
 
   return (
     <Screen flush>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.mapWrap}>
-          <Svg width="100%" height={180} viewBox="0 0 320 180">
-            <Rect x={0} y={0} width={320} height={180} fill={colors.surfaceAlt} />
-            {[40, 80, 120, 160, 200, 240, 280].map((x) => (
-              <Line key={`v${x}`} x1={x} y1={0} x2={x} y2={180} stroke={colors.border} strokeWidth={1} />
-            ))}
-            {[30, 60, 90, 120, 150].map((y) => (
-              <Line key={`h${y}`} x1={0} y1={y} x2={320} y2={y} stroke={colors.border} strokeWidth={1} />
-            ))}
-            <Line x1={0} y1={95} x2={320} y2={70} stroke={colors.borderStrong} strokeWidth={6} />
-            <Line x1={120} y1={0} x2={150} y2={180} stroke={colors.borderStrong} strokeWidth={6} />
-            <Circle cx={160} cy={90} r={7} fill={colors.primary} />
-            <Circle cx={160} cy={90} r={13} fill="none" stroke={colors.primary} strokeWidth={2} opacity={0.5} />
-          </Svg>
+          {mapSvg}
           {list.map((s) => {
             const p = pos(s);
             return (
@@ -141,19 +170,6 @@ export default function PlacesScreen() {
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filtersScroll}>
-          {PLACES.map((p) => {
-            const sel = p.key === placeKey;
-            return (
-              <Pressable key={p.key} onPress={() => setPlaceKey(p.key)} style={[styles.chip, sel && styles.chipActive]}>
-                <Text style={[styles.chipText, sel && styles.chipTextActive]}>
-                  {p.key === "me" ? `📍 ${t("services.myLocation")}` : p.key}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </ScrollView>
-
-        <View style={styles.filters}>
           {CATEGORIES.map((c) => {
             const sel = c.key === filter;
             return (
@@ -162,13 +178,15 @@ export default function PlacesScreen() {
               </Pressable>
             );
           })}
-        </View>
+        </ScrollView>
 
         {loading ? (
           <View style={styles.loading}>
             <ActivityIndicator color={colors.primary} />
             <Text style={styles.muted}>{t("services.searching")}</Text>
           </View>
+        ) : list.length === 0 ? (
+          <Text style={styles.muted}>{t("services.note")}</Text>
         ) : null}
 
         {list.map((s) => (
@@ -191,7 +209,6 @@ export default function PlacesScreen() {
                       <Text style={styles.ratingText}>{s.rating.toFixed(1)}</Text>
                     </View>
                   ) : null}
-                  {s.price ? <Text style={styles.muted}>· {s.price}</Text> : null}
                   {s.open != null ? (
                     <Badge label={s.open ? t("common.open") : t("common.closed")} tone={s.open ? "success" : "danger"} />
                   ) : null}
@@ -205,7 +222,7 @@ export default function PlacesScreen() {
           </Card>
         ))}
 
-        <Text style={styles.note}>{note}</Text>
+        {list.length > 0 ? <Text style={styles.note}>{pricedFuel ? t("services.priceNote") : t("services.liveNote")}</Text> : null}
       </ScrollView>
     </Screen>
   );
@@ -214,10 +231,19 @@ export default function PlacesScreen() {
 const makeStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     content: { padding: spacing.lg, gap: spacing.md, paddingBottom: spacing.xxl },
-    mapWrap: { borderRadius: radius.lg, overflow: "hidden", borderWidth: 1, borderColor: colors.border },
+    mapWrap: { borderRadius: radius.lg, overflow: "hidden", borderWidth: 1, borderColor: colors.border, minHeight: 180 },
+    gateOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      alignItems: "center",
+      justifyContent: "center",
+      gap: spacing.md,
+      padding: spacing.lg,
+      backgroundColor: colors.background + "D9",
+    },
+    gateHint: { ...typography.body, color: colors.text, textAlign: "center", maxWidth: 320 },
+    denied: { ...typography.caption, color: colors.danger, textAlign: "center" },
     pin: { position: "absolute", marginLeft: -13, marginTop: -26 },
     filtersScroll: { flexDirection: "row", gap: spacing.sm, paddingRight: spacing.lg },
-    filters: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
     chip: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.border },
     chipActive: { borderColor: colors.primary, backgroundColor: colors.primarySoft },
     chipText: { ...typography.caption, color: colors.textMuted, fontWeight: "600" },

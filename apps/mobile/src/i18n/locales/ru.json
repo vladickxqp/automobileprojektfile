@@ -10,7 +10,8 @@
     "open": "Открыто",
     "closed": "Закрыто",
     "new": "Новое",
-    "used": "Б/у"
+    "used": "Б/у",
+    "retry": "Повторить"
   },
   "auth": {
     "signInTitle": "С возвращением",
@@ -327,7 +328,10 @@
     "searching": "Поиск рядом…",
     "priceNote": "Цены: data.gouv.fr / Tankerkönig · Места © OpenStreetMap",
     "myLocation": "Моё местоположение",
-    "tab": "Карта"
+    "tab": "Карта",
+    "enableLocation": "Включить геолокацию",
+    "locationHint": "Включи геолокацию, чтобы найти сервисы, заправки и другое рядом.",
+    "locationDenied": "Доступ к геолокации запрещён. Разреши его в браузере."
   },
   "mechaniker": {
     "tab": "ИИ-механик",

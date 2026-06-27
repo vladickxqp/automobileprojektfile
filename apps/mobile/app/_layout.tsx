@@ -5,7 +5,6 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../src/i18n";
 import { AuthProvider } from "../src/auth/AuthContext";
 import { ThemeProvider, useTheme } from "../src/theme/ThemeProvider";
-import { ThemeToggle } from "../src/ui/ThemeToggle";
 
 const queryClient = new QueryClient();
 
@@ -21,7 +20,6 @@ function ThemedStack() {
           headerTitleStyle: { fontWeight: "700" },
           headerShadowVisible: false,
           contentStyle: { backgroundColor: colors.background },
-          headerRight: () => <ThemeToggle />,
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

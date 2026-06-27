@@ -10,7 +10,8 @@
     "open": "Open",
     "closed": "Closed",
     "new": "New",
-    "used": "Used"
+    "used": "Used",
+    "retry": "Retry"
   },
   "auth": {
     "signInTitle": "Welcome back",
@@ -327,7 +328,10 @@
     "searching": "Searching nearby…",
     "priceNote": "Prices via data.gouv.fr / Tankerkönig · Places © OpenStreetMap",
     "myLocation": "My location",
-    "tab": "Map"
+    "tab": "Map",
+    "enableLocation": "Enable location",
+    "locationHint": "Enable your location to find nearby workshops, fuel stations and more.",
+    "locationDenied": "Location access denied. Please allow it in the browser."
   },
   "mechaniker": {
     "tab": "AI Mechanic",

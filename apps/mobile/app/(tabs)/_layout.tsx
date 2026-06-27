@@ -4,7 +4,6 @@ import { View } from "react-native";
 import { useTheme } from "../../src/theme/ThemeProvider";
 import { CapsuleTabBar } from "../../src/ui/CapsuleTabBar";
 import { IconButton } from "../../src/ui/IconButton";
-import { ThemeToggle } from "../../src/ui/ThemeToggle";
 import { BellIcon, CarIcon, HomeIcon, LayersIcon, MapPinIcon, SparkleIcon, UserIcon } from "../../src/ui/icons";
 
 export default function TabsLayout() {
@@ -20,7 +19,6 @@ export default function TabsLayout() {
         headerTintColor: colors.text,
         headerTitleStyle: { fontWeight: "700" },
         headerShadowVisible: false,
-        headerRight: () => <ThemeToggle />,
       }}
     >
       <Tabs.Screen
@@ -29,11 +27,10 @@ export default function TabsLayout() {
           title: t("home.tab"),
           tabBarIcon: ({ color, size }) => <HomeIcon size={size} color={color} />,
           headerRight: () => (
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingRight: 4 }}>
+            <View style={{ paddingRight: 4 }}>
               <IconButton variant="ghost" accessibilityLabel={t("notifications.title")} onPress={() => router.push("/notifications")}>
                 <BellIcon size={20} color={colors.text} />
               </IconButton>
-              <ThemeToggle />
             </View>
           ),
         }}
