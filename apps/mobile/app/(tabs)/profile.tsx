@@ -7,12 +7,11 @@ import { api } from "../../src/api/client";
 import { useAuth } from "../../src/auth/AuthContext";
 import { useTheme } from "../../src/theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../../src/theme/tokens";
-import { Badge } from "../../src/ui/Badge";
 import { Button } from "../../src/ui/Button";
 import { Card } from "../../src/ui/Card";
 import { LogoMark } from "../../src/ui/Logo";
 import { Screen } from "../../src/ui/Screen";
-import { ChevronRightIcon, CrownIcon, GaugeIcon, LayersIcon, SettingsIcon } from "../../src/ui/icons";
+import { ChevronRightIcon, GaugeIcon, LayersIcon, SettingsIcon } from "../../src/ui/icons";
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
@@ -32,30 +31,12 @@ export default function ProfileScreen() {
             <LogoMark size={56} />
           </View>
           <Text style={styles.name}>{user?.email ?? t("profile.guest")}</Text>
-          <Badge label={t("profile.freeTier")} tone="neutral" />
         </Card>
 
-        <View style={styles.statRow}>
-          <View style={styles.stat}>
-            <GaugeIcon size={20} color={colors.primary} />
-            <Text style={styles.statValue}>{count}</Text>
-            <Text style={styles.statLabel}>{t("profile.vehicles")}</Text>
-          </View>
-          <View style={styles.stat}>
-            <CrownIcon size={20} color={colors.primary} />
-            <Text style={styles.statValue}>Free</Text>
-            <Text style={styles.statLabel}>{t("profile.tier")}</Text>
-          </View>
-        </View>
-
-        {/* Premium upsell */}
-        <Card accent style={styles.premium}>
-          <View style={styles.premiumHead}>
-            <CrownIcon size={20} color={colors.primary} />
-            <Text style={styles.premiumTitle}>{t("profile.premiumTitle")}</Text>
-          </View>
-          <Text style={styles.premiumText}>{t("profile.premiumText")}</Text>
-          <Button title={t("profile.discoverPremium")} onPress={() => router.push("/premium")} />
+        <Card style={styles.stat}>
+          <GaugeIcon size={20} color={colors.primary} />
+          <Text style={styles.statValue}>{count}</Text>
+          <Text style={styles.statLabel}>{t("profile.vehicles")}</Text>
         </Card>
 
         <Card style={{ gap: 0, paddingVertical: spacing.xs }}>
@@ -107,23 +88,9 @@ const makeStyles = (colors: ThemeColors) =>
       justifyContent: "center",
     },
     name: { ...typography.h2, color: colors.text },
-    statRow: { flexDirection: "row", gap: spacing.md },
-    stat: {
-      flex: 1,
-      backgroundColor: colors.surface,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: radius.lg,
-      padding: spacing.lg,
-      gap: spacing.xs,
-      alignItems: "flex-start",
-    },
+    stat: { alignItems: "flex-start", gap: spacing.xs },
     statValue: { ...typography.h1, color: colors.text },
     statLabel: { ...typography.label, color: colors.textMuted },
-    premium: { gap: spacing.sm },
-    premiumHead: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
-    premiumTitle: { ...typography.h3, color: colors.text },
-    premiumText: { ...typography.caption, color: colors.textMuted },
     row: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: spacing.md, paddingHorizontal: spacing.sm },
     rowLeft: { flexDirection: "row", alignItems: "center", gap: spacing.md },
     rowLabel: { ...typography.body, color: colors.text },
