@@ -4,8 +4,9 @@
 FROM node:20-slim
 
 WORKDIR /app
-ENV NODE_ENV=production
 ENV HOST=0.0.0.0
+# NODE_ENV is set to "production" at runtime by the host (render.yaml). It is intentionally NOT set
+# during the build so that pnpm installs devDependencies needed for the toolchain.
 
 # OpenSSL + CA certs are required by the Prisma query engine.
 RUN apt-get update -y \
