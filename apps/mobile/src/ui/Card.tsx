@@ -46,13 +46,13 @@ const makeStyles = (colors: ThemeColors) =>
       backgroundColor: colors.backgroundElevated,
       borderColor: colors.borderStrong,
       ...Platform.select({
-        web: { boxShadow: "0 24px 54px -26px rgba(124,92,255,0.45)" } as object,
+        web: { boxShadow: "0 22px 48px -28px rgba(124,92,255,0.22)" } as object,
         default: {
           shadowColor: colors.primary,
-          shadowOpacity: 0.4,
-          shadowRadius: 26,
-          shadowOffset: { width: 0, height: 14 },
-          elevation: 8,
+          shadowOpacity: 0.22,
+          shadowRadius: 22,
+          shadowOffset: { width: 0, height: 12 },
+          elevation: 6,
         },
       }),
     },

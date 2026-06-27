@@ -88,13 +88,13 @@ const makeStyles = (colors: ThemeColors) =>
       backgroundColor: colors.primary,
       borderColor: colors.primary,
       ...Platform.select({
-        web: { boxShadow: "0 14px 34px -10px rgba(124,92,255,0.6)" } as object,
+        web: { boxShadow: "0 12px 30px -14px rgba(124,92,255,0.32)" } as object,
         default: {
           shadowColor: colors.primary,
-          shadowOpacity: 0.5,
-          shadowRadius: 16,
-          shadowOffset: { width: 0, height: 8 },
-          elevation: 6,
+          shadowOpacity: 0.28,
+          shadowRadius: 14,
+          shadowOffset: { width: 0, height: 6 },
+          elevation: 4,
         },
       }),
     },
