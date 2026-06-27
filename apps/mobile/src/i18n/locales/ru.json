@@ -92,7 +92,14 @@
     "modifications": "Тюнинг",
     "parts": "Запчасти",
     "services": "Сервисы",
-    "upcoming": "Предстоящее"
+    "upcoming": "Предстоящее",
+    "overview": "Обзор",
+    "toolsTab": "Инструменты",
+    "edit": "Редактировать"
+  },
+  "editVehicle": {
+    "title": "Редактировать авто",
+    "plate": "Номер"
   },
   "home": {
     "tab": "Главная",

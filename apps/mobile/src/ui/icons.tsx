@@ -163,6 +163,15 @@ export function UserIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconPro
   );
 }
 
+export function PencilIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Path d="M14.5 5.5l4 4L8 20H4v-4L14.5 5.5Z" stroke={color} strokeWidth={strokeWidth} strokeLinejoin="round" />
+      <Line x1={13} y1={7} x2={17} y2={11} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
 export function HomeIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
   return (
     <Svg {...base(size)}>

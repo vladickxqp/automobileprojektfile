@@ -92,7 +92,14 @@
     "modifications": "Modifikationen",
     "parts": "Teile-Suche",
     "services": "Services",
-    "upcoming": "Anstehend"
+    "upcoming": "Anstehend",
+    "overview": "Übersicht",
+    "toolsTab": "Werkzeuge",
+    "edit": "Bearbeiten"
+  },
+  "editVehicle": {
+    "title": "Fahrzeug bearbeiten",
+    "plate": "Kennzeichen"
   },
   "home": {
     "tab": "Start",

@@ -24,6 +24,7 @@ import {
   FuelIcon,
   GaugeIcon,
   MapPinIcon,
+  PencilIcon,
   SearchIcon,
   SlidersIcon,
   SparkleIcon,
@@ -70,6 +71,7 @@ export default function VehicleDashboard() {
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [reportUrl, setReportUrl] = useState<string | null>(null);
+  const [tab, setTab] = useState<"overview" | "tools">("overview");
 
   const vehicle = useQuery({ queryKey: ["vehicle", id], queryFn: () => api.getVehicle(id), enabled: !!id });
   const summary = useQuery({ queryKey: ["expenses", id], queryFn: () => api.expenseSummary(id), enabled: !!id });
@@ -117,8 +119,35 @@ export default function VehicleDashboard() {
             {v.year}
             {v.engine ? ` · ${v.engine}` : ""}
           </Text>
+          <Button
+            variant="secondary"
+            title={t("dashboard.edit")}
+            icon={<PencilIcon size={18} color={colors.text} />}
+            onPress={() => router.push(`/vehicle/${id}/edit`)}
+          />
         </Card>
 
+        <View style={styles.segment}>
+          <Pressable
+            style={[styles.segmentItem, tab === "overview" && styles.segmentActive]}
+            onPress={() => setTab("overview")}
+          >
+            <Text style={[styles.segmentText, tab === "overview" && styles.segmentTextActive]}>
+              {t("dashboard.overview")}
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.segmentItem, tab === "tools" && styles.segmentActive]}
+            onPress={() => setTab("tools")}
+          >
+            <Text style={[styles.segmentText, tab === "tools" && styles.segmentTextActive]}>
+              {t("dashboard.toolsTab")}
+            </Text>
+          </Pressable>
+        </View>
+
+        {tab === "overview" ? (
+          <>
         {/* AutoScore */}
         <Card elevated style={styles.scoreCard}>
           <View style={styles.scoreRow}>
@@ -185,6 +214,9 @@ export default function VehicleDashboard() {
           )}
         </Card>
 
+          </>
+        ) : (
+          <>
         {/* Sale report */}
         <Card>
           <Text style={styles.cardTitle}>{t("dashboard.prepareSale")}</Text>
@@ -203,7 +235,6 @@ export default function VehicleDashboard() {
         </Card>
 
         {/* Quick actions */}
-        <Text style={styles.sectionLabel}>{t("dashboard.tools")}</Text>
         <View style={styles.actionsGrid}>
           <ActionTile
             label={t("dashboard.assistant")}
@@ -276,6 +307,8 @@ export default function VehicleDashboard() {
             styles={styles}
           />
         </View>
+          </>
+        )}
       </ScrollView>
     </Screen>
   );
@@ -329,6 +362,11 @@ function ActionTile({
 const makeStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     content: { padding: spacing.lg, gap: spacing.md, paddingBottom: spacing.xxl },
+    segment: { flexDirection: "row", backgroundColor: colors.surfaceAlt, borderRadius: radius.md, padding: 4 },
+    segmentItem: { flex: 1, paddingVertical: spacing.sm, borderRadius: radius.sm, alignItems: "center" },
+    segmentActive: { backgroundColor: colors.primary },
+    segmentText: { ...typography.body, fontWeight: "700", color: colors.textMuted },
+    segmentTextActive: { color: colors.onPrimary },
     hero: { alignItems: "center", gap: spacing.xs, paddingBottom: spacing.lg },
     heroTitle: { ...typography.h1, color: colors.text, textAlign: "center" },
     heroSub: { ...typography.caption, color: colors.textMuted, textAlign: "center" },

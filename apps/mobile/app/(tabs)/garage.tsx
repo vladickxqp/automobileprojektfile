@@ -22,24 +22,7 @@ export default function GarageScreen() {
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
-  const vehicles = useQuery({
-    queryKey: ["vehicles"],
-    queryFn: api.listVehicles,
-    enabled: ready && !!user,
-  });
-  const fleet = useQuery({
-    queryKey: ["fleetSummary"],
-    queryFn: api.fleetSummary,
-    enabled: ready && !!user,
-  });
-
-  const hour = new Date().getHours();
-  const greeting =
-    hour < 11
-      ? t("garage.greetingMorning")
-      : hour < 18
-        ? t("garage.greetingDay")
-        : t("garage.greetingEvening");
+  const vehicles = useQuery({ queryKey: ["vehicles"], queryFn: api.listVehicles, enabled: ready && !!user });
 
   if (!ready) {
     return (
@@ -59,27 +42,12 @@ export default function GarageScreen() {
         keyExtractor={(v) => v.id}
         contentContainerStyle={styles.list}
         ListHeaderComponent={
-          <View style={styles.headerWrap}>
-            <Card elevated style={styles.hero}>
-              <View style={styles.heroTop}>
-                <View>
-                  <Text style={styles.heroLabel}>{greeting} 👋</Text>
-                  <Text style={styles.heroTitle}>{t("garage.title")}</Text>
-                </View>
-                <Badge label={`${count} ${t("garage.cars")}`} tone="accent" />
-              </View>
-              {fleet.data ? (
-                <View style={styles.glance}>
-                  <Glance value={String(fleet.data.vehicles)} label={t("garage.cars")} colors={colors} styles={styles} />
-                  <View style={styles.glanceDiv} />
-                  <Glance value={String(fleet.data.avgScore)} label={t("garage.avgScore")} colors={colors} styles={styles} />
-                  <View style={styles.glanceDiv} />
-                  <Glance value={String(fleet.data.dueReminders)} label={t("garage.due")} colors={colors} styles={styles} />
-                </View>
-              ) : null}
-            </Card>
-            {count > 0 ? <Text style={styles.sectionLabel}>{t("garage.vehicles")}</Text> : null}
-          </View>
+          count > 0 ? (
+            <View style={styles.headerRow}>
+              <Text style={styles.title}>{t("garage.title")}</Text>
+              <Badge label={`${count} ${t("garage.cars")}`} tone="accent" />
+            </View>
+          ) : null
         }
         renderItem={({ item }) => (
           <Pressable onPress={() => router.push(`/vehicle/${item.id}`)}>
@@ -137,47 +105,11 @@ export default function GarageScreen() {
   );
 }
 
-function Glance({
-  value,
-  label,
-  colors,
-  styles,
-}: {
-  value: string;
-  label: string;
-  colors: ThemeColors;
-  styles: ReturnType<typeof makeStyles>;
-}) {
-  return (
-    <View style={styles.glanceItem}>
-      <Text style={styles.glanceValue}>{value}</Text>
-      <Text style={styles.glanceLabel}>{label}</Text>
-    </View>
-  );
-}
-
 const makeStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     list: { padding: spacing.lg, gap: spacing.md, paddingBottom: spacing.xl },
-    glance: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-around",
-      borderTopWidth: 1,
-      borderTopColor: colors.border,
-      paddingTop: spacing.md,
-      marginTop: spacing.xs,
-    },
-    glanceItem: { alignItems: "center", flex: 1, gap: 2 },
-    glanceValue: { ...typography.h2, color: colors.text },
-    glanceLabel: { ...typography.label, color: colors.textMuted },
-    glanceDiv: { width: 1, height: 28, backgroundColor: colors.border },
-    headerWrap: { gap: spacing.md },
-    hero: { gap: spacing.md, paddingBottom: spacing.sm },
-    heroTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" },
-    heroLabel: { ...typography.label, color: colors.primary },
-    heroTitle: { ...typography.h1, color: colors.text },
-    sectionLabel: { ...typography.label, color: colors.textMuted, marginTop: spacing.xs },
+    headerRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: spacing.xs },
+    title: { ...typography.h1, color: colors.text },
     carCard: { paddingVertical: spacing.lg },
     carCardPressed: { borderColor: colors.borderStrong, backgroundColor: colors.surfaceHover },
     carCardRow: { flexDirection: "row", alignItems: "center", gap: spacing.md },

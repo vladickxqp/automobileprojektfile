@@ -92,7 +92,14 @@
     "modifications": "Modifications",
     "parts": "Parts",
     "services": "Services",
-    "upcoming": "Upcoming"
+    "upcoming": "Upcoming",
+    "overview": "Overview",
+    "toolsTab": "Tools",
+    "edit": "Edit"
+  },
+  "editVehicle": {
+    "title": "Edit vehicle",
+    "plate": "Plate"
   },
   "home": {
     "tab": "Home",
