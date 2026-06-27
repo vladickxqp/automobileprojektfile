@@ -72,7 +72,7 @@ export default function HomeScreen() {
                           {v.mileageKm != null ? ` · ${v.mileageKm.toLocaleString("de-DE")} km` : ""}
                         </Text>
                       </View>
-                      <ScoreRing score={score} size={74} strokeWidth={8} />
+                      <ScoreRing score={score} size={60} strokeWidth={7} />
                     </View>
                   </Card>
                 )}
