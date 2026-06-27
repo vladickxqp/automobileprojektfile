@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Redirect, useRouter } from "expo-router";
-import { useMemo, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { api, type VehicleEventDTO } from "../../src/api/client";
@@ -40,7 +40,8 @@ export default function HomeScreen() {
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const vehicles = useQuery({ queryKey: ["vehicles"], queryFn: api.listVehicles, enabled: ready && !!user });
-  const current = vehicles.data?.[0];
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const current = vehicles.data?.find((v) => v.id === selectedId) ?? vehicles.data?.[0];
   const id = current?.id;
 
   const score = useQuery({ queryKey: ["score", id], queryFn: () => api.getScore(id!), enabled: !!id });
@@ -102,6 +103,26 @@ export default function HomeScreen() {
           </>
         ) : (
           <>
+            {/* Vehicle switcher */}
+            {(vehicles.data?.length ?? 0) > 1 ? (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.switcher}>
+                {vehicles.data!.map((v) => {
+                  const sel = v.id === id;
+                  return (
+                    <Pressable
+                      key={v.id}
+                      onPress={() => setSelectedId(v.id)}
+                      style={[styles.switchChip, sel && styles.switchChipActive]}
+                    >
+                      <Text style={[styles.switchText, sel && styles.switchTextActive]} numberOfLines={1}>
+                        {v.make} {v.model}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+            ) : null}
+
             {/* Current vehicle hero */}
             <Pressable onPress={() => router.push(`/vehicle/${id}`)}>
               <Card elevated style={styles.hero}>
@@ -225,6 +246,18 @@ function StatusRow({
 const makeStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     content: { padding: spacing.lg, gap: spacing.md, paddingBottom: spacing.xxl },
+    switcher: { flexDirection: "row", gap: spacing.sm, paddingRight: spacing.lg },
+    switchChip: {
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      borderRadius: radius.pill,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.surface,
+    },
+    switchChipActive: { borderColor: colors.primary, backgroundColor: colors.primarySoft },
+    switchText: { ...typography.caption, color: colors.textMuted, fontWeight: "700" },
+    switchTextActive: { color: colors.primary },
     empty: { flex: 1, alignItems: "center", justifyContent: "center", gap: spacing.md, padding: spacing.xl },
     emptyTitle: { ...typography.h1, color: colors.text, textAlign: "center" },
     emptySub: { ...typography.body, color: colors.textMuted, textAlign: "center" },

@@ -16,6 +16,7 @@ import type {
   SaleReportRefDTO,
   ScanDTO,
   ScoreDTO,
+  UpdateVehicleInput,
   UploadFile,
   VehicleDTO,
   VehicleEventDTO,
@@ -108,10 +109,15 @@ export const demoApi = {
     return delay(publicVehicle(v));
   },
 
-  updateVehicle: (id: string, input: { mileageKm?: number; plate?: string | null }): Promise<VehicleDTO> => {
+  updateVehicle: (id: string, input: UpdateVehicleInput): Promise<VehicleDTO> => {
     const v = find(id);
     if (input.mileageKm != null) v.mileageKm = input.mileageKm;
     if (input.plate !== undefined) v.plate = input.plate;
+    if (input.make != null) v.make = input.make;
+    if (input.model != null) v.model = input.model;
+    if (input.year != null) v.year = input.year;
+    if (input.engine !== undefined) v.engine = input.engine;
+    if (input.photoUrl !== undefined) v.photoUrl = input.photoUrl;
     v.updatedAt = new Date().toISOString();
     return delay(publicVehicle(v));
   },

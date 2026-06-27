@@ -42,6 +42,16 @@ export interface CreateVehicleInput {
   photoUrl?: string;
 }
 
+export interface UpdateVehicleInput {
+  mileageKm?: number;
+  plate?: string | null;
+  make?: string;
+  model?: string;
+  year?: number;
+  engine?: string | null;
+  photoUrl?: string | null;
+}
+
 export interface VehicleEventDTO {
   id: string;
   vehicleId: string;
@@ -293,7 +303,7 @@ const realApi = {
   decodeVin: (vin: string) => request<DecodeDTO>(`/vehicles/decode/${vin}`),
   createVehicle: (input: CreateVehicleInput) =>
     request<VehicleDTO>("/vehicles", { method: "POST", body: input }),
-  updateVehicle: (id: string, input: { mileageKm?: number; plate?: string | null }) =>
+  updateVehicle: (id: string, input: UpdateVehicleInput) =>
     request<VehicleDTO>(`/vehicles/${id}`, { method: "PATCH", body: input }),
   listEvents: (vehicleId: string, type?: "maintenance" | "repair" | "expense") =>
     request<VehicleEventDTO[]>(`/vehicles/${vehicleId}/events${type ? `?type=${type}` : ""}`),
