@@ -1,0 +1,31 @@
+# Render Blueprint for the CarDNA API + a managed Postgres.
+# Deploy: render.com → New → Blueprint → pick this repo. Render provisions the database and the
+# Docker service, wires DATABASE_URL automatically and generates JWT_SECRET. Set ANTHROPIC_API_KEY
+# in the dashboard afterwards to enable the AI assistant (everything else works without it).
+databases:
+  - name: cardna-db
+    plan: free
+    databaseName: autolife
+    user: autolife
+
+services:
+  - type: web
+    name: cardna-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cardna-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: NODE_ENV
+        value: production
+      - key: ANTHROPIC_MODEL
+        value: claude-opus-4-8
+      - key: ANTHROPIC_API_KEY
+        sync: false
