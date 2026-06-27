@@ -24,14 +24,17 @@ function ThemedStack() {
           headerTitleStyle: { fontWeight: "700" },
           headerShadowVisible: false,
           contentStyle: { backgroundColor: colors.background },
-          headerLeft: ({ canGoBack }) =>
-            canGoBack ? (
-              <View style={{ paddingLeft: 4, paddingRight: 8 }}>
-                <IconButton variant="ghost" accessibilityLabel="Zurück" onPress={() => router.back()}>
-                  <ArrowLeftIcon size={22} color={colors.text} />
-                </IconButton>
-              </View>
-            ) : undefined,
+          headerLeft: ({ canGoBack }) => (
+            <View style={{ paddingLeft: 4, paddingRight: 8 }}>
+              <IconButton
+                variant="ghost"
+                accessibilityLabel="Zurück"
+                onPress={() => (canGoBack ? router.back() : router.replace("/home"))}
+              >
+                <ArrowLeftIcon size={22} color={colors.text} />
+              </IconButton>
+            </View>
+          ),
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
