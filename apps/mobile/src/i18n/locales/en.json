@@ -141,7 +141,8 @@
     "empty": "No notifications"
   },
   "history": {
-    "title": "History",
+    "title": "Vehicle history",
+    "subtitle": "View and add all repairs & maintenance",
     "empty": "No entries in the life record yet.",
     "add": "Add record",
     "types": {
@@ -192,7 +193,17 @@
     "empty": "No documents yet",
     "upload": "Upload document",
     "expires": "expires",
-    "noFile": "No file available (demo)."
+    "noFile": "No file available (demo).",
+    "typeLabel": "Document type",
+    "types": {
+      "invoice": "Invoice",
+      "techpassport": "Registration",
+      "insurance": "Insurance",
+      "TÜV": "Inspection",
+      "warranty": "Warranty",
+      "contract": "Contract",
+      "other": "Other"
+    }
   },
   "reminders": {
     "title": "Reminders",

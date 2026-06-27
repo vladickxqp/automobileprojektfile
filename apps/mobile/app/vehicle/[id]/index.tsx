@@ -23,6 +23,7 @@ import {
   BellIcon,
   CalculatorIcon,
   ChartIcon,
+  ChevronRightIcon,
   FileIcon,
   FuelIcon,
   GaugeIcon,
@@ -167,6 +168,22 @@ export default function VehicleDashboard() {
 
         {tab === "overview" ? (
           <>
+        {/* Vehicle history shortcut */}
+        <Pressable onPress={() => router.push(`/vehicle/${id}/history`)}>
+          {({ pressed }) => (
+            <Card style={[styles.histCard, pressed && { borderColor: colors.primary }]}>
+              <View style={styles.histIcon}>
+                <WrenchIcon size={22} color={colors.primary} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.histTitle}>{t("history.title")}</Text>
+                <Text style={styles.muted}>{t("history.subtitle")}</Text>
+              </View>
+              <ChevronRightIcon size={20} color={colors.textFaint} />
+            </Card>
+          )}
+        </Pressable>
+
         {/* AutoScore */}
         <Card elevated style={styles.scoreCard}>
           <View style={styles.scoreRow}>
@@ -438,6 +455,16 @@ const makeStyles = (colors: ThemeColors) =>
     statusValue: { ...typography.caption, color: colors.text, fontWeight: "600", flexShrink: 1 },
     statusDivider: { height: 1, backgroundColor: colors.border },
     recDetail: { ...typography.caption, fontWeight: "700" },
+    histCard: { flexDirection: "row", alignItems: "center", gap: spacing.md },
+    histIcon: {
+      width: 44,
+      height: 44,
+      borderRadius: radius.md,
+      backgroundColor: colors.primarySoft,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    histTitle: { ...typography.h3, color: colors.text },
     deleteBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: spacing.sm, paddingVertical: spacing.md, marginTop: spacing.xs },
     deleteText: { ...typography.body, color: colors.danger, fontWeight: "700" },
     sectionLabel: { ...typography.label, color: colors.textMuted, marginTop: spacing.sm },

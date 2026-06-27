@@ -141,7 +141,8 @@
     "empty": "Keine Benachrichtigungen"
   },
   "history": {
-    "title": "Verlauf",
+    "title": "Fahrzeughistorie",
+    "subtitle": "Alle Reparaturen & Wartungen ansehen und hinzufügen",
     "empty": "Noch keine Einträge in der Lebensakte.",
     "add": "Eintrag hinzufügen",
     "types": {
@@ -192,7 +193,17 @@
     "empty": "Noch keine Dokumente",
     "upload": "Dokument hochladen",
     "expires": "läuft ab",
-    "noFile": "Keine Datei vorhanden (Demo)."
+    "noFile": "Keine Datei vorhanden (Demo).",
+    "typeLabel": "Dokumenttyp",
+    "types": {
+      "invoice": "Rechnung",
+      "techpassport": "Fahrzeugschein",
+      "insurance": "Versicherung",
+      "TÜV": "TÜV / HU",
+      "warranty": "Garantie",
+      "contract": "Kaufvertrag",
+      "other": "Sonstiges"
+    }
   },
   "reminders": {
     "title": "Erinnerungen",
