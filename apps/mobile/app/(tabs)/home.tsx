@@ -7,13 +7,11 @@ import { api } from "../../src/api/client";
 import { useAuth } from "../../src/auth/AuthContext";
 import { useTheme } from "../../src/theme/ThemeProvider";
 import { spacing, typography, type ThemeColors } from "../../src/theme/tokens";
-import { Button } from "../../src/ui/Button";
 import { Card } from "../../src/ui/Card";
 import { CarPhoto } from "../../src/ui/CarPhoto";
 import { Screen } from "../../src/ui/Screen";
 import { ScoreRing } from "../../src/ui/ScoreRing";
 import { Skeleton } from "../../src/ui/Skeleton";
-import { PlusIcon } from "../../src/ui/icons";
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -80,13 +78,6 @@ export default function HomeScreen() {
             );
           })
         )}
-
-        <Button
-          size="lg"
-          title={t("garage.addCar")}
-          icon={<PlusIcon size={20} color={colors.onPrimary} />}
-          onPress={() => router.push("/add-vehicle")}
-        />
       </ScrollView>
     </Screen>
   );
