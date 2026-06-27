@@ -103,6 +103,17 @@
     "delete": "Delete vehicle",
     "deleteConfirm": "Really delete this vehicle?"
   },
+  "recommend": {
+    "title": "Maintenance suggestions",
+    "nextOil": "Next oil change",
+    "inKm": "in {{km}} km",
+    "overdue": "overdue",
+    "checkBrakes": "Brake check recommended",
+    "tuvExpires": "Inspection expires",
+    "inMonths": "in {{count}} mo",
+    "inspection": "Service inspection due",
+    "allGood": "All up to date — no suggestions."
+  },
   "home": {
     "tab": "Home",
     "quickActions": "Quick actions",

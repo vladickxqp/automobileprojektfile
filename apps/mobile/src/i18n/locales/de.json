@@ -103,6 +103,17 @@
     "delete": "Fahrzeug entfernen",
     "deleteConfirm": "Dieses Fahrzeug wirklich entfernen?"
   },
+  "recommend": {
+    "title": "Wartungsempfehlungen",
+    "nextOil": "Nächster Ölwechsel",
+    "inKm": "in {{km}} km",
+    "overdue": "überfällig",
+    "checkBrakes": "Bremsen prüfen empfohlen",
+    "tuvExpires": "TÜV / HU läuft ab",
+    "inMonths": "in {{count}} Mon.",
+    "inspection": "Inspektion empfohlen",
+    "allGood": "Alles aktuell — keine Empfehlungen."
+  },
   "home": {
     "tab": "Start",
     "quickActions": "Schnellaktionen",

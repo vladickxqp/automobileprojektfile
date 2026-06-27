@@ -6,6 +6,7 @@ import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "
 import type { ScoreFactorDTO } from "../../../src/api/client";
 import { api } from "../../../src/api/client";
 import { API_URL } from "../../../src/api/config";
+import { computeRecommendations } from "../../../src/api/maintenance";
 import { useTheme } from "../../../src/theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
 import { Badge, type BadgeTone } from "../../../src/ui/Badge";
@@ -61,6 +62,7 @@ export default function VehicleDashboard() {
   const reminders = useQuery({ queryKey: ["reminders", id], queryFn: () => api.listReminders(id), enabled: !!id });
   const documents = useQuery({ queryKey: ["documents", id], queryFn: () => api.listDocuments(id), enabled: !!id });
   const score = useQuery({ queryKey: ["score", id], queryFn: () => api.getScore(id), enabled: !!id });
+  const events = useQuery({ queryKey: ["events", id], queryFn: () => api.listEvents(id), enabled: !!id });
 
   const computeScore = useMutation({
     mutationFn: () => api.computeScore(id),
@@ -114,6 +116,7 @@ export default function VehicleDashboard() {
   const nextRem = rems
     .filter((r) => r.dueDate)
     .sort((a, b) => +new Date(a.dueDate!) - +new Date(b.dueDate!))[0];
+  const recs = computeRecommendations(v, events.data ?? [], docs, t);
   const scoreValue = score.data?.score ?? null;
   const factors = score.data?.factors ?? [];
 
@@ -231,6 +234,25 @@ export default function VehicleDashboard() {
               {nextRem ? `${nextRem.title} · ${new Date(nextRem.dueDate!).toLocaleDateString("de-DE")}` : t("home.none")}
             </Text>
           </View>
+        </Card>
+
+        {/* Maintenance recommendations */}
+        <Card>
+          <Text style={styles.cardTitle}>{t("recommend.title")}</Text>
+          {recs.length === 0 ? (
+            <Text style={styles.muted}>{t("recommend.allGood")}</Text>
+          ) : (
+            recs.map((r) => {
+              const tone = r.severity === "danger" ? colors.danger : r.severity === "warning" ? colors.warning : colors.success;
+              return (
+                <View key={r.id} style={styles.statusRow}>
+                  <View style={[styles.upDot, { backgroundColor: tone }]} />
+                  <Text style={styles.statusLabel}>{r.label}</Text>
+                  {r.detail ? <Text style={[styles.recDetail, { color: tone }]}>{r.detail}</Text> : null}
+                </View>
+              );
+            })
+          )}
         </Card>
 
         <Pressable onPress={confirmDelete} style={styles.deleteBtn}>
@@ -415,6 +437,7 @@ const makeStyles = (colors: ThemeColors) =>
     statusDate: { ...typography.caption, color: colors.textMuted },
     statusValue: { ...typography.caption, color: colors.text, fontWeight: "600", flexShrink: 1 },
     statusDivider: { height: 1, backgroundColor: colors.border },
+    recDetail: { ...typography.caption, fontWeight: "700" },
     deleteBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: spacing.sm, paddingVertical: spacing.md, marginTop: spacing.xs },
     deleteText: { ...typography.body, color: colors.danger, fontWeight: "700" },
     sectionLabel: { ...typography.label, color: colors.textMuted, marginTop: spacing.sm },
