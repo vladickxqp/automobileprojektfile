@@ -115,6 +115,10 @@
     "noVehicleSub": "Füge dein erstes Auto hinzu, um dein Dashboard zu sehen.",
     "addVehicle": "Auto hinzufügen"
   },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "empty": "Keine Benachrichtigungen"
+  },
   "history": {
     "title": "Verlauf",
     "empty": "Noch keine Einträge in der Lebensakte.",

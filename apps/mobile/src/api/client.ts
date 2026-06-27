@@ -195,6 +195,16 @@ export interface FleetSummaryDTO {
   dueReminders: number;
 }
 
+export interface NotificationDTO {
+  id: string;
+  vehicleId: string;
+  vehicleName: string;
+  kind: "reminder" | "document";
+  title: string;
+  date: string | null;
+  severity: "info" | "warning" | "danger";
+}
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -324,6 +334,7 @@ const realApi = {
   createModification: (vehicleId: string, input: CreateModificationInput) =>
     request<ModificationDTO>(`/vehicles/${vehicleId}/modifications`, { method: "POST", body: input }),
   fleetSummary: () => request<FleetSummaryDTO>(`/fleet/summary`),
+  listNotifications: () => request<NotificationDTO[]>(`/notifications`),
 };
 
 // In demo mode every call is served from built-in sample data (no backend). See src/api/config.ts.

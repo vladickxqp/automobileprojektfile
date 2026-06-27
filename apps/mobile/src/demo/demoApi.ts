@@ -11,6 +11,7 @@ import type {
   ExpenseSummaryDTO,
   FleetSummaryDTO,
   ModificationDTO,
+  NotificationDTO,
   ReminderDTO,
   SaleReportRefDTO,
   ScanDTO,
@@ -310,5 +311,25 @@ export const demoApi = {
       : 0;
     const dueReminders = store.reduce((s, v) => s + v.reminders.filter((r) => !r.completedAt).length, 0);
     return delay({ vehicles: store.length, totalKm, totalSpentEur, avgScore, dueReminders });
+  },
+
+  listNotifications: (): Promise<NotificationDTO[]> => {
+    const sev = (date?: string | null): NotificationDTO["severity"] => {
+      if (!date) return "info";
+      const d = Math.ceil((+new Date(date) - Date.now()) / 86_400_000);
+      return d < 0 ? "danger" : d < 30 ? "warning" : "info";
+    };
+    const out: NotificationDTO[] = [];
+    for (const v of store) {
+      const vehicleName = `${v.make} ${v.model}`;
+      for (const r of v.reminders.filter((r) => !r.completedAt && r.dueDate)) {
+        out.push({ id: `n-${r.id}`, vehicleId: v.id, vehicleName, kind: "reminder", title: r.title, date: r.dueDate, severity: sev(r.dueDate) });
+      }
+      for (const d of v.documents.filter((d) => d.expiresAt)) {
+        out.push({ id: `n-${d.id}`, vehicleId: v.id, vehicleName, kind: "document", title: d.title ?? d.type, date: d.expiresAt, severity: sev(d.expiresAt) });
+      }
+    }
+    out.sort((a, b) => +new Date(a.date ?? 0) - +new Date(b.date ?? 0));
+    return delay(out);
   },
 };

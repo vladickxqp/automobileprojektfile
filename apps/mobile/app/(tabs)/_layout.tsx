@@ -1,12 +1,15 @@
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { View } from "react-native";
 import { useTheme } from "../../src/theme/ThemeProvider";
+import { IconButton } from "../../src/ui/IconButton";
 import { ThemeToggle } from "../../src/ui/ThemeToggle";
-import { CarIcon, HomeIcon, LayersIcon, UserIcon } from "../../src/ui/icons";
+import { BellIcon, CarIcon, HomeIcon, LayersIcon, UserIcon } from "../../src/ui/icons";
 
 export default function TabsLayout() {
   const { t } = useTranslation();
   const { colors } = useTheme();
+  const router = useRouter();
 
   return (
     <Tabs
@@ -27,7 +30,18 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="home"
-        options={{ title: t("home.tab"), tabBarIcon: ({ color, size }) => <HomeIcon size={size} color={color} /> }}
+        options={{
+          title: t("home.tab"),
+          tabBarIcon: ({ color, size }) => <HomeIcon size={size} color={color} />,
+          headerRight: () => (
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingRight: 4 }}>
+              <IconButton variant="ghost" accessibilityLabel={t("notifications.title")} onPress={() => router.push("/notifications")}>
+                <BellIcon size={20} color={colors.text} />
+              </IconButton>
+              <ThemeToggle />
+            </View>
+          ),
+        }}
       />
       <Tabs.Screen
         name="garage"

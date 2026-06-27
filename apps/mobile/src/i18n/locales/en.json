@@ -115,6 +115,10 @@
     "noVehicleSub": "Add your first car to see your dashboard.",
     "addVehicle": "Add car"
   },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications"
+  },
   "history": {
     "title": "History",
     "empty": "No entries in the life record yet.",
