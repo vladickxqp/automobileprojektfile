@@ -163,6 +163,16 @@ export function UserIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconPro
   );
 }
 
+export function MenuIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Line x1={4} y1={7} x2={20} y2={7} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+      <Line x1={4} y1={12} x2={20} y2={12} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+      <Line x1={4} y1={17} x2={20} y2={17} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
 export function PencilIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
   return (
     <Svg {...base(size)}>
