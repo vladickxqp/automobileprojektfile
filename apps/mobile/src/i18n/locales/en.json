@@ -326,7 +326,19 @@
     "liveNote": "Real places near you · © OpenStreetMap",
     "searching": "Searching nearby…",
     "priceNote": "Prices via data.gouv.fr / Tankerkönig · Places © OpenStreetMap",
-    "myLocation": "My location"
+    "myLocation": "My location",
+    "tab": "Map"
+  },
+  "mechaniker": {
+    "tab": "AI Mechanic",
+    "title": "AI Mechanic",
+    "subtitle": "Describe your problem — the AI narrows down the cause.",
+    "symptomsLabel": "Common symptoms",
+    "symptoms": ["Power loss", "Knocking / rattling", "Squealing / grinding", "Vibration", "Smoke", "Smell", "Warning light", "Starting issues"],
+    "selectVehicle": "Select vehicle",
+    "start": "Start AI diagnosis",
+    "noVehicle": "Add a car first.",
+    "addVehicle": "Add car"
   },
   "fleet": {
     "title": "Fleet",

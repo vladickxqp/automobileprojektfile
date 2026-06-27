@@ -2,9 +2,10 @@ import { Tabs, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { useTheme } from "../../src/theme/ThemeProvider";
+import { CapsuleTabBar } from "../../src/ui/CapsuleTabBar";
 import { IconButton } from "../../src/ui/IconButton";
 import { ThemeToggle } from "../../src/ui/ThemeToggle";
-import { BellIcon, CarIcon, HomeIcon, LayersIcon, UserIcon } from "../../src/ui/icons";
+import { BellIcon, CarIcon, HomeIcon, LayersIcon, MapPinIcon, SparkleIcon, UserIcon } from "../../src/ui/icons";
 
 export default function TabsLayout() {
   const { t } = useTranslation();
@@ -13,19 +14,13 @@ export default function TabsLayout() {
 
   return (
     <Tabs
+      tabBar={(props) => <CapsuleTabBar {...props} />}
       screenOptions={{
         headerStyle: { backgroundColor: colors.background },
         headerTintColor: colors.text,
         headerTitleStyle: { fontWeight: "700" },
         headerShadowVisible: false,
         headerRight: () => <ThemeToggle />,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
-        tabBarStyle: {
-          backgroundColor: colors.background,
-          borderTopColor: colors.border,
-        },
-        tabBarLabelStyle: { fontSize: 11, fontWeight: "600" },
       }}
     >
       <Tabs.Screen
@@ -46,6 +41,14 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="garage"
         options={{ title: t("garage.title"), tabBarIcon: ({ color, size }) => <CarIcon size={size} color={color} /> }}
+      />
+      <Tabs.Screen
+        name="karte"
+        options={{ title: t("services.tab"), tabBarIcon: ({ color, size }) => <MapPinIcon size={size} color={color} /> }}
+      />
+      <Tabs.Screen
+        name="mechaniker"
+        options={{ title: t("mechaniker.tab"), tabBarIcon: ({ color, size }) => <SparkleIcon size={size} color={color} /> }}
       />
       <Tabs.Screen
         name="fleet"

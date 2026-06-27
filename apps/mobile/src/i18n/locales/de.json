@@ -326,7 +326,19 @@
     "liveNote": "Echte Orte in deiner Nähe · © OpenStreetMap",
     "searching": "Suche in deiner Nähe…",
     "priceNote": "Preise via data.gouv.fr / Tankerkönig · Orte © OpenStreetMap",
-    "myLocation": "Mein Standort"
+    "myLocation": "Mein Standort",
+    "tab": "Karte"
+  },
+  "mechaniker": {
+    "tab": "KI-Mechaniker",
+    "title": "KI-Mechaniker",
+    "subtitle": "Beschreibe dein Problem — die KI grenzt die Ursache ein.",
+    "symptomsLabel": "Häufige Symptome",
+    "symptoms": ["Leistungsverlust", "Klopfen / Klackern", "Quietschen / Schleifen", "Vibration", "Rauch", "Geruch", "Warnleuchte", "Startprobleme"],
+    "selectVehicle": "Fahrzeug wählen",
+    "start": "KI-Diagnose starten",
+    "noVehicle": "Füge zuerst ein Auto hinzu.",
+    "addVehicle": "Auto hinzufügen"
   },
   "fleet": {
     "title": "Flotte",
