@@ -99,7 +99,9 @@
   },
   "editVehicle": {
     "title": "Fahrzeug bearbeiten",
-    "plate": "Kennzeichen"
+    "plate": "Kennzeichen",
+    "delete": "Fahrzeug entfernen",
+    "deleteConfirm": "Dieses Fahrzeug wirklich entfernen?"
   },
   "home": {
     "tab": "Start",
@@ -156,7 +158,8 @@
     "title": "Dokumente",
     "empty": "Noch keine Dokumente",
     "upload": "Dokument hochladen",
-    "expires": "läuft ab"
+    "expires": "läuft ab",
+    "noFile": "Keine Datei vorhanden (Demo)."
   },
   "reminders": {
     "title": "Erinnerungen",

@@ -99,7 +99,9 @@
   },
   "editVehicle": {
     "title": "Edit vehicle",
-    "plate": "Plate"
+    "plate": "Plate",
+    "delete": "Delete vehicle",
+    "deleteConfirm": "Really delete this vehicle?"
   },
   "home": {
     "tab": "Home",
@@ -156,7 +158,8 @@
     "title": "Documents",
     "empty": "No documents yet",
     "upload": "Upload document",
-    "expires": "expires"
+    "expires": "expires",
+    "noFile": "No file available (demo)."
   },
   "reminders": {
     "title": "Reminders",

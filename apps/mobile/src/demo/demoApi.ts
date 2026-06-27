@@ -122,6 +122,12 @@ export const demoApi = {
     return delay(publicVehicle(v));
   },
 
+  deleteVehicle: (id: string): Promise<{ ok: boolean }> => {
+    const i = store.findIndex((x) => x.id === id);
+    if (i >= 0) store.splice(i, 1);
+    return delay({ ok: true });
+  },
+
   listEvents: (vehicleId: string, type?: "maintenance" | "repair" | "expense"): Promise<VehicleEventDTO[]> => {
     const list = find(vehicleId).events.filter((e) => (type ? e.type === type : true));
     return delay([...list].sort((a, b) => +new Date(b.occurredAt) - +new Date(a.occurredAt)));
@@ -169,7 +175,7 @@ export const demoApi = {
       id: uid("doc"),
       vehicleId,
       type: meta.type,
-      fileUrl: "#",
+      fileUrl: file.uri,
       title: meta.title ?? file.name,
       issuedAt: new Date().toISOString(),
       expiresAt: meta.expiresAt ?? null,

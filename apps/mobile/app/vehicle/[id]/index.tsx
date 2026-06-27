@@ -2,12 +2,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import type { DocumentDTO, ReminderDTO, ScoreFactorDTO } from "../../../src/api/client";
+import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import type { ScoreFactorDTO } from "../../../src/api/client";
 import { api } from "../../../src/api/client";
 import { API_URL } from "../../../src/api/config";
 import { useTheme } from "../../../src/theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
+import { Badge, type BadgeTone } from "../../../src/ui/Badge";
 import { Button } from "../../../src/ui/Button";
 import { Card } from "../../../src/ui/Card";
 import { CarPhoto } from "../../../src/ui/CarPhoto";
@@ -26,41 +27,22 @@ import {
   MapPinIcon,
   PencilIcon,
   SearchIcon,
+  ShieldIcon,
   SlidersIcon,
   SparkleIcon,
+  TrashIcon,
   WrenchIcon,
 } from "../../../src/ui/icons";
 
-interface Upcoming {
-  id: string;
-  label: string;
-  date: string;
-}
-
-function buildUpcoming(
-  reminders: ReminderDTO[],
-  documents: DocumentDTO[],
+function vehicleStatus(
+  date: string | null | undefined,
   t: (key: string) => string,
-): Upcoming[] {
-  const docLabel = (type: string) =>
-    type === "insurance" ? t("settings.insurance") : type === "TÜV" ? t("settings.tuv") : type;
-  const items: Upcoming[] = [
-    ...reminders.filter((r) => r.dueDate).map((r) => ({ id: `r-${r.id}`, label: r.title, date: r.dueDate as string })),
-    ...documents
-      .filter((d) => d.expiresAt)
-      .map((d) => ({ id: `d-${d.id}`, label: `${docLabel(d.type)} ${t("documents.expires")}`, date: d.expiresAt as string })),
-  ];
-  return items.sort((a, b) => +new Date(a.date) - +new Date(b.date)).slice(0, 4);
-}
-
-function daysUntil(date: string): number {
-  return Math.ceil((+new Date(date) - Date.now()) / 86_400_000);
-}
-function dueColor(date: string, colors: ThemeColors): string {
-  const d = daysUntil(date);
-  if (d < 30) return colors.danger;
-  if (d < 90) return colors.warning;
-  return colors.textMuted;
+): { label: string; tone: BadgeTone } {
+  if (!date) return { label: "—", tone: "neutral" };
+  const d = Math.ceil((+new Date(date) - Date.now()) / 86_400_000);
+  if (d < 0) return { label: t("home.expired"), tone: "danger" };
+  if (d < 30) return { label: t("home.expiringSoon"), tone: "warning" };
+  return { label: t("home.valid"), tone: "success" };
 }
 
 export default function VehicleDashboard() {
@@ -89,6 +71,28 @@ export default function VehicleDashboard() {
     onSuccess: (report) => setReportUrl(`${API_URL}${report.url}`),
   });
 
+  const del = useMutation({
+    mutationFn: () => api.deleteVehicle(id),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+      void queryClient.invalidateQueries({ queryKey: ["fleetSummary"] });
+      router.replace("/home");
+    },
+  });
+
+  const confirmDelete = () => {
+    const title = t("editVehicle.delete");
+    const msg = t("editVehicle.deleteConfirm");
+    if (Platform.OS === "web") {
+      if (typeof window !== "undefined" && window.confirm(msg)) del.mutate();
+    } else {
+      Alert.alert(title, msg, [
+        { text: t("common.cancel"), style: "cancel" },
+        { text: title, style: "destructive", onPress: () => del.mutate() },
+      ]);
+    }
+  };
+
   if (vehicle.isLoading || !vehicle.data) {
     return (
       <Screen>
@@ -102,7 +106,13 @@ export default function VehicleDashboard() {
 
   const v = vehicle.data;
   const eur = summary.data?.byCurrency.EUR;
-  const upcoming = buildUpcoming(reminders.data ?? [], documents.data ?? [], t);
+  const docs = documents.data ?? [];
+  const rems = reminders.data ?? [];
+  const tuvDoc = docs.find((d) => d.type === "TÜV");
+  const insDoc = docs.find((d) => d.type === "insurance");
+  const nextRem = rems
+    .filter((r) => r.dueDate)
+    .sort((a, b) => +new Date(a.dueDate!) - +new Date(b.dueDate!))[0];
   const scoreValue = score.data?.score ?? null;
   const factors = score.data?.factors ?? [];
 
@@ -187,33 +197,40 @@ export default function VehicleDashboard() {
           </Text>
         </Card>
 
-        {/* Upcoming deadlines (reminders + document expiries) */}
+        {/* Status */}
         <Card>
-          <View style={styles.cardHeadRow}>
-            <Text style={styles.cardTitle}>{t("dashboard.upcoming")}</Text>
-            <BellIcon size={18} color={colors.textMuted} />
+          <Text style={styles.cardTitle}>{t("home.status")}</Text>
+          <View style={styles.statusRow}>
+            <ShieldIcon size={18} color={colors.textMuted} />
+            <Text style={styles.statusLabel}>{t("home.tuv")}</Text>
+            <Text style={styles.statusDate}>
+              {tuvDoc?.expiresAt ? new Date(tuvDoc.expiresAt).toLocaleDateString("de-DE") : ""}
+            </Text>
+            <Badge {...vehicleStatus(tuvDoc?.expiresAt, t)} />
           </View>
-          {upcoming.length === 0 ? (
-            <Text style={styles.muted}>{t("dashboard.noReminders")}</Text>
-          ) : (
-            upcoming.map((u) => {
-              const tone = dueColor(u.date, colors);
-              const days = daysUntil(u.date);
-              const inText = days < 0 ? t("common.overdue") : days === 0 ? t("common.today") : t("common.inDays", { count: days });
-              return (
-                <View key={u.id} style={styles.upRow}>
-                  <View style={[styles.upDot, { backgroundColor: tone }]} />
-                  <Text style={styles.upLabel} numberOfLines={1}>
-                    {u.label}
-                  </Text>
-                  <Text style={styles.upDate}>{new Date(u.date).toLocaleDateString("de-DE")}</Text>
-                  <Text style={[styles.upIn, { color: tone }]}>{inText}</Text>
-                </View>
-              );
-            })
-          )}
+          <View style={styles.statusDivider} />
+          <View style={styles.statusRow}>
+            <FileIcon size={18} color={colors.textMuted} />
+            <Text style={styles.statusLabel}>{t("home.insurance")}</Text>
+            <Text style={styles.statusDate}>
+              {insDoc?.expiresAt ? new Date(insDoc.expiresAt).toLocaleDateString("de-DE") : ""}
+            </Text>
+            <Badge {...vehicleStatus(insDoc?.expiresAt, t)} />
+          </View>
+          <View style={styles.statusDivider} />
+          <View style={styles.statusRow}>
+            <WrenchIcon size={18} color={colors.textMuted} />
+            <Text style={styles.statusLabel}>{t("home.nextService")}</Text>
+            <Text style={styles.statusValue} numberOfLines={1}>
+              {nextRem ? `${nextRem.title} · ${new Date(nextRem.dueDate!).toLocaleDateString("de-DE")}` : t("home.none")}
+            </Text>
+          </View>
         </Card>
 
+        <Pressable onPress={confirmDelete} style={styles.deleteBtn}>
+          <TrashIcon size={18} color={colors.danger} />
+          <Text style={styles.deleteText}>{t("editVehicle.delete")}</Text>
+        </Pressable>
           </>
         ) : (
           <>
@@ -387,6 +404,13 @@ const makeStyles = (colors: ThemeColors) =>
     upLabel: { ...typography.body, color: colors.text, flex: 1 },
     upDate: { ...typography.caption, color: colors.textMuted },
     upIn: { ...typography.caption, fontWeight: "700", width: 66, textAlign: "right" },
+    statusRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm, paddingVertical: spacing.sm },
+    statusLabel: { ...typography.body, color: colors.text, flex: 1 },
+    statusDate: { ...typography.caption, color: colors.textMuted },
+    statusValue: { ...typography.caption, color: colors.text, fontWeight: "600", flexShrink: 1 },
+    statusDivider: { height: 1, backgroundColor: colors.border },
+    deleteBtn: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: spacing.sm, paddingVertical: spacing.md, marginTop: spacing.xs },
+    deleteText: { ...typography.body, color: colors.danger, fontWeight: "700" },
     sectionLabel: { ...typography.label, color: colors.textMuted, marginTop: spacing.sm },
     actionsGrid: { flexDirection: "row", flexWrap: "wrap", gap: spacing.md },
     action: {

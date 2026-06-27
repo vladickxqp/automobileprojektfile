@@ -163,6 +163,16 @@ export function UserIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconPro
   );
 }
 
+export function TrashIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Line x1={4} y1={6.5} x2={20} y2={6.5} stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" />
+      <Path d="M9 6.5V5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 5v1.5" stroke={color} strokeWidth={strokeWidth} strokeLinejoin="round" />
+      <Path d="M6 6.5l1 12a1.5 1.5 0 0 0 1.5 1.4h7A1.5 1.5 0 0 0 17 18.5l1-12" stroke={color} strokeWidth={strokeWidth} strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
 export function MenuIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
   return (
     <Svg {...base(size)}>

@@ -305,6 +305,7 @@ const realApi = {
     request<VehicleDTO>("/vehicles", { method: "POST", body: input }),
   updateVehicle: (id: string, input: UpdateVehicleInput) =>
     request<VehicleDTO>(`/vehicles/${id}`, { method: "PATCH", body: input }),
+  deleteVehicle: (id: string) => request<{ ok: boolean }>(`/vehicles/${id}`, { method: "DELETE" }),
   listEvents: (vehicleId: string, type?: "maintenance" | "repair" | "expense") =>
     request<VehicleEventDTO[]>(`/vehicles/${vehicleId}/events${type ? `?type=${type}` : ""}`),
   createEvent: (vehicleId: string, input: CreateEventInput) =>
