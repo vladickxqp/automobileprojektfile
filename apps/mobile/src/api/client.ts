@@ -76,6 +76,10 @@ export type CreateEventInput =
         laborCost?: number;
         currency?: string;
         notes?: string;
+        cost?: number;
+        workshop?: string;
+        diy?: boolean;
+        photos?: string[];
       };
     }
   | {
@@ -84,6 +88,12 @@ export type CreateEventInput =
       mileageKm?: number;
       payload: { category: string; amount: number; currency?: string; note?: string };
     };
+
+export interface UpdateEventInput {
+  occurredAt?: string;
+  mileageKm?: number;
+  payload?: Record<string, unknown>;
+}
 
 export interface ExpenseSummaryDTO {
   count: number;
@@ -310,6 +320,10 @@ const realApi = {
     request<VehicleEventDTO[]>(`/vehicles/${vehicleId}/events${type ? `?type=${type}` : ""}`),
   createEvent: (vehicleId: string, input: CreateEventInput) =>
     request<VehicleEventDTO>(`/vehicles/${vehicleId}/events`, { method: "POST", body: input }),
+  updateEvent: (vehicleId: string, eventId: string, input: UpdateEventInput) =>
+    request<VehicleEventDTO>(`/vehicles/${vehicleId}/events/${eventId}`, { method: "PATCH", body: input }),
+  deleteEvent: (vehicleId: string, eventId: string) =>
+    request<{ ok: boolean }>(`/vehicles/${vehicleId}/events/${eventId}`, { method: "DELETE" }),
   expenseSummary: (vehicleId: string) =>
     request<ExpenseSummaryDTO>(`/vehicles/${vehicleId}/expenses/summary`),
   listDocuments: (vehicleId: string) => request<DocumentDTO[]>(`/vehicles/${vehicleId}/documents`),

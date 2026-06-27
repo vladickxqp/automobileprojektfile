@@ -145,6 +145,7 @@
   },
   "addEvent": {
     "title": "Add record",
+    "editTitle": "Edit record",
     "maintenance": "Maintenance",
     "expense": "Expense",
     "workTitle": "What was done",
@@ -152,7 +153,28 @@
     "amount": "Amount",
     "mileage": "Mileage (km)",
     "save": "Save",
-    "failed": "Could not save"
+    "failed": "Could not save",
+    "art": "Type of service",
+    "date": "Date",
+    "cost": "Cost (€)",
+    "description": "Description",
+    "workshop": "Workshop",
+    "diy": "DIY",
+    "addPhoto": "Add photo / document",
+    "delete": "Delete record",
+    "deleteConfirm": "Delete this record?",
+    "categories": {
+      "oil": "Oil change",
+      "oilfilter": "Oil filter change",
+      "brakes": "Brakes (discs & pads)",
+      "tires": "Tire change",
+      "tuv": "Inspection",
+      "inspection": "Service inspection",
+      "battery": "Battery replaced",
+      "fluids": "Fluids",
+      "repair": "Repair",
+      "other": "Other"
+    }
   },
   "documents": {
     "title": "Documents",

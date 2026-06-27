@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { api, type VehicleEventDTO } from "../../../src/api/client";
 import { useTheme } from "../../../src/theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
@@ -19,6 +19,17 @@ function describe(e: VehicleEventDTO): string {
     return `${category}: ${amount} ${currency}`;
   }
   return String(e.payload.title ?? e.type);
+}
+
+function costOf(e: VehicleEventDTO): number | null {
+  if (e.type === "expense") return Number(e.payload.amount) || null;
+  const c = e.payload.cost != null ? Number(e.payload.cost) : (Number(e.payload.partsCost) || 0) + (Number(e.payload.laborCost) || 0);
+  return c || null;
+}
+function workshopOf(e: VehicleEventDTO, diyLabel: string): string | null {
+  if (e.payload.diy) return diyLabel;
+  const w = e.payload.workshop ?? e.payload.shopName;
+  return w ? String(w) : null;
 }
 
 function eventVisual(type: VehicleEventDTO["type"], colors: ThemeColors): { icon: (c: string) => ReactNode; color: string } {
@@ -75,20 +86,37 @@ export default function HistoryScreen() {
                       <View style={[styles.dot, { borderColor: vis.color }]}>{vis.icon(vis.color)}</View>
                       {i < sorted.length - 1 ? <View style={styles.line} /> : null}
                     </View>
-                    <Card style={styles.entry}>
-                      <Text style={styles.entryTitle}>{describe(e)}</Text>
-                      <Text style={styles.muted}>
-                        {new Date(e.occurredAt).toLocaleDateString("de-DE")} · {t(`history.types.${e.type}`, { defaultValue: e.type })}
-                        {e.mileageKm != null ? ` · ${e.mileageKm.toLocaleString("de-DE")} km` : ""}
-                      </Text>
-                    </Card>
+                    <Pressable style={styles.entry} onPress={() => router.push(`/vehicle/${id}/add-event?eventId=${e.id}`)}>
+                      {({ pressed }) => {
+                        const cost = costOf(e);
+                        const ws = workshopOf(e, t("addEvent.diy"));
+                        const meta = [cost != null ? `${cost.toLocaleString("de-DE")} €` : null, ws].filter(Boolean).join(" · ");
+                        const photoCount = Array.isArray(e.payload.photos) ? (e.payload.photos as string[]).length : 0;
+                        return (
+                          <Card style={pressed ? { borderColor: colors.borderStrong } : undefined}>
+                            <Text style={styles.entryTitle}>{describe(e)}</Text>
+                            <Text style={styles.muted}>
+                              {new Date(e.occurredAt).toLocaleDateString("de-DE")} · {t(`history.types.${e.type}`, { defaultValue: e.type })}
+                              {e.mileageKm != null ? ` · ${e.mileageKm.toLocaleString("de-DE")} km` : ""}
+                            </Text>
+                            {meta ? <Text style={styles.entryMeta}>{meta}</Text> : null}
+                            {e.payload.notes ? (
+                              <Text style={styles.muted} numberOfLines={2}>
+                                {String(e.payload.notes)}
+                              </Text>
+                            ) : null}
+                            {photoCount ? <Text style={styles.muted}>📎 {photoCount}</Text> : null}
+                          </Card>
+                        );
+                      }}
+                    </Pressable>
                   </View>
                 </View>
               );
             })}
           </View>
         )}
-        <Button title="Eintrag hinzufügen" onPress={() => router.push(`/vehicle/${id}/add-event`)} />
+        <Button title={t("history.add")} onPress={() => router.push(`/vehicle/${id}/add-event`)} />
       </View>
     </Screen>
   );
@@ -113,5 +141,6 @@ const makeStyles = (colors: ThemeColors) =>
     line: { flex: 1, width: 2, backgroundColor: colors.border, marginVertical: 2 },
     entry: { flex: 1, marginBottom: spacing.md, gap: spacing.xs },
     entryTitle: { ...typography.h3, color: colors.text },
+    entryMeta: { ...typography.caption, color: colors.text, fontWeight: "600" },
     muted: { ...typography.caption, color: colors.textMuted },
   });

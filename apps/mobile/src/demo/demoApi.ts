@@ -16,6 +16,7 @@ import type {
   SaleReportRefDTO,
   ScanDTO,
   ScoreDTO,
+  UpdateEventInput,
   UpdateVehicleInput,
   UploadFile,
   VehicleDTO,
@@ -147,6 +148,23 @@ export const demoApi = {
     };
     v.events.unshift(event);
     return delay(event);
+  },
+
+  updateEvent: (vehicleId: string, eventId: string, input: UpdateEventInput): Promise<VehicleEventDTO> => {
+    const v = find(vehicleId);
+    const e = v.events.find((x) => x.id === eventId);
+    if (!e) throw new Error("Eintrag nicht gefunden");
+    if (input.occurredAt != null) e.occurredAt = input.occurredAt;
+    if (input.mileageKm !== undefined) e.mileageKm = input.mileageKm;
+    if (input.payload) e.payload = { ...e.payload, ...input.payload };
+    return delay(e);
+  },
+
+  deleteEvent: (vehicleId: string, eventId: string): Promise<{ ok: boolean }> => {
+    const v = find(vehicleId);
+    const i = v.events.findIndex((x) => x.id === eventId);
+    if (i >= 0) v.events.splice(i, 1);
+    return delay({ ok: true });
   },
 
   expenseSummary: (vehicleId: string): Promise<ExpenseSummaryDTO> => {

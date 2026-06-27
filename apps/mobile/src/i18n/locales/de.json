@@ -145,6 +145,7 @@
   },
   "addEvent": {
     "title": "Eintrag hinzufügen",
+    "editTitle": "Eintrag bearbeiten",
     "maintenance": "Wartung",
     "expense": "Ausgabe",
     "workTitle": "Was wurde gemacht",
@@ -152,7 +153,28 @@
     "amount": "Betrag",
     "mileage": "Kilometerstand (km)",
     "save": "Speichern",
-    "failed": "Speichern fehlgeschlagen"
+    "failed": "Speichern fehlgeschlagen",
+    "art": "Art der Wartung",
+    "date": "Datum",
+    "cost": "Kosten (€)",
+    "description": "Beschreibung",
+    "workshop": "Werkstatt",
+    "diy": "Eigenleistung",
+    "addPhoto": "Foto / Dokument hinzufügen",
+    "delete": "Eintrag löschen",
+    "deleteConfirm": "Diesen Eintrag löschen?",
+    "categories": {
+      "oil": "Ölwechsel",
+      "oilfilter": "Ölfilterwechsel",
+      "brakes": "Bremsen (Scheiben & Beläge)",
+      "tires": "Reifenwechsel",
+      "tuv": "TÜV / HU",
+      "inspection": "Inspektion",
+      "battery": "Batterie gewechselt",
+      "fluids": "Flüssigkeiten",
+      "repair": "Reparatur",
+      "other": "Sonstiges"
+    }
   },
   "documents": {
     "title": "Dokumente",
