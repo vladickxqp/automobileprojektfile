@@ -163,6 +163,16 @@ export function UserIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconPro
   );
 }
 
+export function HomeIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
+  return (
+    <Svg {...base(size)}>
+      <Path d="M4 11l8-7 8 7" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M6 10v9a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-9" stroke={color} strokeWidth={strokeWidth} strokeLinejoin="round" />
+      <Path d="M10 20v-5h4v5" stroke={color} strokeWidth={strokeWidth} strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
 export function CarIcon({ size = 22, color = "#fff", strokeWidth = 2 }: IconProps) {
   return (
     <Svg {...base(size)}>

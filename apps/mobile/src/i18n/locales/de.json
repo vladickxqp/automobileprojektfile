@@ -93,6 +93,28 @@
     "services": "Services",
     "upcoming": "Anstehend"
   },
+  "home": {
+    "tab": "Start",
+    "quickActions": "Schnellaktionen",
+    "askAi": "KI fragen",
+    "scanObd": "OBD scannen",
+    "addExpense": "Ausgabe",
+    "uploadDoc": "Dokument",
+    "addMaintenance": "Wartung",
+    "status": "Status",
+    "tuv": "TÜV / HU",
+    "insurance": "Versicherung",
+    "nextService": "Nächster Service",
+    "none": "Nichts geplant",
+    "recent": "Letzte Aktivität",
+    "noActivity": "Noch keine Aktivität.",
+    "valid": "Gültig",
+    "expiringSoon": "Läuft bald ab",
+    "expired": "Abgelaufen",
+    "noVehicleTitle": "Willkommen bei CarDNA",
+    "noVehicleSub": "Füge dein erstes Auto hinzu, um dein Dashboard zu sehen.",
+    "addVehicle": "Auto hinzufügen"
+  },
   "history": {
     "title": "Verlauf",
     "empty": "Noch keine Einträge in der Lebensakte.",

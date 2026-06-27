@@ -2,7 +2,7 @@ import { Tabs } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../../src/theme/ThemeProvider";
 import { ThemeToggle } from "../../src/ui/ThemeToggle";
-import { CarIcon, LayersIcon, UserIcon } from "../../src/ui/icons";
+import { CarIcon, HomeIcon, LayersIcon, UserIcon } from "../../src/ui/icons";
 
 export default function TabsLayout() {
   const { t } = useTranslation();
@@ -25,6 +25,10 @@ export default function TabsLayout() {
         tabBarLabelStyle: { fontSize: 11, fontWeight: "600" },
       }}
     >
+      <Tabs.Screen
+        name="home"
+        options={{ title: t("home.tab"), tabBarIcon: ({ color, size }) => <HomeIcon size={size} color={color} /> }}
+      />
       <Tabs.Screen
         name="garage"
         options={{ title: t("garage.title"), tabBarIcon: ({ color, size }) => <CarIcon size={size} color={color} /> }}

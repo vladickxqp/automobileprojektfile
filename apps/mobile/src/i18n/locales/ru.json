@@ -93,6 +93,28 @@
     "services": "Сервисы",
     "upcoming": "Предстоящее"
   },
+  "home": {
+    "tab": "Главная",
+    "quickActions": "Быстрые действия",
+    "askAi": "Спросить ИИ",
+    "scanObd": "Скан OBD",
+    "addExpense": "Расход",
+    "uploadDoc": "Документ",
+    "addMaintenance": "Сервис",
+    "status": "Статус",
+    "tuv": "Техосмотр",
+    "insurance": "Страховка",
+    "nextService": "Следующий сервис",
+    "none": "Ничего не запланировано",
+    "recent": "Последняя активность",
+    "noActivity": "Пока нет активности.",
+    "valid": "Действует",
+    "expiringSoon": "Скоро истекает",
+    "expired": "Истекло",
+    "noVehicleTitle": "Добро пожаловать в CarDNA",
+    "noVehicleSub": "Добавьте первое авто, чтобы увидеть дашборд.",
+    "addVehicle": "Добавить авто"
+  },
   "history": {
     "title": "История",
     "empty": "В истории жизни ещё нет записей.",

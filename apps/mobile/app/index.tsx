@@ -42,7 +42,7 @@ export default function Launch() {
 
   if (!isOnboarded()) return <Redirect href="/onboarding" />;
   if (!user) return <Redirect href="/sign-in" />;
-  return <Redirect href="/garage" />;
+  return <Redirect href="/home" />;
 }
 
 const makeStyles = (colors: ThemeColors) =>

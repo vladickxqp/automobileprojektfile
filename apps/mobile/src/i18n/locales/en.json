@@ -93,6 +93,28 @@
     "services": "Services",
     "upcoming": "Upcoming"
   },
+  "home": {
+    "tab": "Home",
+    "quickActions": "Quick actions",
+    "askAi": "Ask AI",
+    "scanObd": "Scan OBD",
+    "addExpense": "Expense",
+    "uploadDoc": "Document",
+    "addMaintenance": "Maintenance",
+    "status": "Status",
+    "tuv": "Inspection",
+    "insurance": "Insurance",
+    "nextService": "Next service",
+    "none": "Nothing scheduled",
+    "recent": "Recent activity",
+    "noActivity": "No activity yet.",
+    "valid": "Valid",
+    "expiringSoon": "Expiring soon",
+    "expired": "Expired",
+    "noVehicleTitle": "Welcome to CarDNA",
+    "noVehicleSub": "Add your first car to see your dashboard.",
+    "addVehicle": "Add car"
+  },
   "history": {
     "title": "History",
     "empty": "No entries in the life record yet.",

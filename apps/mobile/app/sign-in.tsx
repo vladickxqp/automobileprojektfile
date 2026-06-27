@@ -29,7 +29,7 @@ export default function SignInScreen() {
     try {
       if (mode === "signIn") await signIn(email.trim(), password);
       else await signUp(email.trim(), password);
-      router.replace("/garage");
+      router.replace("/home");
     } catch (e) {
       Alert.alert(t("auth.error"), e instanceof Error ? e.message : String(e));
     } finally {
@@ -41,7 +41,7 @@ export default function SignInScreen() {
     setBusy(true);
     try {
       await signIn(`demo+${provider}@cardna.app`, "demo-oauth");
-      router.replace("/garage");
+      router.replace("/home");
     } catch (e) {
       Alert.alert(t("auth.error"), e instanceof Error ? e.message : String(e));
     } finally {
