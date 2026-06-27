@@ -1,6 +1,6 @@
-// "Instrument" design system — a near-black cockpit aesthetic with a single tachometer-orange
-// signature accent. Two palettes share the same keys so any component can switch themes by
-// swapping the palette object. Dark is the default; light is a clean daylight counterpart.
+// "Aurora" design system — a premium deep-violet aesthetic: gradient backgrounds, glassy rounded
+// cards, a glowing violet signature accent and pill buttons. Two palettes share the same keys so
+// any component switches themes by swapping the palette object. Dark is the default.
 
 export interface ThemeColors {
   // surfaces
@@ -16,7 +16,7 @@ export interface ThemeColors {
   text: string;
   textMuted: string;
   textFaint: string;
-  // signature accent (tachometer orange)
+  // signature accent (glowing violet)
   primary: string;
   primarySoft: string;
   primaryGlow: string;
@@ -25,7 +25,7 @@ export interface ThemeColors {
   success: string;
   warning: string;
   danger: string;
-  // 3d / hero scene
+  // gradient backdrop / hero
   heroTop: string;
   heroBottom: string;
   carPaint: string;
@@ -33,55 +33,54 @@ export interface ThemeColors {
 }
 
 export const darkColors: ThemeColors = {
-  background: "#0A0B0D",
-  backgroundElevated: "#101317",
-  surface: "#14171B",
-  surfaceAlt: "#1A1E24",
-  surfaceHover: "#21262D",
-  border: "#262B32",
-  borderStrong: "#333A43",
-  text: "#F4F5F7",
-  textMuted: "#9AA1AB",
-  textFaint: "#5B626B",
-  primary: "#F2552A",
-  primarySoft: "#2A140C",
-  primaryGlow: "rgba(242,85,42,0.35)",
-  onPrimary: "#0A0604",
-  success: "#2FB47C",
-  warning: "#E8A13C",
-  danger: "#E5484D",
-  heroTop: "#161A1F",
-  heroBottom: "#0A0B0D",
-  carPaint: "#F2552A",
-  carGlass: "#0C0E11",
+  background: "#0D0A1F",
+  backgroundElevated: "#15102E",
+  surface: "#181235",
+  surfaceAlt: "#211A45",
+  surfaceHover: "#2A2255",
+  border: "#2A2350",
+  borderStrong: "#3A3270",
+  text: "#F3F1FF",
+  textMuted: "#A7A1CC",
+  textFaint: "#6E6797",
+  primary: "#7C5CFF",
+  primarySoft: "#221A4D",
+  primaryGlow: "rgba(124,92,255,0.45)",
+  onPrimary: "#FFFFFF",
+  success: "#34D399",
+  warning: "#FBBF24",
+  danger: "#F87171",
+  heroTop: "#2A1F5C",
+  heroBottom: "#0B0918",
+  carPaint: "#7C5CFF",
+  carGlass: "#15102E",
 };
 
 export const lightColors: ThemeColors = {
-  background: "#F5F6F8",
+  background: "#F4F2FC",
   backgroundElevated: "#FFFFFF",
   surface: "#FFFFFF",
-  surfaceAlt: "#EEF1F4",
-  surfaceHover: "#E6EAEF",
-  border: "#E2E6EB",
-  borderStrong: "#CCD2DA",
-  text: "#14181C",
-  textMuted: "#5B636D",
-  textFaint: "#99A1AB",
-  primary: "#E0491D",
-  primarySoft: "#FCE7DF",
-  primaryGlow: "rgba(224,73,29,0.22)",
+  surfaceAlt: "#EFEBFA",
+  surfaceHover: "#E6E0F7",
+  border: "#E6E0F7",
+  borderStrong: "#CFC6EC",
+  text: "#191428",
+  textMuted: "#615B7A",
+  textFaint: "#9A93B5",
+  primary: "#6D4AE6",
+  primarySoft: "#EBE5FB",
+  primaryGlow: "rgba(109,74,230,0.30)",
   onPrimary: "#FFFFFF",
-  success: "#1E9C66",
-  warning: "#C07C18",
-  danger: "#D23B40",
+  success: "#10B981",
+  warning: "#D97706",
+  danger: "#DC2626",
   heroTop: "#FFFFFF",
-  heroBottom: "#E9ECF1",
-  carPaint: "#E0491D",
-  carGlass: "#C9D2DC",
+  heroBottom: "#ECE7FA",
+  carPaint: "#6D4AE6",
+  carGlass: "#CFC6EC",
 };
 
-// Back-compat default export — the dark palette. Prefer `useTheme()` in components so the
-// active palette follows the theme toggle.
+// Back-compat default export — the dark palette. Prefer `useTheme()` in components.
 export const colors = darkColors;
 
 export const spacing = {
@@ -95,10 +94,10 @@ export const spacing = {
 } as const;
 
 export const radius = {
-  sm: 6,
-  md: 10,
-  lg: 16,
-  xl: 22,
+  sm: 10,
+  md: 14,
+  lg: 20,
+  xl: 28,
   pill: 999,
 } as const;
 

@@ -31,18 +31,28 @@ const makeStyles = (colors: ThemeColors) =>
       borderRadius: radius.lg,
       padding: spacing.lg,
       gap: spacing.sm,
+      ...Platform.select({
+        web: { boxShadow: "0 14px 32px -22px rgba(0,0,0,0.65)" } as object,
+        default: {
+          shadowColor: "#000",
+          shadowOpacity: 0.25,
+          shadowRadius: 16,
+          shadowOffset: { width: 0, height: 8 },
+          elevation: 3,
+        },
+      }),
     },
     elevated: {
       backgroundColor: colors.backgroundElevated,
       borderColor: colors.borderStrong,
       ...Platform.select({
-        web: { boxShadow: "0 18px 40px -24px rgba(0,0,0,0.7)" } as object,
+        web: { boxShadow: "0 24px 54px -26px rgba(124,92,255,0.45)" } as object,
         default: {
-          shadowColor: "#000",
+          shadowColor: colors.primary,
           shadowOpacity: 0.4,
-          shadowRadius: 24,
-          shadowOffset: { width: 0, height: 12 },
-          elevation: 6,
+          shadowRadius: 26,
+          shadowOffset: { width: 0, height: 14 },
+          elevation: 8,
         },
       }),
     },

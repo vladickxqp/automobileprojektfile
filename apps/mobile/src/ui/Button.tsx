@@ -72,24 +72,30 @@ export function Button({
 const makeStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     base: {
-      height: 50,
-      borderRadius: radius.md,
+      height: 52,
+      borderRadius: radius.pill,
       alignItems: "center",
       justifyContent: "center",
-      paddingHorizontal: spacing.lg,
+      paddingHorizontal: spacing.xl,
       borderWidth: 1,
       borderColor: "transparent",
       ...Platform.select({ web: { cursor: "pointer" } as object, default: {} }),
     },
-    lg: { height: 56, borderRadius: radius.lg },
+    lg: { height: 58 },
     content: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
     icon: { marginLeft: -2 },
     primary: {
       backgroundColor: colors.primary,
       borderColor: colors.primary,
       ...Platform.select({
-        web: { boxShadow: "0 10px 26px -12px rgba(242,85,42,0.7)" } as object,
-        default: {},
+        web: { boxShadow: "0 14px 34px -10px rgba(124,92,255,0.6)" } as object,
+        default: {
+          shadowColor: colors.primary,
+          shadowOpacity: 0.5,
+          shadowRadius: 16,
+          shadowOffset: { width: 0, height: 8 },
+          elevation: 6,
+        },
       }),
     },
     secondary: { backgroundColor: colors.surfaceAlt, borderColor: colors.borderStrong },
