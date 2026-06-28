@@ -13,8 +13,8 @@ import { CarPhoto } from "../../src/ui/CarPhoto";
 import { Screen } from "../../src/ui/Screen";
 import { ScoreRing } from "../../src/ui/ScoreRing";
 import { Skeleton } from "../../src/ui/Skeleton";
-import { StatTile } from "../../src/ui/StatTile";
-import { ChevronRightIcon, FileIcon, FuelIcon, GaugeIcon, ShieldIcon } from "../../src/ui/icons";
+import { VehicleDashboard } from "../../src/ui/VehicleDashboard";
+import { ChevronRightIcon, FileIcon, ShieldIcon } from "../../src/ui/icons";
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ export default function HomeScreen() {
   const id = current?.id;
 
   const score = useQuery({ queryKey: ["score", id], queryFn: () => api.getScore(id!), enabled: !!id });
-  const summary = useQuery({ queryKey: ["expenses", id], queryFn: () => api.expenseSummary(id!), enabled: !!id });
+  const events = useQuery({ queryKey: ["events", id], queryFn: () => api.listEvents(id!), enabled: !!id });
   const documents = useQuery({ queryKey: ["documents", id], queryFn: () => api.listDocuments(id!), enabled: !!id });
 
   if (!ready) {
@@ -63,7 +63,6 @@ export default function HomeScreen() {
   const docs = documents.data ?? [];
   const tuv = docs.find((d) => d.type === "TÜV");
   const ins = docs.find((d) => d.type === "insurance");
-  const eur = summary.data?.byCurrency.EUR;
 
   return (
     <Screen flush>
@@ -113,19 +112,8 @@ export default function HomeScreen() {
               )}
             </Pressable>
 
-            {/* Key stats */}
-            <View style={styles.statRow}>
-              <StatTile
-                label={t("dashboard.mileage")}
-                value={current.mileageKm != null ? `${current.mileageKm.toLocaleString("de-DE")} km` : "—"}
-                icon={<GaugeIcon size={18} color={colors.primary} />}
-              />
-              <StatTile
-                label={t("dashboard.expenses")}
-                value={eur != null ? `${eur.toLocaleString("de-DE")} €` : "—"}
-                icon={<FuelIcon size={18} color={colors.primary} />}
-              />
-            </View>
+            {/* Per-vehicle dashboard */}
+            <VehicleDashboard vehicle={current} events={events.data ?? []} />
 
             {/* Status */}
             <Card>
@@ -177,7 +165,6 @@ const makeStyles = (colors: ThemeColors) =>
     sub: { ...typography.caption, color: colors.textMuted },
     openRow: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 4 },
     openText: { ...typography.label, color: colors.primary },
-    statRow: { flexDirection: "row", gap: spacing.md },
     cardTitle: { ...typography.label, color: colors.textMuted },
     statusRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm, paddingVertical: spacing.sm },
     statusLabel: { ...typography.body, color: colors.text, flex: 1 },

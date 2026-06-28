@@ -237,10 +237,22 @@
     "createAccount": "Create account",
     "haveAccount": "I already have an account",
     "slides": [
-      { "title": "Your car. Its story.", "text": "Every vehicle gets a complete digital life record — from purchase to resale." },
-      { "title": "AI-powered diagnostics.", "text": "Describe symptoms, read fault codes and understand problems instantly — with clear recommendations." },
-      { "title": "Digital vehicle passport.", "text": "Maintenance, documents and costs in one place — transferable to the next owner at resale." },
-      { "title": "Maintain smarter. Save money.", "text": "AutoScore shows the condition; reminders prevent costly damage before it happens." }
+      {
+        "title": "Your car. Its story.",
+        "text": "Every vehicle gets a complete digital life record — from purchase to resale."
+      },
+      {
+        "title": "AI-powered diagnostics.",
+        "text": "Describe symptoms, read fault codes and understand problems instantly — with clear recommendations."
+      },
+      {
+        "title": "Digital vehicle passport.",
+        "text": "Maintenance, documents and costs in one place — transferable to the next owner at resale."
+      },
+      {
+        "title": "Maintain smarter. Save money.",
+        "text": "AutoScore shows the condition; reminders prevent costly damage before it happens."
+      }
     ]
   },
   "settings": {
@@ -392,7 +404,16 @@
     "title": "AI Mechanic",
     "subtitle": "Describe your problem — the AI narrows down the cause.",
     "symptomsLabel": "Common symptoms",
-    "symptoms": ["Power loss", "Knocking / rattling", "Squealing / grinding", "Vibration", "Smoke", "Smell", "Warning light", "Starting issues"],
+    "symptoms": [
+      "Power loss",
+      "Knocking / rattling",
+      "Squealing / grinding",
+      "Vibration",
+      "Smoke",
+      "Smell",
+      "Warning light",
+      "Starting issues"
+    ],
     "selectVehicle": "Select vehicle",
     "start": "Start AI diagnosis",
     "noVehicle": "Add a car first.",
@@ -405,5 +426,23 @@
     "totalKm": "Total km",
     "totalCost": "Total cost",
     "avgCondition": "AVG CONDITION"
+  },
+  "dash": {
+    "title": "Dashboard",
+    "periods": {
+      "month": "This month",
+      "sixMonths": "Last 6 months",
+      "year": "This year"
+    },
+    "drivingReport": "Driving report",
+    "kmDriven": "Distance driven",
+    "perMonth": "Avg. per month",
+    "costPerKm": "Cost per km",
+    "fuel": "Fuel",
+    "repair": "Repairs & service",
+    "other": "Other expenses",
+    "total": "Total cost",
+    "entries_one": "{{count}} entry",
+    "entries_other": "{{count}} entries"
   }
 }

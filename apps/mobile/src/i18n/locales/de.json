@@ -237,10 +237,22 @@
     "createAccount": "Konto erstellen",
     "haveAccount": "Ich habe schon ein Konto",
     "slides": [
-      { "title": "Dein Auto. Seine Geschichte.", "text": "Jedes Fahrzeug bekommt eine vollständige digitale Lebensakte — von der Anschaffung bis zum Verkauf." },
-      { "title": "KI-gestützte Diagnose.", "text": "Beschreibe Symptome, lies Fehlercodes aus und verstehe Probleme sofort — mit klaren Handlungsempfehlungen." },
-      { "title": "Digitaler Fahrzeugpass.", "text": "Wartung, Dokumente und Kosten an einem Ort — übertragbar an den nächsten Besitzer beim Verkauf." },
-      { "title": "Schlauer warten. Geld sparen.", "text": "Der AutoScore zeigt den Zustand, Erinnerungen verhindern teure Schäden, bevor sie entstehen." }
+      {
+        "title": "Dein Auto. Seine Geschichte.",
+        "text": "Jedes Fahrzeug bekommt eine vollständige digitale Lebensakte — von der Anschaffung bis zum Verkauf."
+      },
+      {
+        "title": "KI-gestützte Diagnose.",
+        "text": "Beschreibe Symptome, lies Fehlercodes aus und verstehe Probleme sofort — mit klaren Handlungsempfehlungen."
+      },
+      {
+        "title": "Digitaler Fahrzeugpass.",
+        "text": "Wartung, Dokumente und Kosten an einem Ort — übertragbar an den nächsten Besitzer beim Verkauf."
+      },
+      {
+        "title": "Schlauer warten. Geld sparen.",
+        "text": "Der AutoScore zeigt den Zustand, Erinnerungen verhindern teure Schäden, bevor sie entstehen."
+      }
     ]
   },
   "settings": {
@@ -392,7 +404,16 @@
     "title": "KI-Mechaniker",
     "subtitle": "Beschreibe dein Problem — die KI grenzt die Ursache ein.",
     "symptomsLabel": "Häufige Symptome",
-    "symptoms": ["Leistungsverlust", "Klopfen / Klackern", "Quietschen / Schleifen", "Vibration", "Rauch", "Geruch", "Warnleuchte", "Startprobleme"],
+    "symptoms": [
+      "Leistungsverlust",
+      "Klopfen / Klackern",
+      "Quietschen / Schleifen",
+      "Vibration",
+      "Rauch",
+      "Geruch",
+      "Warnleuchte",
+      "Startprobleme"
+    ],
     "selectVehicle": "Fahrzeug wählen",
     "start": "KI-Diagnose starten",
     "noVehicle": "Füge zuerst ein Auto hinzu.",
@@ -405,5 +426,23 @@
     "totalKm": "Gesamt-km",
     "totalCost": "Kosten gesamt",
     "avgCondition": "Ø ZUSTAND"
+  },
+  "dash": {
+    "title": "Dashboard",
+    "periods": {
+      "month": "Dieser Monat",
+      "sixMonths": "Letzte 6 Monate",
+      "year": "Dieses Jahr"
+    },
+    "drivingReport": "Fahrbericht",
+    "kmDriven": "Gefahrene Kilometer",
+    "perMonth": "Ø pro Monat",
+    "costPerKm": "Kosten pro km",
+    "fuel": "Kraftstoff",
+    "repair": "Reparaturen & Wartung",
+    "other": "Sonstige Ausgaben",
+    "total": "Gesamtkosten",
+    "entries_one": "{{count}} Eintrag",
+    "entries_other": "{{count}} Einträge"
   }
 }
