@@ -44,7 +44,6 @@ export default function GarageScreen() {
         ListHeaderComponent={
           count > 0 ? (
             <View style={styles.headerRow}>
-              <Text style={styles.title}>{t("garage.title")}</Text>
               <Badge label={`${count} ${t("garage.cars")}`} tone="accent" />
             </View>
           ) : null
@@ -108,8 +107,7 @@ export default function GarageScreen() {
 const makeStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     list: { padding: spacing.lg, gap: spacing.md, paddingBottom: spacing.xl },
-    headerRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: spacing.xs },
-    title: { ...typography.h1, color: colors.text },
+    headerRow: { alignItems: "center", justifyContent: "center", marginBottom: spacing.xs },
     carCard: { paddingVertical: spacing.lg },
     carCardPressed: { borderColor: colors.borderStrong, backgroundColor: colors.surfaceHover },
     carCardRow: { flexDirection: "row", alignItems: "center", gap: spacing.md },
