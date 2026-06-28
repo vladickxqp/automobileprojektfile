@@ -8,6 +8,7 @@ import { api, type CreateEventInput } from "../../../src/api/client";
 import { useTheme } from "../../../src/theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
 import { Button } from "../../../src/ui/Button";
+import { Dropdown } from "../../../src/ui/Dropdown";
 import { Screen } from "../../../src/ui/Screen";
 import { TextField } from "../../../src/ui/TextField";
 import { PlusIcon, TrashIcon } from "../../../src/ui/icons";
@@ -155,17 +156,12 @@ export default function AddEventScreen() {
 
         {kind === "maintenance" ? (
           <>
-            <Text style={styles.sectionLabel}>{t("addEvent.art").toUpperCase()}</Text>
-            <View style={styles.chips}>
-              {CATEGORY_KEYS.map((c) => {
-                const sel = c === category;
-                return (
-                  <Pressable key={c} onPress={() => setCategory(c)} style={[styles.chip, sel && styles.chipActive]}>
-                    <Text style={[styles.chipText, sel && styles.chipTextActive]}>{t(`addEvent.categories.${c}`)}</Text>
-                  </Pressable>
-                );
-              })}
-            </View>
+            <Dropdown
+              label={t("addEvent.art")}
+              value={category}
+              onChange={setCategory}
+              options={CATEGORY_KEYS.map((c) => ({ value: c, label: t(`addEvent.categories.${c}`) }))}
+            />
 
             <View style={styles.rowFields}>
               <View style={styles.flex}>
@@ -228,12 +224,6 @@ const makeStyles = (colors: ThemeColors) =>
     form: { padding: spacing.lg, gap: spacing.md, paddingBottom: spacing.xxl },
     tabs: { flexDirection: "row", gap: spacing.sm },
     tab: { flex: 1 },
-    sectionLabel: { ...typography.label, color: colors.textMuted },
-    chips: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
-    chip: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.pill, borderWidth: 1, borderColor: colors.border },
-    chipActive: { borderColor: colors.primary, backgroundColor: colors.primarySoft },
-    chipText: { ...typography.caption, color: colors.textMuted, fontWeight: "600" },
-    chipTextActive: { color: colors.primary },
     rowFields: { flexDirection: "row", gap: spacing.md },
     flex: { flex: 1 },
     switchRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: spacing.xs },
