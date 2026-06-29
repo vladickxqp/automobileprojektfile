@@ -53,12 +53,16 @@ export function ScoreRing({ score, size = 132, strokeWidth = 12, label = "AutoSc
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
         />
       </Svg>
-      <View style={styles.center}>
+      <View style={[styles.center, { width: size, paddingHorizontal: strokeWidth }]}>
         <Text style={[styles.value, { color: ring, fontSize: valueSize, lineHeight: valueSize + 2 }]}>
           {score ?? "—"}
         </Text>
         {showLabel ? (
-          <Text style={[styles.label, { color: colors.textMuted, fontSize: labelSize, letterSpacing: 0.4 }]} numberOfLines={1}>
+          <Text
+            style={[styles.label, { color: colors.textMuted, fontSize: labelSize, lineHeight: labelSize + 2, letterSpacing: 0.3 }]}
+            numberOfLines={2}
+            adjustsFontSizeToFit
+          >
             {label}
           </Text>
         ) : null}
@@ -69,7 +73,7 @@ export function ScoreRing({ score, size = 132, strokeWidth = 12, label = "AutoSc
 
 const makeStyles = () =>
   StyleSheet.create({
-    center: { position: "absolute", alignItems: "center" },
+    center: { position: "absolute", alignItems: "center", justifyContent: "center" },
     value: { fontSize: 38, fontWeight: "800", lineHeight: 42 },
-    label: { ...typography.label, marginTop: 2 },
+    label: { ...typography.label, marginTop: 2, textAlign: "center" },
   });
