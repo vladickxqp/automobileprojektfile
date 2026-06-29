@@ -6,13 +6,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../theme/tokens";
 import { LogoMark } from "./Logo";
-import { CarIcon, HomeIcon, LayersIcon, MapPinIcon, SettingsIcon, SparkleIcon, UserIcon, type IconProps } from "./icons";
+import { CarIcon, HomeIcon, LayersIcon, MapPinIcon, SparkleIcon, UserIcon, type IconProps } from "./icons";
 
 interface NavItem {
   route: string;
   label: string;
   Icon: (p: IconProps) => JSX.Element;
-  push?: boolean;
 }
 
 // Slide-in side menu (replaces the bottom bar). Opened by the header hamburger.
@@ -47,13 +46,11 @@ export function AppDrawer({ open, onClose }: { open: boolean; onClose: () => voi
     { route: "/mechaniker", label: t("mechaniker.tab"), Icon: SparkleIcon },
     { route: "/fleet", label: t("fleet.title"), Icon: LayersIcon },
     { route: "/profile", label: t("profile.title"), Icon: UserIcon },
-    { route: "/settings", label: t("settings.title"), Icon: SettingsIcon, push: true },
   ];
 
-  const go = (item: NavItem) => {
+  const go = (route: string) => {
     onClose();
-    if (item.push) router.push(item.route);
-    else router.replace(item.route);
+    router.replace(route);
   };
 
   return (
@@ -72,7 +69,7 @@ export function AppDrawer({ open, onClose }: { open: boolean; onClose: () => voi
           const active = pathname === it.route || (it.route === "/home" && (pathname === "/" || pathname === "/home"));
           const color = active ? colors.primary : colors.textMuted;
           return (
-            <Pressable key={it.route} onPress={() => go(it)} style={[styles.item, active && styles.itemActive]}>
+            <Pressable key={it.route} onPress={() => go(it.route)} style={[styles.item, active && styles.itemActive]}>
               <it.Icon size={22} color={color} />
               <Text style={[styles.itemLabel, { color: active ? colors.text : colors.textMuted }]}>{it.label}</Text>
             </Pressable>
