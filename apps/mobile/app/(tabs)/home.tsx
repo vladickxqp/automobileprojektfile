@@ -115,26 +115,28 @@ export default function HomeScreen() {
             {/* Per-vehicle dashboard */}
             <VehicleDashboard vehicle={current} events={events.data ?? []} />
 
-            {/* Status */}
+            {/* Status — tap a row to view the document & dates */}
             <Card>
               <Text style={styles.cardTitle}>{t("home.status")}</Text>
-              <View style={styles.statusRow}>
+              <Pressable style={styles.statusRow} onPress={() => router.push(`/vehicle/${id}/document?type=TÜV`)}>
                 <ShieldIcon size={18} color={colors.textMuted} />
                 <Text style={styles.statusLabel}>{t("home.tuv")}</Text>
                 <Text style={styles.statusDate}>
                   {tuv?.expiresAt ? new Date(tuv.expiresAt).toLocaleDateString("de-DE") : ""}
                 </Text>
                 <Badge {...status(tuv?.expiresAt)} />
-              </View>
+                <ChevronRightIcon size={16} color={colors.textFaint} />
+              </Pressable>
               <View style={styles.divider} />
-              <View style={styles.statusRow}>
+              <Pressable style={styles.statusRow} onPress={() => router.push(`/vehicle/${id}/document?type=insurance`)}>
                 <FileIcon size={18} color={colors.textMuted} />
                 <Text style={styles.statusLabel}>{t("home.insurance")}</Text>
                 <Text style={styles.statusDate}>
                   {ins?.expiresAt ? new Date(ins.expiresAt).toLocaleDateString("de-DE") : ""}
                 </Text>
                 <Badge {...status(ins?.expiresAt)} />
-              </View>
+                <ChevronRightIcon size={16} color={colors.textFaint} />
+              </Pressable>
             </Card>
           </>
         )}

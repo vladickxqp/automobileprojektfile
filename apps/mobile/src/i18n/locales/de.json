@@ -203,7 +203,12 @@
       "warranty": "Garantie",
       "contract": "Kaufvertrag",
       "other": "Sonstiges"
-    }
+    },
+    "issued": "Ausgestellt am",
+    "validUntil": "Gültig bis",
+    "view": "Dokument ansehen",
+    "none": "Noch kein Dokument hinterlegt",
+    "history": "Frühere Dokumente"
   },
   "reminders": {
     "title": "Erinnerungen",

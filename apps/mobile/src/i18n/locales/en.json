@@ -203,7 +203,12 @@
       "warranty": "Warranty",
       "contract": "Contract",
       "other": "Other"
-    }
+    },
+    "issued": "Issued on",
+    "validUntil": "Valid until",
+    "view": "View document",
+    "none": "No document yet",
+    "history": "Earlier documents"
   },
   "reminders": {
     "title": "Reminders",

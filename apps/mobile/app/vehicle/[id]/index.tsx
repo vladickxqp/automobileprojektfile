@@ -226,23 +226,25 @@ export default function VehicleDashboard() {
         {/* Status */}
         <Card>
           <Text style={styles.cardTitle}>{t("home.status")}</Text>
-          <View style={styles.statusRow}>
+          <Pressable style={styles.statusRow} onPress={() => router.push(`/vehicle/${id}/document?type=TÜV`)}>
             <ShieldIcon size={18} color={colors.textMuted} />
             <Text style={styles.statusLabel}>{t("home.tuv")}</Text>
             <Text style={styles.statusDate}>
               {tuvDoc?.expiresAt ? new Date(tuvDoc.expiresAt).toLocaleDateString("de-DE") : ""}
             </Text>
             <Badge {...vehicleStatus(tuvDoc?.expiresAt, t)} />
-          </View>
+            <ChevronRightIcon size={16} color={colors.textFaint} />
+          </Pressable>
           <View style={styles.statusDivider} />
-          <View style={styles.statusRow}>
+          <Pressable style={styles.statusRow} onPress={() => router.push(`/vehicle/${id}/document?type=insurance`)}>
             <FileIcon size={18} color={colors.textMuted} />
             <Text style={styles.statusLabel}>{t("home.insurance")}</Text>
             <Text style={styles.statusDate}>
               {insDoc?.expiresAt ? new Date(insDoc.expiresAt).toLocaleDateString("de-DE") : ""}
             </Text>
             <Badge {...vehicleStatus(insDoc?.expiresAt, t)} />
-          </View>
+            <ChevronRightIcon size={16} color={colors.textFaint} />
+          </Pressable>
           <View style={styles.statusDivider} />
           <View style={styles.statusRow}>
             <WrenchIcon size={18} color={colors.textMuted} />
