@@ -28,9 +28,71 @@ export function periodStart(period: DashboardPeriod, ref: Date = new Date()): Da
 
 // Cost of a maintenance / repair event, tolerant of both payload shapes:
 // the newer { cost } and the older { partsCost, laborCost }.
-function maintenanceCost(p: Record<string, unknown>): number {
+export function maintenanceCost(p: Record<string, unknown>): number {
   if (typeof p.cost === "number") return p.cost;
   return (Number(p.partsCost) || 0) + (Number(p.laborCost) || 0);
+}
+
+export function isFuelCategory(category: string): boolean {
+  const c = category.toLowerCase();
+  return c === "fuel" || c === "kraftstoff" || c === "benzin" || c === "diesel";
+}
+
+export type CostCategory = "fuel" | "repair" | "other" | "total";
+
+// A single line item behind a dashboard cost tile. Raw fields are returned so the screen can
+// localise and format them.
+export interface CostEntry {
+  id: string;
+  type: VehicleEventDTO["type"];
+  group: "fuel" | "repair" | "other";
+  date: string;
+  amount: number;
+  mileageKm: number | null;
+  title: string | null;
+  category: string | null;
+  note: string | null;
+  workshop: string | null;
+  diy: boolean;
+}
+
+function groupOf(e: VehicleEventDTO): "fuel" | "repair" | "other" | null {
+  if (e.type === "maintenance" || e.type === "repair") return "repair";
+  if (e.type === "expense") return isFuelCategory(String(e.payload?.category ?? "")) ? "fuel" : "other";
+  return null;
+}
+
+// Detailed, newest-first breakdown for one cost tile within the selected period.
+export function listCostEntries(
+  events: VehicleEventDTO[],
+  period: DashboardPeriod,
+  category: CostCategory,
+  ref: Date = new Date(),
+): CostEntry[] {
+  const startMs = +periodStart(period, ref);
+  const out: CostEntry[] = [];
+  for (const e of events) {
+    if (+new Date(e.occurredAt) < startMs) continue;
+    const group = groupOf(e);
+    if (!group) continue;
+    if (category !== "total" && group !== category) continue;
+    const p = (e.payload ?? {}) as Record<string, unknown>;
+    const amount = group === "repair" ? maintenanceCost(p) : Number(p.amount) || 0;
+    out.push({
+      id: e.id,
+      type: e.type,
+      group,
+      date: e.occurredAt,
+      amount,
+      mileageKm: e.mileageKm,
+      title: typeof p.title === "string" ? p.title : null,
+      category: typeof p.category === "string" ? p.category : null,
+      note: typeof p.note === "string" ? p.note : typeof p.notes === "string" ? p.notes : null,
+      workshop: typeof p.workshop === "string" ? p.workshop : typeof p.shopName === "string" ? p.shopName : null,
+      diy: Boolean(p.diy),
+    });
+  }
+  return out.sort((a, b) => +new Date(b.date) - +new Date(a.date));
 }
 
 export function computeDashboard(
@@ -57,8 +119,7 @@ export function computeDashboard(
       repairCount += 1;
     } else if (e.type === "expense") {
       const amount = Number(p.amount) || 0;
-      const category = String(p.category ?? "").toLowerCase();
-      if (category === "fuel" || category === "kraftstoff" || category === "benzin" || category === "diesel") {
+      if (isFuelCategory(String(p.category ?? ""))) {
         fuelCost += amount;
         fuelCount += 1;
       } else {

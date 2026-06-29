@@ -444,6 +444,7 @@
     "total": "Всего расходов",
     "entries_one": "{{count}} запись",
     "entries_few": "{{count}} записи",
-    "entries_many": "{{count}} записей"
+    "entries_many": "{{count}} записей",
+    "noEntries": "Нет записей за этот период"
   }
 }

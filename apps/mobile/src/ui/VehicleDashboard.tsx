@@ -1,12 +1,13 @@
+import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { computeDashboard, type DashboardPeriod } from "../api/dashboard";
+import { computeDashboard, type CostCategory, type DashboardPeriod } from "../api/dashboard";
 import type { VehicleDTO, VehicleEventDTO } from "../api/client";
 import { useTheme } from "../theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../theme/tokens";
 import { Card } from "./Card";
-import { ActivityIcon, FuelIcon, GaugeIcon, LayersIcon, WrenchIcon } from "./icons";
+import { ActivityIcon, ChevronRightIcon, FuelIcon, GaugeIcon, LayersIcon, WrenchIcon } from "./icons";
 
 const PERIODS: DashboardPeriod[] = ["month", "sixMonths", "year"];
 
@@ -20,11 +21,15 @@ const km = (n: number) => `${n.toLocaleString("de-DE")} km`;
 
 export function VehicleDashboard({ vehicle, events }: Props) {
   const { t } = useTranslation();
+  const router = useRouter();
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [period, setPeriod] = useState<DashboardPeriod>("month");
 
   const stats = useMemo(() => computeDashboard(vehicle, events, period), [vehicle, events, period]);
+
+  const openCosts = (category: CostCategory) =>
+    router.push(`/vehicle/${vehicle.id}/costs?category=${category}&period=${period}`);
 
   return (
     <View style={styles.wrap}>
@@ -71,7 +76,7 @@ export function VehicleDashboard({ vehicle, events }: Props) {
         </View>
       </Card>
 
-      {/* Cost tiles */}
+      {/* Cost tiles — tap for a detailed breakdown */}
       <View style={styles.tiles}>
         <CostTile
           colors={colors}
@@ -79,6 +84,7 @@ export function VehicleDashboard({ vehicle, events }: Props) {
           label={t("dash.fuel")}
           value={eur(stats.fuelCost)}
           hint={t("dash.entries", { count: stats.fuelCount })}
+          onPress={() => openCosts("fuel")}
         />
         <CostTile
           colors={colors}
@@ -86,6 +92,7 @@ export function VehicleDashboard({ vehicle, events }: Props) {
           label={t("dash.repair")}
           value={eur(stats.repairCost)}
           hint={t("dash.entries", { count: stats.repairCount })}
+          onPress={() => openCosts("repair")}
         />
         <CostTile
           colors={colors}
@@ -93,6 +100,7 @@ export function VehicleDashboard({ vehicle, events }: Props) {
           label={t("dash.other")}
           value={eur(stats.otherCost)}
           hint={t("dash.entries", { count: stats.otherCount })}
+          onPress={() => openCosts("other")}
         />
         <CostTile
           colors={colors}
@@ -100,6 +108,7 @@ export function VehicleDashboard({ vehicle, events }: Props) {
           label={t("dash.total")}
           value={eur(stats.totalCost)}
           accent
+          onPress={() => openCosts("total")}
         />
       </View>
     </View>
@@ -113,6 +122,7 @@ function CostTile({
   value,
   hint,
   accent,
+  onPress,
 }: {
   colors: ThemeColors;
   icon: React.ReactNode;
@@ -120,21 +130,26 @@ function CostTile({
   value: string;
   hint?: string;
   accent?: boolean;
+  onPress?: () => void;
 }) {
   const styles = makeStyles(colors);
   return (
-    <View style={[styles.tile, accent && styles.tileAccent]}>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.tile, accent && styles.tileAccent, pressed && { borderColor: colors.primary }]}
+    >
       <View style={styles.tileHead}>
         {icon}
         <Text style={styles.tileLabel} numberOfLines={1}>
           {label}
         </Text>
+        <ChevronRightIcon size={16} color={colors.textFaint} />
       </View>
       <Text style={[styles.tileValue, accent && { color: colors.primary }]} numberOfLines={1}>
         {value}
       </Text>
       {hint ? <Text style={styles.tileHint}>{hint}</Text> : null}
-    </View>
+    </Pressable>
   );
 }
 
@@ -182,7 +197,7 @@ const makeStyles = (colors: ThemeColors) =>
     },
     tileAccent: { borderColor: colors.primary, backgroundColor: colors.primarySoft },
     tileHead: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
-    tileLabel: { ...typography.label, color: colors.textMuted, flexShrink: 1 },
+    tileLabel: { ...typography.label, color: colors.textMuted, flex: 1 },
     tileValue: { ...typography.h2, color: colors.text },
     tileHint: { ...typography.caption, color: colors.textFaint },
   });

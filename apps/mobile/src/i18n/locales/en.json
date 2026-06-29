@@ -443,6 +443,7 @@
     "other": "Other expenses",
     "total": "Total cost",
     "entries_one": "{{count}} entry",
-    "entries_other": "{{count}} entries"
+    "entries_other": "{{count}} entries",
+    "noEntries": "No entries in this period"
   }
 }
