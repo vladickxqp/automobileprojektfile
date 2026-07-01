@@ -12,6 +12,7 @@ import { Card } from "../../src/ui/Card";
 import { CarPhoto } from "../../src/ui/CarPhoto";
 import { Screen } from "../../src/ui/Screen";
 import { ScoreRing } from "../../src/ui/ScoreRing";
+import { RecentEvents } from "../../src/ui/RecentEvents";
 import { Skeleton } from "../../src/ui/Skeleton";
 import { VehicleDashboard } from "../../src/ui/VehicleDashboard";
 import { ChevronRightIcon, FileIcon, ShieldIcon } from "../../src/ui/icons";
@@ -138,6 +139,9 @@ export default function HomeScreen() {
                 <ChevronRightIcon size={16} color={colors.textFaint} />
               </Pressable>
             </Card>
+
+            {/* Recent events — tap to open/edit, or see the full history */}
+            <RecentEvents vehicleId={id!} events={events.data ?? []} />
           </>
         )}
       </ScrollView>

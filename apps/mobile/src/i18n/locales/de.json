@@ -134,7 +134,8 @@
     "expired": "Abgelaufen",
     "noVehicleTitle": "Willkommen bei CarDNA",
     "noVehicleSub": "Füge dein erstes Auto hinzu, um dein Dashboard zu sehen.",
-    "addVehicle": "Auto hinzufügen"
+    "addVehicle": "Auto hinzufügen",
+    "showAll": "Alle anzeigen"
   },
   "notifications": {
     "title": "Benachrichtigungen",

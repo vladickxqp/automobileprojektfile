@@ -134,7 +134,8 @@
     "expired": "Истекло",
     "noVehicleTitle": "Добро пожаловать в CarDNA",
     "noVehicleSub": "Добавьте первое авто, чтобы увидеть дашборд.",
-    "addVehicle": "Добавить авто"
+    "addVehicle": "Добавить авто",
+    "showAll": "Показать все"
   },
   "notifications": {
     "title": "Уведомления",

@@ -134,7 +134,8 @@
     "expired": "Expired",
     "noVehicleTitle": "Welcome to CarDNA",
     "noVehicleSub": "Add your first car to see your dashboard.",
-    "addVehicle": "Add car"
+    "addVehicle": "Add car",
+    "showAll": "Show all"
   },
   "notifications": {
     "title": "Notifications",
