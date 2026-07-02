@@ -74,6 +74,14 @@ export function VehicleDashboard({ vehicle, events }: Props) {
             {stats.costPerKm != null ? `${stats.costPerKm.toFixed(2).replace(".", ",")} €` : "—"}
           </Text>
         </View>
+        <View style={styles.divider} />
+        <View style={styles.reportRow}>
+          <FuelIcon size={18} color={colors.textMuted} />
+          <Text style={styles.reportLabel}>{t("dash.consumption")}</Text>
+          <Text style={styles.reportValue}>
+            {stats.avgConsumption != null ? `${stats.avgConsumption.toFixed(1).replace(".", ",")} l/100 km` : "—"}
+          </Text>
+        </View>
       </Card>
 
       {/* Cost tiles — tap for a detailed breakdown */}

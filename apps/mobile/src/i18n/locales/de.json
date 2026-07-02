@@ -187,7 +187,17 @@
       "fluids": "Flüssigkeiten",
       "repair": "Reparatur",
       "other": "Sonstiges"
-    }
+    },
+    "expenseCategories": {
+      "fuel": "Tanken",
+      "service": "Wartung",
+      "repair": "Reparatur",
+      "insurance": "Versicherung",
+      "tuning": "Tuning",
+      "care": "Pflege",
+      "other": "Sonstiges"
+    },
+    "liters": "Getankte Liter"
   },
   "documents": {
     "title": "Dokumente",
@@ -455,6 +465,7 @@
     "total": "Gesamtkosten",
     "entries_one": "{{count}} Eintrag",
     "entries_other": "{{count}} Einträge",
-    "noEntries": "Keine Einträge in diesem Zeitraum"
+    "noEntries": "Keine Einträge in diesem Zeitraum",
+    "consumption": "Ø Verbrauch"
   }
 }

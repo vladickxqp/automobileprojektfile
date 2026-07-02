@@ -187,7 +187,17 @@
       "fluids": "Жидкости",
       "repair": "Ремонт",
       "other": "Прочее"
-    }
+    },
+    "expenseCategories": {
+      "fuel": "Заправка",
+      "service": "ТО",
+      "repair": "Ремонт",
+      "insurance": "Страховка",
+      "tuning": "Тюнинг",
+      "care": "Уход",
+      "other": "Прочее"
+    },
+    "liters": "Заправлено литров"
   },
   "documents": {
     "title": "Документы",
@@ -456,6 +466,7 @@
     "entries_one": "{{count}} запись",
     "entries_few": "{{count}} записи",
     "entries_many": "{{count}} записей",
-    "noEntries": "Нет записей за этот период"
+    "noEntries": "Нет записей за этот период",
+    "consumption": "Ø Расход"
   }
 }

@@ -14,6 +14,8 @@ export interface DashboardStats {
   otherCost: number;
   totalCost: number;
   costPerKm: number | null;
+  litersTotal: number;
+  avgConsumption: number | null; // litres per 100 km
   fuelCount: number;
   repairCount: number;
   otherCount: number;
@@ -111,6 +113,7 @@ export function computeDashboard(
   let fuelCount = 0;
   let otherCount = 0;
   let repairCount = 0;
+  let litersTotal = 0;
 
   for (const e of inPeriod) {
     const p = e.payload ?? {};
@@ -122,6 +125,7 @@ export function computeDashboard(
       if (isFuelCategory(String(p.category ?? ""))) {
         fuelCost += amount;
         fuelCount += 1;
+        litersTotal += Number(p.liters) || 0;
       } else {
         otherCost += amount;
         otherCount += 1;
@@ -153,6 +157,8 @@ export function computeDashboard(
     (ref.getFullYear() - start.getFullYear()) * 12 + (ref.getMonth() - start.getMonth()) + 1;
   const avgKmPerMonth = kmDriven != null && monthsElapsed > 0 ? Math.round(kmDriven / monthsElapsed) : null;
   const costPerKm = kmDriven && kmDriven > 0 ? totalCost / kmDriven : null;
+  // l/100 km — needs both a distance and at least one refuel with litres logged.
+  const avgConsumption = kmDriven && kmDriven > 0 && litersTotal > 0 ? (litersTotal / kmDriven) * 100 : null;
 
   return {
     period,
@@ -164,6 +170,8 @@ export function computeDashboard(
     otherCost,
     totalCost,
     costPerKm,
+    litersTotal,
+    avgConsumption,
     fuelCount,
     repairCount,
     otherCount,

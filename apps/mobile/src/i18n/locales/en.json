@@ -187,7 +187,17 @@
       "fluids": "Fluids",
       "repair": "Repair",
       "other": "Other"
-    }
+    },
+    "expenseCategories": {
+      "fuel": "Fuel",
+      "service": "Service",
+      "repair": "Repair",
+      "insurance": "Insurance",
+      "tuning": "Tuning",
+      "care": "Care",
+      "other": "Other"
+    },
+    "liters": "Liters filled"
   },
   "documents": {
     "title": "Documents",
@@ -455,6 +465,7 @@
     "total": "Total cost",
     "entries_one": "{{count}} entry",
     "entries_other": "{{count}} entries",
-    "noEntries": "No entries in this period"
+    "noEntries": "No entries in this period",
+    "consumption": "Avg. consumption"
   }
 }

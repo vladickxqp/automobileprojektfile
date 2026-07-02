@@ -45,17 +45,29 @@ export const maintenanceCategorySchema = z.enum([
   "repair",
   "inspection",
   "tires",
+  "oil",
+  "oilfilter",
+  "brakes",
+  "tuv",
+  "battery",
+  "fluids",
   "other",
 ]);
 export type MaintenanceCategory = z.infer<typeof maintenanceCategorySchema>;
 
-/** Payload for `maintenance` / `repair` events (#6 service history). */
+/** Payload for `maintenance` / `repair` events (#6 service history). `cost`/`workshop`/`diy`/
+ *  `photos` are the fields the app captures; `partsCost`/`laborCost`/`shopName` stay for
+ *  back-compat with older entries. */
 export const maintenanceEventPayloadSchema = z.object({
   title: z.string().min(1).max(120),
   category: maintenanceCategorySchema.default("service"),
   shopName: z.string().max(120).optional(),
+  workshop: z.string().max(120).optional(),
   partsCost: z.number().nonnegative().optional(),
   laborCost: z.number().nonnegative().optional(),
+  cost: z.number().nonnegative().optional(),
+  diy: z.boolean().optional(),
+  photos: z.array(z.string()).max(20).optional(),
   currency: z.string().length(3).default("EUR"),
   notes: z.string().max(2000).optional(),
 });
@@ -64,19 +76,23 @@ export type MaintenanceEventPayload = z.infer<typeof maintenanceEventPayloadSche
 export const expenseCategorySchema = z.enum([
   "fuel",
   "service",
+  "repair",
   "insurance",
   "tax",
+  "tuning",
+  "care",
   "parts",
   "fine",
   "other",
 ]);
 export type ExpenseCategory = z.infer<typeof expenseCategorySchema>;
 
-/** Payload for `expense` events (#9 expense tracking). */
+/** Payload for `expense` events (#9 expense tracking). `liters` powers the l/100 km analysis. */
 export const expenseEventPayloadSchema = z.object({
   category: expenseCategorySchema,
   amount: z.number().positive(),
   currency: z.string().length(3).default("EUR"),
+  liters: z.number().nonnegative().optional(),
   note: z.string().max(500).optional(),
 });
 export type ExpenseEventPayload = z.infer<typeof expenseEventPayloadSchema>;

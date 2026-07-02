@@ -14,6 +14,7 @@ import { TextField } from "../../../src/ui/TextField";
 import { PlusIcon, TrashIcon } from "../../../src/ui/icons";
 
 const CATEGORY_KEYS = ["oil", "oilfilter", "brakes", "tires", "tuv", "inspection", "battery", "fluids", "repair", "other"];
+const EXPENSE_CATEGORY_KEYS = ["fuel", "service", "repair", "insurance", "tuning", "care", "other"];
 
 const pad = (n: number) => String(n).padStart(2, "0");
 const fmtDate = (d: Date) => `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`;
@@ -49,6 +50,7 @@ export default function AddEventScreen() {
   // expense-only
   const [expCategory, setExpCategory] = useState("fuel");
   const [amount, setAmount] = useState("");
+  const [liters, setLiters] = useState("");
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -61,8 +63,10 @@ export default function AddEventScreen() {
     setMileage(ev.mileageKm != null ? String(ev.mileageKm) : "");
     if (ev.type === "expense") {
       setKind("expense");
-      setExpCategory(String(p.category ?? ""));
+      const cat = String(p.category ?? "fuel");
+      setExpCategory(EXPENSE_CATEGORY_KEYS.includes(cat) ? cat : "other");
       setAmount(p.amount != null ? String(p.amount) : "");
+      setLiters(p.liters != null ? String(p.liters) : "");
     } else {
       setKind("maintenance");
       setCategory(typeof p.category === "string" && CATEGORY_KEYS.includes(p.category) ? p.category : "other");
@@ -94,7 +98,12 @@ export default function AddEventScreen() {
         diy,
         photos: photos.length ? photos : undefined,
       };
-      const expensePayload = { category: expCategory.trim(), amount: Number(amount), currency: "EUR" };
+      const expensePayload = {
+        category: expCategory,
+        amount: Number(amount),
+        currency: "EUR",
+        ...(expCategory === "fuel" && liters ? { liters: Number(liters) } : {}),
+      };
       if (isEdit) {
         return api.updateEvent(id, eventId!, {
           occurredAt,
@@ -193,8 +202,16 @@ export default function AddEventScreen() {
           </>
         ) : (
           <>
-            <TextField label={t("addEvent.category")} autoCapitalize="none" value={expCategory} onChangeText={setExpCategory} />
+            <Dropdown
+              label={t("addEvent.category")}
+              value={expCategory}
+              onChange={setExpCategory}
+              options={EXPENSE_CATEGORY_KEYS.map((c) => ({ value: c, label: t(`addEvent.expenseCategories.${c}`) }))}
+            />
             <TextField label={t("addEvent.amount")} keyboardType="decimal-pad" value={amount} onChangeText={setAmount} />
+            {expCategory === "fuel" ? (
+              <TextField label={t("addEvent.liters")} keyboardType="decimal-pad" value={liters} onChangeText={setLiters} />
+            ) : null}
             <View style={styles.rowFields}>
               <View style={styles.flex}>
                 <TextField label={t("addEvent.date")} value={date} onChangeText={setDate} placeholder="TT.MM.JJJJ" />
