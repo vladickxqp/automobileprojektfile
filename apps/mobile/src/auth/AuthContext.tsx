@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { setUnauthorizedHandler } from "../api/apiClient";
 import { api } from "../api/client";
 import { DEMO } from "../api/config";
 import { clearToken, loadToken, saveToken } from "./store";
@@ -23,6 +24,13 @@ const AuthContext = createContext<AuthState | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [ready, setReady] = useState(false);
+
+  // A 401 from any request (expired / invalid token) drops the session; screens guarded by `user`
+  // then redirect to sign-in. The token itself is already cleared by the API interceptor.
+  useEffect(() => {
+    setUnauthorizedHandler(() => setUser(null));
+    return () => setUnauthorizedHandler(null);
+  }, []);
 
   useEffect(() => {
     // Demo mode: start signed in so the preview lands straight in the garage. Sign-out still

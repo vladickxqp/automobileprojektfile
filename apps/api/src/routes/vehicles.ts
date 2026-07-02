@@ -18,6 +18,10 @@ const updateVehicleSchema = z.object({
   mileageKm: z.number().int().nonnegative().optional(),
   plate: z.string().max(20).nullable().optional(),
   photoUrl: z.string().url().nullable().optional(),
+  make: z.string().min(1).max(60).optional(),
+  model: z.string().min(1).max(60).optional(),
+  year: z.number().int().min(1900).max(2100).optional(),
+  engine: z.string().max(120).nullable().optional(),
 });
 
 export async function vehicleRoutes(app: FastifyInstance) {
@@ -114,5 +118,17 @@ export async function vehicleRoutes(app: FastifyInstance) {
     }
 
     return prisma.vehicle.update({ where: { id }, data: body });
+  });
+
+  // Remove a vehicle the user owns. Cascade deletes its events, documents, scans, scores,
+  // reminders, sale reports and ownership rows (see schema onDelete: Cascade).
+  app.delete("/:id", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const ownership = await activeOwnership(request.user.sub, id);
+    if (!ownership) {
+      return reply.code(404).send({ error: "Vehicle not found" });
+    }
+    await prisma.vehicle.delete({ where: { id } });
+    return { ok: true };
   });
 }

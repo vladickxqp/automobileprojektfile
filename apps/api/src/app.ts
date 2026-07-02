@@ -16,6 +16,8 @@ import { assistantRoutes } from "./routes/assistant";
 import { scanRoutes } from "./routes/scans";
 import { scoreRoutes } from "./routes/score";
 import { saleReportRoutes, publicReportRoutes } from "./routes/sale-report";
+import { fleetRoutes } from "./routes/fleet";
+import { notificationRoutes } from "./routes/notifications";
 
 export function buildApp(): FastifyInstance {
   const app = Fastify({
@@ -48,6 +50,8 @@ export function buildApp(): FastifyInstance {
   app.register(scoreRoutes, { prefix: "/vehicles" });
   app.register(saleReportRoutes, { prefix: "/vehicles" });
   app.register(publicReportRoutes, { prefix: "/r" });
+  app.register(fleetRoutes, { prefix: "/fleet" });
+  app.register(notificationRoutes, { prefix: "/notifications" });
 
   return app;
 }

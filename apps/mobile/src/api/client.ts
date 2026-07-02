@@ -1,6 +1,6 @@
-import { getAccessToken } from "../auth/store";
 import { demoApi } from "../demo/demoApi";
-import { API_URL, DEMO } from "./config";
+import { apiClient } from "./apiClient";
+import { DEMO } from "./config";
 
 export interface VehicleDTO {
   id: string;
@@ -225,48 +225,13 @@ export interface NotificationDTO {
   severity: "info" | "warning" | "danger";
 }
 
-export class ApiError extends Error {
-  constructor(
-    public status: number,
-    message: string,
-  ) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
+// Re-exported for callers that still import it from here.
+export { ApiError } from "./apiClient";
 
-interface RequestOptions {
-  method?: "GET" | "POST" | "PATCH" | "DELETE";
-  body?: unknown;
-  auth?: boolean;
-}
-
-async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (options.auth !== false) {
-    const token = getAccessToken();
-    if (token) headers.Authorization = `Bearer ${token}`;
-  }
-
-  const res = await fetch(`${API_URL}${path}`, {
-    method: options.method ?? "GET",
-    headers,
-    body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
-  });
-
-  if (!res.ok) {
-    let message = res.statusText;
-    try {
-      const data = (await res.json()) as { error?: string };
-      if (data.error) message = data.error;
-    } catch {
-      // non-JSON error body — keep statusText
-    }
-    throw new ApiError(res.status, message);
-  }
-
-  return (await res.json()) as T;
-}
+const get = <T>(path: string) => apiClient.get<T>(path).then((r) => r.data);
+const post = <T>(path: string, body?: unknown) => apiClient.post<T>(path, body ?? {}).then((r) => r.data);
+const patch = <T>(path: string, body?: unknown) => apiClient.patch<T>(path, body ?? {}).then((r) => r.data);
+const del = <T>(path: string) => apiClient.delete<T>(path).then((r) => r.data);
 
 async function uploadDocument(
   vehicleId: string,
@@ -283,83 +248,54 @@ async function uploadDocument(
   form.append("type", meta.type);
   if (meta.title) form.append("title", meta.title);
   if (meta.expiresAt) form.append("expiresAt", meta.expiresAt);
-
-  const token = getAccessToken();
-  const res = await fetch(`${API_URL}/vehicles/${vehicleId}/documents`, {
-    method: "POST",
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    body: form,
-  });
-  if (!res.ok) {
-    let message = res.statusText;
-    try {
-      const data = (await res.json()) as { error?: string };
-      if (data.error) message = data.error;
-    } catch {
-      // keep statusText
-    }
-    throw new ApiError(res.status, message);
-  }
-  return (await res.json()) as DocumentDTO;
+  // Let axios set the multipart boundary (no manual Content-Type).
+  const { data } = await apiClient.post<DocumentDTO>(`/vehicles/${vehicleId}/documents`, form);
+  return data;
 }
 
 const realApi = {
-  register: (email: string, password: string) =>
-    request<AuthResponse>("/auth/register", { method: "POST", body: { email, password }, auth: false }),
-  login: (email: string, password: string) =>
-    request<AuthResponse>("/auth/login", { method: "POST", body: { email, password }, auth: false }),
-  listVehicles: () => request<VehicleDTO[]>("/vehicles"),
-  getVehicle: (id: string) => request<VehicleDTO>(`/vehicles/${id}`),
-  decodeVin: (vin: string) => request<DecodeDTO>(`/vehicles/decode/${vin}`),
-  createVehicle: (input: CreateVehicleInput) =>
-    request<VehicleDTO>("/vehicles", { method: "POST", body: input }),
-  updateVehicle: (id: string, input: UpdateVehicleInput) =>
-    request<VehicleDTO>(`/vehicles/${id}`, { method: "PATCH", body: input }),
-  deleteVehicle: (id: string) => request<{ ok: boolean }>(`/vehicles/${id}`, { method: "DELETE" }),
+  register: (email: string, password: string) => post<AuthResponse>("/auth/register", { email, password }),
+  login: (email: string, password: string) => post<AuthResponse>("/auth/login", { email, password }),
+  listVehicles: () => get<VehicleDTO[]>("/vehicles"),
+  getVehicle: (id: string) => get<VehicleDTO>(`/vehicles/${id}`),
+  decodeVin: (vin: string) => get<DecodeDTO>(`/vehicles/decode/${vin}`),
+  createVehicle: (input: CreateVehicleInput) => post<VehicleDTO>("/vehicles", input),
+  updateVehicle: (id: string, input: UpdateVehicleInput) => patch<VehicleDTO>(`/vehicles/${id}`, input),
+  deleteVehicle: (id: string) => del<{ ok: boolean }>(`/vehicles/${id}`),
   listEvents: (vehicleId: string, type?: "maintenance" | "repair" | "expense") =>
-    request<VehicleEventDTO[]>(`/vehicles/${vehicleId}/events${type ? `?type=${type}` : ""}`),
+    get<VehicleEventDTO[]>(`/vehicles/${vehicleId}/events${type ? `?type=${type}` : ""}`),
   createEvent: (vehicleId: string, input: CreateEventInput) =>
-    request<VehicleEventDTO>(`/vehicles/${vehicleId}/events`, { method: "POST", body: input }),
+    post<VehicleEventDTO>(`/vehicles/${vehicleId}/events`, input),
   updateEvent: (vehicleId: string, eventId: string, input: UpdateEventInput) =>
-    request<VehicleEventDTO>(`/vehicles/${vehicleId}/events/${eventId}`, { method: "PATCH", body: input }),
+    patch<VehicleEventDTO>(`/vehicles/${vehicleId}/events/${eventId}`, input),
   deleteEvent: (vehicleId: string, eventId: string) =>
-    request<{ ok: boolean }>(`/vehicles/${vehicleId}/events/${eventId}`, { method: "DELETE" }),
-  expenseSummary: (vehicleId: string) =>
-    request<ExpenseSummaryDTO>(`/vehicles/${vehicleId}/expenses/summary`),
-  listDocuments: (vehicleId: string) => request<DocumentDTO[]>(`/vehicles/${vehicleId}/documents`),
+    del<{ ok: boolean }>(`/vehicles/${vehicleId}/events/${eventId}`),
+  expenseSummary: (vehicleId: string) => get<ExpenseSummaryDTO>(`/vehicles/${vehicleId}/expenses/summary`),
+  listDocuments: (vehicleId: string) => get<DocumentDTO[]>(`/vehicles/${vehicleId}/documents`),
   uploadDocument,
-  listReminders: (vehicleId: string) => request<ReminderDTO[]>(`/vehicles/${vehicleId}/reminders`),
+  listReminders: (vehicleId: string) => get<ReminderDTO[]>(`/vehicles/${vehicleId}/reminders`),
   createReminder: (
     vehicleId: string,
     input: { kind?: string; title: string; dueDate?: string; dueMileageKm?: number },
-  ) => request<ReminderDTO>(`/vehicles/${vehicleId}/reminders`, { method: "POST", body: input }),
+  ) => post<ReminderDTO>(`/vehicles/${vehicleId}/reminders`, input),
   completeReminder: (vehicleId: string, reminderId: string) =>
-    request<{ ok: boolean }>(`/vehicles/${vehicleId}/reminders/${reminderId}/complete`, {
-      method: "PATCH",
-    }),
-  assistantHistory: (vehicleId: string) =>
-    request<AiMessageDTO[]>(`/vehicles/${vehicleId}/assistant/history`),
+    patch<{ ok: boolean }>(`/vehicles/${vehicleId}/reminders/${reminderId}/complete`),
+  assistantHistory: (vehicleId: string) => get<AiMessageDTO[]>(`/vehicles/${vehicleId}/assistant/history`),
   askAssistant: (vehicleId: string, message: string) =>
-    request<AssistantReplyDTO>(`/vehicles/${vehicleId}/assistant`, {
-      method: "POST",
-      body: { message },
-    }),
-  listScans: (vehicleId: string) => request<ScanDTO[]>(`/vehicles/${vehicleId}/scans`),
-  createScan: (
-    vehicleId: string,
-    body: { dtcCodes: string[]; adapterInfo?: string; mileageKm?: number },
-  ) => request<ScanDTO>(`/vehicles/${vehicleId}/scans`, { method: "POST", body }),
-  getScore: (vehicleId: string) => request<ScoreDTO>(`/vehicles/${vehicleId}/score`),
-  computeScore: (vehicleId: string) =>
-    request<ScoreDTO>(`/vehicles/${vehicleId}/score`, { method: "POST", body: {} }),
-  generateSaleReport: (vehicleId: string) =>
-    request<SaleReportRefDTO>(`/vehicles/${vehicleId}/sale-report`, { method: "POST", body: {} }),
+    post<AssistantReplyDTO>(`/vehicles/${vehicleId}/assistant`, { message }),
+  listScans: (vehicleId: string) => get<ScanDTO[]>(`/vehicles/${vehicleId}/scans`),
+  createScan: (vehicleId: string, body: { dtcCodes: string[]; adapterInfo?: string; mileageKm?: number }) =>
+    post<ScanDTO>(`/vehicles/${vehicleId}/scans`, body),
+  getScore: (vehicleId: string) => get<ScoreDTO>(`/vehicles/${vehicleId}/score`),
+  computeScore: (vehicleId: string) => post<ScoreDTO>(`/vehicles/${vehicleId}/score`),
+  generateSaleReport: (vehicleId: string) => post<SaleReportRefDTO>(`/vehicles/${vehicleId}/sale-report`),
+  // Modifications have no backend model yet — degrade gracefully so the screen just shows empty.
   listModifications: (vehicleId: string) =>
-    request<ModificationDTO[]>(`/vehicles/${vehicleId}/modifications`),
+    get<ModificationDTO[]>(`/vehicles/${vehicleId}/modifications`).catch(() => [] as ModificationDTO[]),
   createModification: (vehicleId: string, input: CreateModificationInput) =>
-    request<ModificationDTO>(`/vehicles/${vehicleId}/modifications`, { method: "POST", body: input }),
-  fleetSummary: () => request<FleetSummaryDTO>(`/fleet/summary`),
-  listNotifications: () => request<NotificationDTO[]>(`/notifications`),
+    post<ModificationDTO>(`/vehicles/${vehicleId}/modifications`, input),
+  fleetSummary: () => get<FleetSummaryDTO>(`/fleet/summary`),
+  listNotifications: () => get<NotificationDTO[]>(`/notifications`),
 };
 
 // In demo mode every call is served from built-in sample data (no backend). See src/api/config.ts.

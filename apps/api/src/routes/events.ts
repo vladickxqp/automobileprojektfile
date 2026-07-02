@@ -40,6 +40,13 @@ const listQuerySchema = z.object({
   type: z.enum(["maintenance", "repair", "expense"]).optional(),
 });
 
+// The event type is fixed at creation; edits touch date, mileage and the payload only.
+const updateEventSchema = z.object({
+  occurredAt: z.coerce.date().optional(),
+  mileageKm: z.number().int().nonnegative().nullable().optional(),
+  payload: z.record(z.string(), z.unknown()).optional(),
+});
+
 export async function eventRoutes(app: FastifyInstance) {
   registerAuthGuard(app);
 
@@ -70,6 +77,33 @@ export async function eventRoutes(app: FastifyInstance) {
       },
     });
     return reply.code(201).send(event);
+  });
+
+  // Edit an event (date / mileage / payload). Type stays as created.
+  app.patch("/:id/events/:eventId", async (request, reply) => {
+    const { id, eventId } = request.params as { id: string; eventId: string };
+    if (!(await requireVehicleAccess(request, reply, id))) return;
+    const existing = await prisma.vehicleEvent.findFirst({ where: { id: eventId, vehicleId: id } });
+    if (!existing) return reply.code(404).send({ error: "Event not found" });
+    const body = updateEventSchema.parse(request.body);
+    return prisma.vehicleEvent.update({
+      where: { id: eventId },
+      data: {
+        ...(body.occurredAt ? { occurredAt: body.occurredAt } : {}),
+        ...(body.mileageKm !== undefined ? { mileageKm: body.mileageKm } : {}),
+        ...(body.payload ? { payload: body.payload as Prisma.InputJsonValue } : {}),
+      },
+    });
+  });
+
+  // Delete an event.
+  app.delete("/:id/events/:eventId", async (request, reply) => {
+    const { id, eventId } = request.params as { id: string; eventId: string };
+    if (!(await requireVehicleAccess(request, reply, id))) return;
+    const existing = await prisma.vehicleEvent.findFirst({ where: { id: eventId, vehicleId: id } });
+    if (!existing) return reply.code(404).send({ error: "Event not found" });
+    await prisma.vehicleEvent.delete({ where: { id: eventId } });
+    return { ok: true };
   });
 
   // Expense summary (#9): totals per currency and per category, computed from expense events.
