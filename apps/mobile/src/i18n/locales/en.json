@@ -210,10 +210,9 @@
       "invoice": "Invoice",
       "techpassport": "Registration",
       "insurance": "Insurance",
-      "TÜV": "Inspection",
-      "warranty": "Warranty",
       "contract": "Contract",
-      "other": "Other"
+      "other": "Other",
+      "tuv": "Inspection"
     },
     "issued": "Issued on",
     "validUntil": "Valid until",

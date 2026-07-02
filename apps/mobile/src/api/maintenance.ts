@@ -54,7 +54,7 @@ export function computeRecommendations(
   if (brakeDue) recs.push({ id: "brakes", label: t("recommend.checkBrakes"), detail: "", severity: "warning" });
 
   // TÜV / HU expiry from documents.
-  const tuv = documents.find((d) => d.type === "TÜV");
+  const tuv = documents.find((d) => d.type === "tuv");
   if (tuv?.expiresAt) {
     const days = Math.ceil((+new Date(tuv.expiresAt) - Date.now()) / 86_400_000);
     if (days < 0) {

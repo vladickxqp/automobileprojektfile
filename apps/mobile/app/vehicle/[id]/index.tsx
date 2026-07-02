@@ -112,7 +112,7 @@ export default function VehicleDashboard() {
   const eur = summary.data?.byCurrency.EUR;
   const docs = documents.data ?? [];
   const rems = reminders.data ?? [];
-  const tuvDoc = docs.find((d) => d.type === "TÜV");
+  const tuvDoc = docs.find((d) => d.type === "tuv");
   const insDoc = docs.find((d) => d.type === "insurance");
   const nextRem = rems
     .filter((r) => r.dueDate)
@@ -226,7 +226,7 @@ export default function VehicleDashboard() {
         {/* Status */}
         <Card>
           <Text style={styles.cardTitle}>{t("home.status")}</Text>
-          <Pressable style={styles.statusRow} onPress={() => router.push(`/vehicle/${id}/document?type=TÜV`)}>
+          <Pressable style={styles.statusRow} onPress={() => router.push(`/vehicle/${id}/document?type=tuv`)}>
             <ShieldIcon size={18} color={colors.textMuted} />
             <Text style={styles.statusLabel}>{t("home.tuv")}</Text>
             <Text style={styles.statusDate}>

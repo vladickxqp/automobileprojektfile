@@ -210,10 +210,9 @@
       "invoice": "Rechnung",
       "techpassport": "Fahrzeugschein",
       "insurance": "Versicherung",
-      "TÜV": "TÜV / HU",
-      "warranty": "Garantie",
       "contract": "Kaufvertrag",
-      "other": "Sonstiges"
+      "other": "Sonstiges",
+      "tuv": "TÜV / HU"
     },
     "issued": "Ausgestellt am",
     "validUntil": "Gültig bis",

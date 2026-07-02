@@ -13,7 +13,7 @@ import { Card } from "../../../src/ui/Card";
 import { ChevronRightIcon, FileIcon } from "../../../src/ui/icons";
 import { Screen } from "../../../src/ui/Screen";
 
-const TYPE_KEYS = ["invoice", "techpassport", "insurance", "TÜV", "warranty", "contract", "other"];
+const TYPE_KEYS = ["invoice", "techpassport", "insurance", "tuv", "contract", "other"];
 
 export default function DocumentsScreen() {
   const { t } = useTranslation();

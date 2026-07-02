@@ -62,7 +62,7 @@ export default function HomeScreen() {
     return { label: t("home.valid"), tone: "success" };
   };
   const docs = documents.data ?? [];
-  const tuv = docs.find((d) => d.type === "TÜV");
+  const tuv = docs.find((d) => d.type === "tuv");
   const ins = docs.find((d) => d.type === "insurance");
 
   return (
@@ -119,7 +119,7 @@ export default function HomeScreen() {
             {/* Status — tap a row to view the document & dates */}
             <Card>
               <Text style={styles.cardTitle}>{t("home.status")}</Text>
-              <Pressable style={styles.statusRow} onPress={() => router.push(`/vehicle/${id}/document?type=TÜV`)}>
+              <Pressable style={styles.statusRow} onPress={() => router.push(`/vehicle/${id}/document?type=tuv`)}>
                 <ShieldIcon size={18} color={colors.textMuted} />
                 <Text style={styles.statusLabel}>{t("home.tuv")}</Text>
                 <Text style={styles.statusDate}>

@@ -48,7 +48,7 @@ export default function DocumentDetailScreen() {
     }
   };
 
-  const Icon = docType === "TÜV" ? ShieldIcon : FileIcon;
+  const Icon = docType === "tuv" ? ShieldIcon : FileIcon;
 
   return (
     <Screen flush>

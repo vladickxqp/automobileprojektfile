@@ -93,7 +93,7 @@ export const demoVehicles: DemoVehicle[] = [
     ],
     documents: [
       { id: "doc-1-1", vehicleId: "veh-1", type: "insurance", fileUrl: "#", title: "Kfz-Versicherung 2025", issuedAt: days(180), expiresAt: inDays(185), createdAt: days(180) },
-      { id: "doc-1-2", vehicleId: "veh-1", type: "TÜV", fileUrl: "#", title: "HU/AU Bericht", issuedAt: days(90), expiresAt: inDays(640), createdAt: days(90) },
+      { id: "doc-1-2", vehicleId: "veh-1", type: "tuv", fileUrl: "#", title: "HU/AU Bericht", issuedAt: days(90), expiresAt: inDays(640), createdAt: days(90) },
     ],
     reminders: [
       { id: "rem-1-1", vehicleId: "veh-1", kind: "oil", title: "Ölwechsel fällig", dueDate: inDays(45), dueMileageKm: 45_000, completedAt: null, source: "user" },
@@ -160,7 +160,7 @@ export const demoVehicles: DemoVehicle[] = [
       },
     ],
     documents: [
-      { id: "doc-2-1", vehicleId: "veh-2", type: "TÜV", fileUrl: "#", title: "HU/AU Bericht", issuedAt: days(300), expiresAt: inDays(30), createdAt: days(300) },
+      { id: "doc-2-1", vehicleId: "veh-2", type: "tuv", fileUrl: "#", title: "HU/AU Bericht", issuedAt: days(300), expiresAt: inDays(30), createdAt: days(300) },
     ],
     reminders: [
       { id: "rem-2-1", vehicleId: "veh-2", kind: "tuv", title: "TÜV / HU fällig", dueDate: inDays(30), dueMileageKm: null, completedAt: null, source: "document" },
