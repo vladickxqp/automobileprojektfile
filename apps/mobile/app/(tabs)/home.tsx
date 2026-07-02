@@ -12,10 +12,11 @@ import { Card } from "../../src/ui/Card";
 import { CarPhoto } from "../../src/ui/CarPhoto";
 import { Screen } from "../../src/ui/Screen";
 import { ScoreRing } from "../../src/ui/ScoreRing";
+import { EmptyState } from "../../src/ui/EmptyState";
 import { RecentEvents } from "../../src/ui/RecentEvents";
 import { Skeleton } from "../../src/ui/Skeleton";
 import { VehicleDashboard } from "../../src/ui/VehicleDashboard";
-import { ChevronRightIcon, FileIcon, ShieldIcon } from "../../src/ui/icons";
+import { CarIcon, ChevronRightIcon, FileIcon, ShieldIcon } from "../../src/ui/icons";
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -46,10 +47,13 @@ export default function HomeScreen() {
   if (!vehicles.isLoading && list.length === 0) {
     return (
       <Screen>
-        <View style={styles.empty}>
-          <Text style={styles.emptyTitle}>{t("home.noVehicleTitle")}</Text>
-          <Text style={styles.emptySub}>{t("home.noVehicleSub")}</Text>
-        </View>
+        <EmptyState
+          icon={<CarIcon size={32} color={colors.primary} />}
+          title={t("home.noVehicleTitle")}
+          subtitle={t("home.noVehicleSub")}
+          actionLabel={t("home.addVehicle")}
+          onAction={() => router.push("/add-vehicle")}
+        />
       </Screen>
     );
   }
@@ -176,7 +180,4 @@ const makeStyles = (colors: ThemeColors) =>
     statusLabel: { ...typography.body, color: colors.text, flex: 1 },
     statusDate: { ...typography.caption, color: colors.textMuted },
     divider: { height: 1, backgroundColor: colors.border },
-    empty: { flex: 1, alignItems: "center", justifyContent: "center", gap: spacing.sm, paddingVertical: spacing.xxxl },
-    emptyTitle: { ...typography.h1, color: colors.text, textAlign: "center" },
-    emptySub: { ...typography.body, color: colors.textMuted, textAlign: "center" },
   });

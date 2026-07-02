@@ -7,6 +7,8 @@ export interface Recommendation {
   label: string;
   detail: string;
   severity: "info" | "warning" | "danger";
+  kind: string; // maps to a reminder kind (oil / tuv / service / custom)
+  due?: string; // ISO date, when known (e.g. TÜV expiry)
 }
 
 type T = (key: string, opts?: Record<string, unknown>) => string;
@@ -45,24 +47,25 @@ export function computeRecommendations(
     label: t("recommend.nextOil"),
     detail: oilRemaining <= 0 ? t("recommend.overdue") : t("recommend.inKm", { km: oilRemaining.toLocaleString("de-DE") }),
     severity: oilRemaining <= 0 ? "danger" : oilRemaining <= 2000 ? "warning" : "info",
+    kind: "oil",
   });
 
   // Brake check ~ every 30.000 km.
   const lastBrakes = lastMileage(events, "brakes");
   const brakeInt = 30000;
   const brakeDue = lastBrakes == null ? mileage >= brakeInt : mileage - lastBrakes >= brakeInt;
-  if (brakeDue) recs.push({ id: "brakes", label: t("recommend.checkBrakes"), detail: "", severity: "warning" });
+  if (brakeDue) recs.push({ id: "brakes", label: t("recommend.checkBrakes"), detail: "", severity: "warning", kind: "service" });
 
   // TÜV / HU expiry from documents.
   const tuv = documents.find((d) => d.type === "tuv");
   if (tuv?.expiresAt) {
     const days = Math.ceil((+new Date(tuv.expiresAt) - Date.now()) / 86_400_000);
     if (days < 0) {
-      recs.push({ id: "tuv", label: t("recommend.tuvExpires"), detail: t("recommend.overdue"), severity: "danger" });
+      recs.push({ id: "tuv", label: t("recommend.tuvExpires"), detail: t("recommend.overdue"), severity: "danger", kind: "tuv", due: tuv.expiresAt });
     } else if (days <= 120) {
       const months = Math.round(days / 30);
       const detail = months >= 1 ? t("recommend.inMonths", { count: months }) : t("common.inDays", { count: days });
-      recs.push({ id: "tuv", label: t("recommend.tuvExpires"), detail, severity: "warning" });
+      recs.push({ id: "tuv", label: t("recommend.tuvExpires"), detail, severity: "warning", kind: "tuv", due: tuv.expiresAt });
     }
   }
 
@@ -70,7 +73,7 @@ export function computeRecommendations(
   const lastInsp = lastMileage(events, "inspection");
   const inspInt = 20000;
   const inspDue = lastInsp == null ? mileage >= inspInt : mileage - lastInsp >= inspInt;
-  if (inspDue) recs.push({ id: "inspection", label: t("recommend.inspection"), detail: "", severity: "info" });
+  if (inspDue) recs.push({ id: "inspection", label: t("recommend.inspection"), detail: "", severity: "info", kind: "service" });
 
   return recs;
 }

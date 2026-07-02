@@ -263,12 +263,14 @@ export default function VehicleDashboard() {
           ) : (
             recs.map((r) => {
               const tone = r.severity === "danger" ? colors.danger : r.severity === "warning" ? colors.warning : colors.success;
+              const params = `title=${encodeURIComponent(r.label)}&kind=${r.kind}${r.due ? `&due=${encodeURIComponent(r.due)}` : ""}`;
               return (
-                <View key={r.id} style={styles.statusRow}>
+                <Pressable key={r.id} style={styles.statusRow} onPress={() => router.push(`/vehicle/${id}/reminders?${params}`)}>
                   <View style={[styles.upDot, { backgroundColor: tone }]} />
                   <Text style={styles.statusLabel}>{r.label}</Text>
                   {r.detail ? <Text style={[styles.recDetail, { color: tone }]}>{r.detail}</Text> : null}
-                </View>
+                  <ChevronRightIcon size={16} color={colors.textFaint} />
+                </Pressable>
               );
             })
           )}

@@ -226,7 +226,8 @@
     "newTitle": "Neue Erinnerung",
     "add": "Erinnerung hinzufügen",
     "done": "Erledigt",
-    "noDate": "kein Datum"
+    "noDate": "kein Datum",
+    "due": "Fällig am"
   },
   "assistant": {
     "title": "KI-Assistent",

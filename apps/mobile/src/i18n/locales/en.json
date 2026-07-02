@@ -226,7 +226,8 @@
     "newTitle": "New reminder",
     "add": "Add reminder",
     "done": "Done",
-    "noDate": "no date"
+    "noDate": "no date",
+    "due": "Due date"
   },
   "assistant": {
     "title": "AI assistant",

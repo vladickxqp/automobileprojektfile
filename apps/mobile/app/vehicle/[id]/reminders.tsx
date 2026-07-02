@@ -11,13 +11,27 @@ import { Card } from "../../../src/ui/Card";
 import { Screen } from "../../../src/ui/Screen";
 import { TextField } from "../../../src/ui/TextField";
 
+const pad = (n: number) => String(n).padStart(2, "0");
+const fmtDate = (d: Date) => `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`;
+const parseDate = (s: string): string | undefined => {
+  const m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+  if (!m) return undefined;
+  const d = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+  return Number.isNaN(d.getTime()) ? undefined : d.toISOString();
+};
+
 export default function RemindersScreen() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const params = useLocalSearchParams<{ id: string; title?: string; kind?: string; due?: string }>();
+  const id = params.id;
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
-  const [title, setTitle] = useState("");
+
+  // Prefilled from a tapped maintenance recommendation (1-tap reminder).
+  const [title, setTitle] = useState(params.title ?? "");
+  const [due, setDue] = useState(params.due ? fmtDate(new Date(params.due)) : "");
+  const kind = params.kind;
 
   const reminders = useQuery({
     queryKey: ["reminders", id],
@@ -26,9 +40,15 @@ export default function RemindersScreen() {
   });
 
   const add = useMutation({
-    mutationFn: () => api.createReminder(id, { title: title.trim() }),
+    mutationFn: () =>
+      api.createReminder(id, {
+        title: title.trim(),
+        ...(kind ? { kind } : {}),
+        ...(parseDate(due) ? { dueDate: parseDate(due) } : {}),
+      }),
     onSuccess: () => {
       setTitle("");
+      setDue("");
       void queryClient.invalidateQueries({ queryKey: ["reminders", id] });
     },
   });
@@ -68,6 +88,7 @@ export default function RemindersScreen() {
         />
       )}
       <TextField label={t("reminders.newTitle")} value={title} onChangeText={setTitle} />
+      <TextField label={t("reminders.due")} value={due} onChangeText={setDue} placeholder="TT.MM.JJJJ" />
       <Button
         title={t("reminders.add")}
         onPress={() => add.mutate()}

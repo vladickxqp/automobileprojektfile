@@ -1,15 +1,27 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../src/i18n";
+import { ApiError } from "../src/api/apiClient";
 import { AuthProvider } from "../src/auth/AuthContext";
 import { ThemeProvider, useTheme } from "../src/theme/ThemeProvider";
 import { IconButton } from "../src/ui/IconButton";
+import { ToastProvider, toast } from "../src/ui/Toast";
 import { ArrowLeftIcon } from "../src/ui/icons";
 
-const queryClient = new QueryClient();
+// Surface any query/mutation failure as an error toast. 401s are swallowed — the API interceptor
+// already logs the user out and routes to sign-in.
+function notifyError(error: unknown) {
+  if (error instanceof ApiError && error.status === 401) return;
+  toast(error instanceof Error ? error.message : String(error), "error");
+}
+
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({ onError: notifyError }),
+  mutationCache: new MutationCache({ onError: notifyError }),
+});
 
 function ThemedStack() {
   const { colors, isDark } = useTheme();
@@ -49,7 +61,9 @@ export default function RootLayout() {
       <ThemeProvider>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <ThemedStack />
+            <ToastProvider>
+              <ThemedStack />
+            </ToastProvider>
           </AuthProvider>
         </QueryClientProvider>
       </ThemeProvider>
