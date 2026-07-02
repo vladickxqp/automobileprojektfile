@@ -1,7 +1,9 @@
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
+import { Alert, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
+import { api } from "../src/api/client";
+import { useAuth } from "../src/auth/AuthContext";
 import { useTheme } from "../src/theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../src/theme/tokens";
 import { Card } from "../src/ui/Card";
@@ -16,11 +18,35 @@ const LANGS: { code: string; label: string }[] = [
 
 export default function SettingsScreen() {
   const { t, i18n } = useTranslation();
+  const router = useRouter();
+  const { signOut } = useAuth();
   const { colors, isDark, setMode } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const [notif, setNotif] = useState({ maintenance: true, tuv: true, insurance: true, offers: false });
   const current = i18n.language?.slice(0, 2) ?? "de";
+
+  const deleteAccount = async () => {
+    try {
+      await api.deleteAccount();
+    } catch {
+      // Even if the call fails (e.g. offline), drop the local session.
+    }
+    await signOut();
+    router.replace("/");
+  };
+
+  const confirmDeleteAccount = () => {
+    const msg = t("settings.deleteAccountConfirm");
+    if (Platform.OS === "web") {
+      if (typeof window !== "undefined" && window.confirm(msg)) void deleteAccount();
+    } else {
+      Alert.alert(t("settings.deleteAccount"), msg, [
+        { text: t("common.cancel"), style: "cancel" },
+        { text: t("settings.deleteAccount"), style: "destructive", onPress: () => void deleteAccount() },
+      ]);
+    }
+  };
 
   return (
     <Screen flush>
@@ -72,7 +98,7 @@ export default function SettingsScreen() {
         <Section title={t("settings.privacy")} icon={<ShieldIcon size={18} color={colors.primary} />} colors={colors} styles={styles}>
           <LinkRow label={t("settings.privacyPolicy")} onPress={() => Alert.alert(t("settings.privacyPolicy"), t("settings.demoNotice"))} colors={colors} styles={styles} />
           <LinkRow label={t("settings.exportData")} onPress={() => Alert.alert(t("settings.exportData"), t("settings.demoNotice"))} colors={colors} styles={styles} />
-          <LinkRow label={t("settings.deleteAccount")} onPress={() => Alert.alert(t("settings.deleteAccount"), t("settings.demoNotice"))} danger colors={colors} styles={styles} />
+          <LinkRow label={t("settings.deleteAccount")} onPress={confirmDeleteAccount} danger colors={colors} styles={styles} />
         </Section>
 
         <Text style={styles.version}>CarDNA · Demo · v0.0.1</Text>

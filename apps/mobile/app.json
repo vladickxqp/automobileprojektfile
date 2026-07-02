@@ -9,16 +9,28 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.autolife.app"
+      "bundleIdentifier": "com.autolife.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "CarDNA benötigt Zugriff auf die Kamera, um Fotos deines Fahrzeugs sowie Belege und Rechnungen für die Fahrzeughistorie aufzunehmen.",
+        "NSPhotoLibraryUsageDescription": "CarDNA benötigt Zugriff auf deine Fotos, um Fahrzeugbilder und Dokumente (z. B. Rechnungen, Fahrzeugschein, Versicherung) hochzuladen.",
+        "NSPhotoLibraryAddUsageDescription": "CarDNA speichert exportierte Berichte und Belege in deiner Fotobibliothek, wenn du das anforderst."
+      }
     },
     "android": {
-      "package": "com.autolife.app"
+      "package": "com.autolife.app",
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "READ_MEDIA_IMAGES"]
     },
     "plugins": [
       "expo-router",
       "expo-localization",
       "expo-secure-store",
-      "expo-image-picker",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "CarDNA benötigt Zugriff auf deine Fotos, um Fahrzeugbilder und Dokumente (z. B. Rechnungen, Fahrzeugschein, Versicherung) hochzuladen.",
+          "cameraPermission": "CarDNA benötigt Zugriff auf die Kamera, um Fotos deines Fahrzeugs sowie Belege und Rechnungen für die Fahrzeughistorie aufzunehmen."
+        }
+      ],
       "react-native-ble-plx"
     ],
     "experiments": {

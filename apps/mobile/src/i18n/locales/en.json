@@ -276,7 +276,8 @@
     "privacyPolicy": "Privacy policy",
     "exportData": "Export my data",
     "deleteAccount": "Delete account",
-    "demoNotice": "Not available in this demo."
+    "demoNotice": "Not available in this demo.",
+    "deleteAccountConfirm": "Your account and all related data (vehicles, documents, entries) will be permanently deleted. Continue?"
   },
   "profile": {
     "title": "Profile",
@@ -289,7 +290,11 @@
     "discoverPremium": "Discover Premium",
     "fleet": "Fleet / multiple vehicles",
     "settings": "Settings",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "legal": "Legal",
+    "imprint": "Imprint",
+    "privacy": "Privacy policy",
+    "terms": "Terms of service"
   },
   "premium": {
     "title": "CarDNA Premium",

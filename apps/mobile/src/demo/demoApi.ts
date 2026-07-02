@@ -57,6 +57,7 @@ export const demoApi = {
     delay({ token: "demo-token", user: { id: "demo-user", email } }),
   login: (email: string): Promise<AuthResponse> =>
     delay({ token: "demo-token", user: { id: "demo-user", email } }),
+  deleteAccount: (): Promise<{ ok: boolean }> => delay({ ok: true }),
 
   listVehicles: (): Promise<VehicleDTO[]> => delay(store.map(publicVehicle)),
   getVehicle: (id: string): Promise<VehicleDTO> => delay(publicVehicle(find(id))),

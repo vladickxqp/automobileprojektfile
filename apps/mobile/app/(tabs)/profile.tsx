@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
 import { useMemo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -11,7 +12,14 @@ import { Button } from "../../src/ui/Button";
 import { Card } from "../../src/ui/Card";
 import { LogoMark } from "../../src/ui/Logo";
 import { Screen } from "../../src/ui/Screen";
-import { ChevronRightIcon, GaugeIcon, LayersIcon, SettingsIcon } from "../../src/ui/icons";
+import { ChevronRightIcon, FileIcon, GaugeIcon, LayersIcon, SettingsIcon, ShieldIcon } from "../../src/ui/icons";
+
+// Legal pages — placeholder URLs for now; swap for the real hosted documents before release.
+const LEGAL = {
+  imprint: "https://cardna.app/impressum",
+  privacy: "https://cardna.app/datenschutz",
+  terms: "https://cardna.app/agb",
+};
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
@@ -43,6 +51,15 @@ export default function ProfileScreen() {
           <Row icon={<LayersIcon size={20} color={colors.textMuted} />} label={t("profile.fleet")} onPress={() => router.push("/fleet")} colors={colors} styles={styles} />
           <View style={styles.divider} />
           <Row icon={<SettingsIcon size={20} color={colors.textMuted} />} label={t("profile.settings")} onPress={() => router.push("/settings")} colors={colors} styles={styles} />
+        </Card>
+
+        <Text style={styles.sectionLabel}>{t("profile.legal")}</Text>
+        <Card style={{ gap: 0, paddingVertical: spacing.xs }}>
+          <Row icon={<FileIcon size={20} color={colors.textMuted} />} label={t("profile.imprint")} onPress={() => void WebBrowser.openBrowserAsync(LEGAL.imprint)} colors={colors} styles={styles} />
+          <View style={styles.divider} />
+          <Row icon={<ShieldIcon size={20} color={colors.textMuted} />} label={t("profile.privacy")} onPress={() => void WebBrowser.openBrowserAsync(LEGAL.privacy)} colors={colors} styles={styles} />
+          <View style={styles.divider} />
+          <Row icon={<FileIcon size={20} color={colors.textMuted} />} label={t("profile.terms")} onPress={() => void WebBrowser.openBrowserAsync(LEGAL.terms)} colors={colors} styles={styles} />
         </Card>
 
         <Button variant="secondary" title={t("profile.signOut")} onPress={() => { void signOut(); router.replace("/"); }} />
@@ -91,6 +108,7 @@ const makeStyles = (colors: ThemeColors) =>
     stat: { alignItems: "flex-start", gap: spacing.xs },
     statValue: { ...typography.h1, color: colors.text },
     statLabel: { ...typography.label, color: colors.textMuted },
+    sectionLabel: { ...typography.label, color: colors.textMuted, marginTop: spacing.sm, marginLeft: spacing.xs },
     row: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: spacing.md, paddingHorizontal: spacing.sm },
     rowLeft: { flexDirection: "row", alignItems: "center", gap: spacing.md },
     rowLabel: { ...typography.body, color: colors.text },

@@ -256,6 +256,7 @@ async function uploadDocument(
 const realApi = {
   register: (email: string, password: string) => post<AuthResponse>("/auth/register", { email, password }),
   login: (email: string, password: string) => post<AuthResponse>("/auth/login", { email, password }),
+  deleteAccount: () => del<{ ok: boolean }>("/account"),
   listVehicles: () => get<VehicleDTO[]>("/vehicles"),
   getVehicle: (id: string) => get<VehicleDTO>(`/vehicles/${id}`),
   decodeVin: (vin: string) => get<DecodeDTO>(`/vehicles/decode/${vin}`),

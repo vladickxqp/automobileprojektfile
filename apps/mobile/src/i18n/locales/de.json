@@ -276,7 +276,8 @@
     "privacyPolicy": "Datenschutzerklärung",
     "exportData": "Meine Daten exportieren",
     "deleteAccount": "Konto löschen",
-    "demoNotice": "In dieser Demo nicht verfügbar."
+    "demoNotice": "In dieser Demo nicht verfügbar.",
+    "deleteAccountConfirm": "Konto und alle zugehörigen Daten (Fahrzeuge, Dokumente, Einträge) werden unwiderruflich gelöscht. Fortfahren?"
   },
   "profile": {
     "title": "Profil",
@@ -289,7 +290,11 @@
     "discoverPremium": "Premium entdecken",
     "fleet": "Flotte / Mehrere Fahrzeuge",
     "settings": "Einstellungen",
-    "signOut": "Abmelden"
+    "signOut": "Abmelden",
+    "legal": "Rechtliches",
+    "imprint": "Impressum",
+    "privacy": "Datenschutz",
+    "terms": "AGB"
   },
   "premium": {
     "title": "CarDNA Premium",
