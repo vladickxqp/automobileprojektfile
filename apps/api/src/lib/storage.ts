@@ -44,10 +44,14 @@ export class SupabaseStorage implements StorageService {
           headers: this.headers({ "Content-Type": "application/json" }),
           body: JSON.stringify({ id: this.bucket, name: this.bucket, public: true }),
         });
-        // 200 = created, 409 = already exists — both fine.
-        if (!res.ok && res.status !== 409) {
-          this.bucketReady = null; // allow a retry on the next upload
-          throw new Error(`Supabase bucket setup failed (${res.status}): ${await res.text()}`);
+        // 200 = created. "Already exists" is also fine — Supabase signals it either as 409 or as
+        // 400 with a Duplicate / statusCode:409 body.
+        if (!res.ok) {
+          const text = await res.text();
+          if (!/already exists|Duplicate|"statusCode":\s*"?409/i.test(text)) {
+            this.bucketReady = null; // allow a retry on the next upload
+            throw new Error(`Supabase bucket setup failed (${res.status}): ${text}`);
+          }
         }
       })();
     }
