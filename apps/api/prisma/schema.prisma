@@ -59,6 +59,8 @@ enum DocumentType {
   tuv
   invoice
   contract
+  tax
+  warranty
   other
 }
 
@@ -165,6 +167,7 @@ model Document {
   title     String?
   issuedAt  DateTime?
   expiresAt DateTime?
+  meta      Json?
   createdAt DateTime     @default(now())
 
   vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)

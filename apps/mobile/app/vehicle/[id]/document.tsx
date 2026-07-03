@@ -50,6 +50,29 @@ export default function DocumentDetailScreen() {
 
   const Icon = docType === "tuv" ? ShieldIcon : FileIcon;
 
+  // Structured "Documents 2.0" fields, shown per type.
+  const eurFmt = (n: number) => `${n.toLocaleString("de-DE")} €`;
+  const metaRows: { label: string; value: string }[] = [];
+  const m = latest?.meta ?? undefined;
+  if (latest && m) {
+    if (latest.type === "insurance") {
+      if (m.insurer) metaRows.push({ label: t("documents.fields.insurer"), value: m.insurer });
+      if (m.policyNumber) metaRows.push({ label: t("documents.fields.policyNumber"), value: m.policyNumber });
+      if (m.premium != null)
+        metaRows.push({
+          label: t("documents.fields.premium"),
+          value: `${eurFmt(m.premium)} · ${t(`documents.intervals.${m.interval ?? "annual"}`)}`,
+        });
+      if (m.paymentDate) metaRows.push({ label: t("documents.fields.paymentDate"), value: fmtDate(m.paymentDate) });
+    } else if (latest.type === "tax") {
+      if (m.amount != null) metaRows.push({ label: t("documents.fields.amount"), value: eurFmt(m.amount) });
+      if (m.debitDate) metaRows.push({ label: t("documents.fields.debitDate"), value: fmtDate(m.debitDate) });
+    } else if (latest.type === "warranty") {
+      if (m.dealer) metaRows.push({ label: t("documents.fields.dealer"), value: m.dealer });
+      if (m.scope) metaRows.push({ label: t("documents.fields.scope"), value: m.scope });
+    }
+  }
+
   return (
     <Screen flush>
       <Stack.Screen options={{ title: typeLabel }} />
@@ -77,6 +100,12 @@ export default function DocumentDetailScreen() {
                   <Row label={t("documents.issued")} value={fmtDate(latest.issuedAt)} styles={styles} />
                   <View style={styles.divider} />
                   <Row label={t("documents.validUntil")} value={fmtDate(latest.expiresAt)} styles={styles} />
+                  {metaRows.map((r) => (
+                    <View key={r.label}>
+                      <View style={styles.divider} />
+                      <Row label={r.label} value={r.value} styles={styles} />
+                    </View>
+                  ))}
                 </>
               ) : (
                 <Text style={[styles.muted, { marginTop: spacing.sm }]}>{t("documents.none")}</Text>

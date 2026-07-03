@@ -212,13 +212,36 @@
       "insurance": "Insurance",
       "contract": "Contract",
       "other": "Other",
-      "tuv": "Inspection"
+      "tuv": "Inspection",
+      "tax": "Tax",
+      "warranty": "Warranty"
     },
     "issued": "Issued on",
     "validUntil": "Valid until",
     "view": "View document",
     "none": "No document yet",
-    "history": "Earlier documents"
+    "history": "Earlier documents",
+    "newDoc": "New document",
+    "fields": {
+      "insurer": "Insurer",
+      "policyNumber": "Policy number",
+      "premium": "Premium (€)",
+      "interval": "Payment interval",
+      "paymentDate": "Payment date",
+      "amount": "Amount (€)",
+      "debitDate": "Debit date",
+      "dealer": "Dealer",
+      "scope": "Warranty scope",
+      "start": "Start",
+      "end": "End / expiry",
+      "date": "Date"
+    },
+    "intervals": {
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "semiannual": "Semi-annual",
+      "annual": "Annual"
+    }
   },
   "reminders": {
     "title": "Reminders",

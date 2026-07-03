@@ -212,13 +212,36 @@
       "insurance": "Versicherung",
       "contract": "Kaufvertrag",
       "other": "Sonstiges",
-      "tuv": "TÜV / HU"
+      "tuv": "TÜV / HU",
+      "tax": "Steuer",
+      "warranty": "Garantie"
     },
     "issued": "Ausgestellt am",
     "validUntil": "Gültig bis",
     "view": "Dokument ansehen",
     "none": "Noch kein Dokument hinterlegt",
-    "history": "Frühere Dokumente"
+    "history": "Frühere Dokumente",
+    "newDoc": "Neues Dokument",
+    "fields": {
+      "insurer": "Versicherer",
+      "policyNumber": "Versicherungsnummer",
+      "premium": "Beitrag (€)",
+      "interval": "Zahlungsintervall",
+      "paymentDate": "Zahlungsdatum",
+      "amount": "Betrag (€)",
+      "debitDate": "Abbuchungsdatum",
+      "dealer": "Händler",
+      "scope": "Garantieumfang",
+      "start": "Beginn",
+      "end": "Ende / Ablauf",
+      "date": "Datum"
+    },
+    "intervals": {
+      "monthly": "Monatlich",
+      "quarterly": "Vierteljährlich",
+      "semiannual": "Halbjährlich",
+      "annual": "Jährlich"
+    }
   },
   "reminders": {
     "title": "Erinnerungen",

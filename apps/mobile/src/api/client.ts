@@ -101,6 +101,20 @@ export interface ExpenseSummaryDTO {
   byCategory: Record<string, number>;
 }
 
+export type PaymentInterval = "monthly" | "quarterly" | "semiannual" | "annual";
+
+export interface DocumentMetaDTO {
+  insurer?: string;
+  policyNumber?: string;
+  premium?: number;
+  interval?: PaymentInterval;
+  paymentDate?: string;
+  amount?: number;
+  debitDate?: string;
+  dealer?: string;
+  scope?: string;
+}
+
 export interface DocumentDTO {
   id: string;
   vehicleId: string;
@@ -109,6 +123,7 @@ export interface DocumentDTO {
   title: string | null;
   issuedAt: string | null;
   expiresAt: string | null;
+  meta?: DocumentMetaDTO | null;
   createdAt: string;
 }
 
@@ -233,10 +248,14 @@ const post = <T>(path: string, body?: unknown) => apiClient.post<T>(path, body ?
 const patch = <T>(path: string, body?: unknown) => apiClient.patch<T>(path, body ?? {}).then((r) => r.data);
 const del = <T>(path: string) => apiClient.delete<T>(path).then((r) => r.data);
 
+// meta carries `type` plus any Documents-2.0 fields (title, issuedAt, expiresAt, insurer, premium,
+// interval, …). All values are sent as multipart string fields; the backend coerces + validates.
+export type DocumentUploadMeta = { type: string } & Record<string, string | undefined>;
+
 async function uploadDocument(
   vehicleId: string,
   file: UploadFile,
-  meta: { type: string; title?: string; expiresAt?: string },
+  meta: DocumentUploadMeta,
 ): Promise<DocumentDTO> {
   const form = new FormData();
   // React Native FormData accepts this { uri, name, type } shape for file parts.
@@ -246,8 +265,9 @@ async function uploadDocument(
     type: file.mimeType ?? "application/octet-stream",
   } as unknown as Blob);
   form.append("type", meta.type);
-  if (meta.title) form.append("title", meta.title);
-  if (meta.expiresAt) form.append("expiresAt", meta.expiresAt);
+  for (const [key, value] of Object.entries(meta)) {
+    if (key !== "type" && value != null && value !== "") form.append(key, value);
+  }
   // Let axios set the multipart boundary (no manual Content-Type).
   const { data } = await apiClient.post<DocumentDTO>(`/vehicles/${vehicleId}/documents`, form);
   return data;
