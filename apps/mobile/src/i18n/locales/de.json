@@ -490,5 +490,14 @@
     "entries_other": "{{count}} Einträge",
     "noEntries": "Keine Einträge in diesem Zeitraum",
     "consumption": "Ø Verbrauch"
+  },
+  "fuel": {
+    "title": "Kraftstoffstatistik",
+    "pricePerLiter": "Ø Preis / Liter",
+    "totalLiters": "Getankte Liter",
+    "totalCost": "Spritkosten",
+    "consumptionChart": "Verbrauch je Tankfüllung (l/100 km)",
+    "priceChart": "Preis je Liter (€)",
+    "noData": "Zu wenig Tankdaten — trage bei Tank-Ausgaben die Liter (und km) ein."
   }
 }

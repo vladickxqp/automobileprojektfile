@@ -47,13 +47,16 @@ export function VehicleDashboard({ vehicle, events }: Props) {
         })}
       </View>
 
-      {/* Driving report */}
-      <Card elevated style={styles.reportCard}>
+      {/* Driving report — tap for fuel statistics & charts */}
+      <Pressable onPress={() => router.push(`/vehicle/${vehicle.id}/fuel?period=${period}`)}>
+        {({ pressed }) => (
+      <Card elevated style={[styles.reportCard, pressed && { borderColor: colors.primary }]}>
         <View style={styles.reportHead}>
           <View style={styles.reportIcon}>
             <ActivityIcon size={20} color={colors.primary} />
           </View>
-          <Text style={styles.reportTitle}>{t("dash.drivingReport")}</Text>
+          <Text style={[styles.reportTitle, { flex: 1 }]}>{t("dash.drivingReport")}</Text>
+          <ChevronRightIcon size={18} color={colors.textFaint} />
         </View>
         <View style={styles.reportRow}>
           <GaugeIcon size={18} color={colors.textMuted} />
@@ -83,6 +86,8 @@ export function VehicleDashboard({ vehicle, events }: Props) {
           </Text>
         </View>
       </Card>
+        )}
+      </Pressable>
 
       {/* Cost tiles — tap for a detailed breakdown */}
       <View style={styles.tiles}>

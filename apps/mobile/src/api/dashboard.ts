@@ -177,3 +177,71 @@ export function computeDashboard(
     otherCount,
   };
 }
+
+// --- Fuel statistics (Phase 4.5) ---
+
+export interface FuelFill {
+  date: string;
+  mileageKm: number | null;
+  liters: number;
+  cost: number;
+  consumption: number | null; // l/100 km, fill-to-fill
+  pricePerLiter: number | null; // €/l
+}
+
+export interface FuelStats {
+  totalLiters: number;
+  totalCost: number;
+  kmDriven: number | null;
+  avgConsumption: number | null; // l/100 km
+  avgPricePerLiter: number | null; // €/l
+  costPerKm: number | null; // €/km
+  fills: FuelFill[]; // within the period, oldest first
+}
+
+// Fill-to-fill fuel analysis: consumption between refuels (needs odometer readings), plus €/l and
+// €/km. Consumption uses ALL fills for the previous-odometer reference, then the series is trimmed
+// to the selected period.
+export function computeFuelStats(
+  vehicle: VehicleDTO,
+  events: VehicleEventDTO[],
+  period: DashboardPeriod,
+  ref: Date = new Date(),
+): FuelStats {
+  const startMs = +periodStart(period, ref);
+  const fuelEvents = events
+    .filter((e) => e.type === "expense" && isFuelCategory(String(e.payload?.category ?? "")))
+    .sort((a, b) => +new Date(a.occurredAt) - +new Date(b.occurredAt));
+
+  const allFills: FuelFill[] = [];
+  let prevKm: number | null = null;
+  for (const e of fuelEvents) {
+    const p = (e.payload ?? {}) as Record<string, unknown>;
+    const liters = Number(p.liters) || 0;
+    const cost = Number(p.amount) || 0;
+    const km = e.mileageKm;
+    const consumption =
+      prevKm != null && km != null && km > prevKm && liters > 0 ? (liters / (km - prevKm)) * 100 : null;
+    const pricePerLiter = liters > 0 && cost > 0 ? cost / liters : null;
+    allFills.push({ date: e.occurredAt, mileageKm: km, liters, cost, consumption, pricePerLiter });
+    if (km != null) prevKm = km;
+  }
+
+  const fills = allFills.filter((f) => +new Date(f.date) >= startMs);
+  const totalLiters = fills.reduce((s, f) => s + f.liters, 0);
+  const totalCost = fills.reduce((s, f) => s + f.cost, 0);
+  const avgPricePerLiter = totalLiters > 0 ? totalCost / totalLiters : null;
+
+  const dash = computeDashboard(vehicle, events, period, ref);
+  const costPerKm = dash.kmDriven && dash.kmDriven > 0 ? totalCost / dash.kmDriven : null;
+
+  return {
+    totalLiters,
+    totalCost,
+    kmDriven: dash.kmDriven,
+    avgConsumption: dash.avgConsumption,
+    avgPricePerLiter,
+    costPerKm,
+    fills,
+  };
+}

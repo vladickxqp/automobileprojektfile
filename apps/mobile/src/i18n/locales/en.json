@@ -490,5 +490,14 @@
     "entries_other": "{{count}} entries",
     "noEntries": "No entries in this period",
     "consumption": "Avg. consumption"
+  },
+  "fuel": {
+    "title": "Fuel statistics",
+    "pricePerLiter": "Avg. price / litre",
+    "totalLiters": "Litres filled",
+    "totalCost": "Fuel cost",
+    "consumptionChart": "Consumption per fill-up (l/100 km)",
+    "priceChart": "Price per litre (€)",
+    "noData": "Not enough fuel data — add litres (and km) on fuel expenses."
   }
 }
