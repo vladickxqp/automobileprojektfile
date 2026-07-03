@@ -6,6 +6,7 @@ import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "
 import type { ScoreFactorDTO } from "../../../src/api/client";
 import { api } from "../../../src/api/client";
 import { API_URL } from "../../../src/api/config";
+import { computeAutoScore } from "../../../src/api/autoscore";
 import { computeRecommendations } from "../../../src/api/maintenance";
 import { useTheme } from "../../../src/theme/ThemeProvider";
 import { radius, spacing, typography, type ThemeColors } from "../../../src/theme/tokens";
@@ -62,13 +63,7 @@ export default function VehicleDashboard() {
   const summary = useQuery({ queryKey: ["expenses", id], queryFn: () => api.expenseSummary(id), enabled: !!id });
   const reminders = useQuery({ queryKey: ["reminders", id], queryFn: () => api.listReminders(id), enabled: !!id });
   const documents = useQuery({ queryKey: ["documents", id], queryFn: () => api.listDocuments(id), enabled: !!id });
-  const score = useQuery({ queryKey: ["score", id], queryFn: () => api.getScore(id), enabled: !!id });
   const events = useQuery({ queryKey: ["events", id], queryFn: () => api.listEvents(id), enabled: !!id });
-
-  const computeScore = useMutation({
-    mutationFn: () => api.computeScore(id),
-    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ["score", id] }),
-  });
 
   const saleReport = useMutation({
     mutationFn: () => api.generateSaleReport(id),
@@ -118,8 +113,9 @@ export default function VehicleDashboard() {
     .filter((r) => r.dueDate)
     .sort((a, b) => +new Date(a.dueDate!) - +new Date(b.dueDate!))[0];
   const recs = computeRecommendations(v, events.data ?? [], docs, t);
-  const scoreValue = score.data?.score ?? null;
-  const factors = score.data?.factors ?? [];
+  const auto = computeAutoScore(v, events.data ?? [], docs, t);
+  const scoreValue = auto.score;
+  const factors = auto.factors;
 
   return (
     <Screen flush>
@@ -184,23 +180,25 @@ export default function VehicleDashboard() {
           )}
         </Pressable>
 
-        {/* AutoScore */}
-        <Card elevated style={styles.scoreCard}>
-          <View style={styles.scoreRow}>
-            <ScoreRing score={scoreValue} />
-            <View style={styles.factors}>
-              {factors.map((f) => (
-                <FactorBar key={f.key} factor={f} colors={colors} />
-              ))}
-            </View>
-          </View>
-          <Button
-            variant="secondary"
-            title={scoreValue == null ? t("dashboard.computeScore") : t("dashboard.recomputeScore")}
-            loading={computeScore.isPending}
-            onPress={() => computeScore.mutate()}
-          />
-        </Card>
+        {/* AutoScore 2.0 — tap for the full breakdown */}
+        <Pressable onPress={() => router.push(`/vehicle/${id}/autoscore`)}>
+          {({ pressed }) => (
+            <Card elevated style={[styles.scoreCard, pressed && { borderColor: colors.primary }]}>
+              <View style={styles.scoreRow}>
+                <ScoreRing score={scoreValue} />
+                <View style={styles.factors}>
+                  {factors.map((f) => (
+                    <FactorBar key={f.key} factor={f} colors={colors} />
+                  ))}
+                </View>
+              </View>
+              <View style={styles.scoreDetailsRow}>
+                <Text style={styles.scoreDetailsText}>{t("autoscore.details")}</Text>
+                <ChevronRightIcon size={18} color={colors.primary} />
+              </View>
+            </Card>
+          )}
+        </Pressable>
 
         {/* Key stats */}
         <View style={styles.statRow}>
@@ -437,6 +435,8 @@ const makeStyles = (colors: ThemeColors) =>
     heroTitle: { ...typography.h1, color: colors.text, textAlign: "center" },
     heroSub: { ...typography.caption, color: colors.textMuted, textAlign: "center" },
     scoreCard: { gap: spacing.lg },
+    scoreDetailsRow: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 4 },
+    scoreDetailsText: { ...typography.label, color: colors.primary },
     scoreRow: { flexDirection: "row", alignItems: "center", gap: spacing.lg },
     factors: { flex: 1, gap: spacing.sm, minWidth: 0 },
     statRow: { flexDirection: "row", gap: spacing.md },

@@ -500,5 +500,24 @@
     "consumptionChart": "Расход за заправку (л/100 км)",
     "priceChart": "Цена за литр (€)",
     "noData": "Мало данных — указывайте литры (и км) в расходах на топливо."
+  },
+  "autoscore": {
+    "title": "AutoScore",
+    "overall": "Общая оценка",
+    "wear": "Износ",
+    "maintenance": "Обслуживание",
+    "documents": "Документы",
+    "costs": "Расходы",
+    "wearDetail": "пробег {{km}} км",
+    "maintOk": "Обслуживание в норме",
+    "maintDue": "Просрочено ТО",
+    "maintUnknown": "Обслуживание не внесено",
+    "docsOk": "Документы в порядке",
+    "docsIssue": "Проверьте документы (ТО/страховка)",
+    "costLevel": "{{eur}} ремонт / год",
+    "verdictExcellent": "Отличное состояние",
+    "verdictGood": "Хорошее состояние",
+    "verdictAttention": "Требует внимания",
+    "details": "Детали AutoScore"
   }
 }

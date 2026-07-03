@@ -499,5 +499,24 @@
     "consumptionChart": "Verbrauch je Tankfüllung (l/100 km)",
     "priceChart": "Preis je Liter (€)",
     "noData": "Zu wenig Tankdaten — trage bei Tank-Ausgaben die Liter (und km) ein."
+  },
+  "autoscore": {
+    "title": "AutoScore",
+    "overall": "Gesamtbewertung",
+    "wear": "Verschleiß",
+    "maintenance": "Wartung",
+    "documents": "Dokumente",
+    "costs": "Kosten",
+    "wearDetail": "{{km}} km Laufleistung",
+    "maintOk": "Wartung aktuell",
+    "maintDue": "Wartung überfällig",
+    "maintUnknown": "Keine Wartung erfasst",
+    "docsOk": "Papiere gültig",
+    "docsIssue": "Papiere prüfen (TÜV/Versicherung)",
+    "costLevel": "{{eur}} Reparaturen / Jahr",
+    "verdictExcellent": "Sehr guter Zustand",
+    "verdictGood": "Guter Zustand",
+    "verdictAttention": "Aufmerksamkeit nötig",
+    "details": "AutoScore-Details"
   }
 }

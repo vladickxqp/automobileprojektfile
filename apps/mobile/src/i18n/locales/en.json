@@ -499,5 +499,24 @@
     "consumptionChart": "Consumption per fill-up (l/100 km)",
     "priceChart": "Price per litre (€)",
     "noData": "Not enough fuel data — add litres (and km) on fuel expenses."
+  },
+  "autoscore": {
+    "title": "AutoScore",
+    "overall": "Overall rating",
+    "wear": "Wear",
+    "maintenance": "Maintenance",
+    "documents": "Documents",
+    "costs": "Costs",
+    "wearDetail": "{{km}} km mileage",
+    "maintOk": "Maintenance up to date",
+    "maintDue": "Maintenance overdue",
+    "maintUnknown": "No maintenance logged",
+    "docsOk": "Papers valid",
+    "docsIssue": "Check papers (TÜV/insurance)",
+    "costLevel": "{{eur}} repairs / year",
+    "verdictExcellent": "Excellent condition",
+    "verdictGood": "Good condition",
+    "verdictAttention": "Needs attention",
+    "details": "AutoScore details"
   }
 }
