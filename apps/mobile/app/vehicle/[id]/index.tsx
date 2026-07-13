@@ -370,6 +370,13 @@ export default function VehicleDashboard() {
             colors={colors}
             styles={styles}
           />
+          <ActionTile
+            label={t("export.title")}
+            icon={<ChartIcon size={22} color={colors.primary} />}
+            onPress={() => router.push(`/vehicle/${id}/export`)}
+            colors={colors}
+            styles={styles}
+          />
         </View>
           </>
         )}

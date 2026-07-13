@@ -518,5 +518,13 @@
     "verdictGood": "Good condition",
     "verdictAttention": "Needs attention",
     "details": "AutoScore details"
+  },
+  "export": {
+    "title": "Export / Backup",
+    "vehicle": "Vehicle",
+    "pdf": "PDF life record",
+    "pdfHint": "Full vehicle life record as PDF",
+    "csv": "CSV / Excel",
+    "csvHint": "All entries as a table (Excel-compatible)"
   }
 }

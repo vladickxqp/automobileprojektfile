@@ -519,5 +519,13 @@
     "verdictGood": "Хорошее состояние",
     "verdictAttention": "Требует внимания",
     "details": "Детали AutoScore"
+  },
+  "export": {
+    "title": "Экспорт / Бэкап",
+    "vehicle": "Автомобиль",
+    "pdf": "PDF-история",
+    "pdfHint": "Полная история авто в PDF",
+    "csv": "CSV / Excel",
+    "csvHint": "Все записи таблицей (совместимо с Excel)"
   }
 }
